@@ -6,15 +6,21 @@ export type StatusPermohonan = Database["public"]["Enums"]["status_permohonan"];
 export const STATUS_LABEL: Record<StatusPermohonan, string> = {
   baru: "Baru",
   diproses: "Diproses",
+  menunggu_dokumen: "Menunggu Dokumen",
+  dikembalikan: "Dikembalikan",
   selesai: "Selesai",
   ditolak: "Ditolak",
+  dibatalkan: "Dibatalkan",
 };
 
 export const STATUS_TONE: Record<StatusPermohonan, string> = {
   baru: "bg-accent/15 text-accent border-accent/30",
   diproses: "bg-gold/20 text-gold-foreground border-gold/40",
+  menunggu_dokumen: "bg-warning/15 text-warning border-warning/30",
+  dikembalikan: "bg-warning/15 text-warning border-warning/30",
   selesai: "bg-success/15 text-success border-success/30",
   ditolak: "bg-destructive/15 text-destructive border-destructive/30",
+  dibatalkan: "bg-muted text-muted-foreground border-border",
 };
 
 export const PRIORITAS_LABEL = {
