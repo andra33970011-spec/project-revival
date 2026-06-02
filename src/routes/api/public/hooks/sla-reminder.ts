@@ -49,18 +49,19 @@ export const Route = createFileRoute("/api/public/hooks/sla-reminder")({
             // Notif admin OPD
             if (p.opd_id) {
               const { data: admins } = await supabaseAdmin
-                .from("profiles")
-                .select("id")
-                .eq("opd_id", p.opd_id);
-              for (const a of admins ?? []) {
+                .from("user_roles")
+                .select("user_id, profiles!inner(opd_id)")
+                .eq("role", "admin_opd")
+                .eq("profiles.opd_id", p.opd_id);
+              for (const a of (admins ?? []) as Array<{ user_id: string }>) {
                 await enqueueNotification({
-                  userId: a.id,
+                  userId: a.user_id,
                   tipe: "permohonan_sla_admin",
                   judul,
                   body,
                   link: `/admin/${p.id}`,
                   meta: { permohonan_id: p.id, overdue: !!overdue },
-                  dedupeKey: `sla:admin:${a.id}:${p.id}:${dayKey}`,
+                  dedupeKey: `sla:admin:${a.user_id}:${p.id}:${dayKey}`,
                 });
                 sent++;
               }
