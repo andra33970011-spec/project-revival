@@ -220,14 +220,22 @@ function BaruPage() {
         catatan: "Pengajuan melalui portal warga.",
       });
 
-      // Upload berkas (jika ada) ke storage. Path: <userId>/<permohonanId>/<filename>
+      // Upload berkas (jika ada) ke storage + catat ke tabel permohonan_berkas.
       for (const f of files) {
         const safeName = f.name.replace(/[^\w.\-]+/g, "_");
         const path = `${user.id}/${row.id}/${Date.now()}_${safeName}`;
         const { error: upErr } = await supabase.storage
           .from("berkas-permohonan")
           .upload(path, f, { contentType: f.type, upsert: false });
-        if (upErr) console.warn("Gagal upload", f.name, upErr.message);
+        if (upErr) { console.warn("Gagal upload", f.name, upErr.message); continue; }
+        await supabase.from("permohonan_berkas").insert({
+          permohonan_id: row.id,
+          storage_path: path,
+          nama_asli: f.name,
+          mime: f.type || null,
+          size_bytes: f.size,
+          uploaded_by: user.id,
+        });
       }
 
       await logAudit({ aksi: "permohonan.created", entitas: "permohonan", entitas_id: row.id });
