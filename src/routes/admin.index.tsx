@@ -124,8 +124,8 @@ function AdminDashboard() {
         ditolak: summary.kpi.ditolak,
       };
     }
-    const c = { baru: 0, diproses: 0, selesai: 0, ditolak: 0 };
-    items.forEach((p) => { c[p.status]++; });
+    const c: Record<string, number> = { baru: 0, diproses: 0, selesai: 0, ditolak: 0, menunggu_dokumen: 0, dikembalikan: 0, dibatalkan: 0 };
+    items.forEach((p) => { c[p.status] = (c[p.status] ?? 0) + 1; });
     return c;
   }, [items, summary]);
 

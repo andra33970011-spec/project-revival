@@ -54,7 +54,7 @@ export async function fetchAllOpdKinerja(): Promise<OpdKinerja[]> {
     if (!row.opd_id) continue;
     const cur: Agg = aggByOpd.get(row.opd_id) ?? {
       total: 0,
-      status_counts: { baru: 0, diproses: 0, selesai: 0, ditolak: 0 },
+      status_counts: { baru: 0, diproses: 0, menunggu_dokumen: 0, dikembalikan: 0, selesai: 0, ditolak: 0, dibatalkan: 0 },
       totalHariSelesai: 0,
       jumlahSelesai: 0,
       tepatWaktu: 0,
@@ -74,7 +74,7 @@ export async function fetchAllOpdKinerja(): Promise<OpdKinerja[]> {
   const result: OpdKinerja[] = opds.map((opd) => {
     const a = aggByOpd.get(opd.id) ?? {
       total: 0,
-      status_counts: { baru: 0, diproses: 0, selesai: 0, ditolak: 0 } as Record<StatusPermohonan, number>,
+      status_counts: { baru: 0, diproses: 0, menunggu_dokumen: 0, dikembalikan: 0, selesai: 0, ditolak: 0, dibatalkan: 0 } as Record<StatusPermohonan, number>,
       totalHariSelesai: 0,
       jumlahSelesai: 0,
       tepatWaktu: 0,

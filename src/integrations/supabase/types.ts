@@ -1467,6 +1467,7 @@ export type Database = {
       }
       permohonan: {
         Row: {
+          alasan_penolakan: string | null
           atas_nama_hp: string | null
           atas_nama_nama: string | null
           atas_nama_nik: string | null
@@ -1489,6 +1490,7 @@ export type Database = {
           wakil_ambil_nik: string | null
         }
         Insert: {
+          alasan_penolakan?: string | null
           atas_nama_hp?: string | null
           atas_nama_nama?: string | null
           atas_nama_nik?: string | null
@@ -1511,6 +1513,7 @@ export type Database = {
           wakil_ambil_nik?: string | null
         }
         Update: {
+          alasan_penolakan?: string | null
           atas_nama_hp?: string | null
           atas_nama_nama?: string | null
           atas_nama_nik?: string | null
@@ -1541,6 +1544,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      permohonan_berkas: {
+        Row: {
+          created_at: string
+          id: string
+          keterangan: string | null
+          mime: string | null
+          nama_asli: string
+          permohonan_id: string
+          size_bytes: number
+          storage_path: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          keterangan?: string | null
+          mime?: string | null
+          nama_asli: string
+          permohonan_id: string
+          size_bytes?: number
+          storage_path: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          keterangan?: string | null
+          mime?: string | null
+          nama_asli?: string
+          permohonan_id?: string
+          size_bytes?: number
+          storage_path?: string
+          uploaded_by?: string
+        }
+        Relationships: []
+      }
+      permohonan_komentar: {
+        Row: {
+          created_at: string
+          id: string
+          internal_only: boolean
+          oleh: string
+          permohonan_id: string
+          pesan: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          internal_only?: boolean
+          oleh: string
+          permohonan_id: string
+          pesan: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          internal_only?: boolean
+          oleh?: string
+          permohonan_id?: string
+          pesan?: string
+        }
+        Relationships: []
       }
       permohonan_rating: {
         Row: {
@@ -2218,6 +2284,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      konversi_laporan_ke_permohonan: {
+        Args: {
+          _kategori: string
+          _laporan_id: string
+          _opd_id: string
+          _pemohon_id: string
+          _sla_hari?: number
+        }
+        Returns: string
+      }
       opd_attendance_today: { Args: { _opd_id: string }; Returns: Json }
       opd_kinerja_agg: {
         Args: never
@@ -2283,7 +2359,14 @@ export type Database = {
         | "asn"
         | "admin_pemda"
       job_status: "pending" | "running" | "success" | "failed" | "dead"
-      status_permohonan: "baru" | "diproses" | "selesai" | "ditolak"
+      status_permohonan:
+        | "baru"
+        | "diproses"
+        | "selesai"
+        | "ditolak"
+        | "menunggu_dokumen"
+        | "dikembalikan"
+        | "dibatalkan"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2420,7 +2503,15 @@ export const Constants = {
         "admin_pemda",
       ],
       job_status: ["pending", "running", "success", "failed", "dead"],
-      status_permohonan: ["baru", "diproses", "selesai", "ditolak"],
+      status_permohonan: [
+        "baru",
+        "diproses",
+        "selesai",
+        "ditolak",
+        "menunggu_dokumen",
+        "dikembalikan",
+        "dibatalkan",
+      ],
     },
   },
 } as const

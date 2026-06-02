@@ -24,7 +24,7 @@ export const Route = createFileRoute("/permohonan/$id")({
   ),
 });
 
-const STATUS_OPTIONS: StatusPermohonan[] = ["baru", "diproses", "selesai", "ditolak"];
+const STATUS_OPTIONS: StatusPermohonan[] = ["baru", "diproses", "menunggu_dokumen", "dikembalikan", "selesai", "ditolak", "dibatalkan"];
 
 type Permohonan = {
   id: string;
@@ -142,12 +142,18 @@ function DetailPermohonan() {
 
   async function simpanStatus() {
     if (!item || !user) return;
+    if (statusBaru === "ditolak" && catatanStatus.trim().length < 5) {
+      toast.error("Alasan penolakan wajib diisi (min. 5 karakter).");
+      return;
+    }
     setBusy(true);
     try {
       const oldStatus = item.status;
+      const updatePayload: { status: StatusPermohonan; alasan_penolakan?: string } = { status: statusBaru };
+      if (statusBaru === "ditolak") updatePayload.alasan_penolakan = catatanStatus.trim();
       const { error } = await supabase
         .from("permohonan")
-        .update({ status: statusBaru, ...(statusBaru !== "baru" ? {} : {}) })
+        .update(updatePayload)
         .eq("id", item.id);
       if (error) throw error;
 
@@ -381,7 +387,7 @@ function DetailPermohonan() {
             <textarea
               value={catatanStatus}
               onChange={(e) => setCatatanStatus(e.target.value)}
-              placeholder="Catatan perubahan status (opsional)…"
+              placeholder={statusBaru === "ditolak" ? "Alasan penolakan (wajib, min. 5 karakter)…" : "Catatan perubahan status (opsional)…"}
               maxLength={500}
               rows={3}
               className="mt-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
