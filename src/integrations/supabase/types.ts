@@ -466,6 +466,45 @@ export type Database = {
         }
         Relationships: []
       }
+      cron_history: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          finished_at: string | null
+          id: string
+          job_name: string
+          request_id: string | null
+          result: Json | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job_name: string
+          request_id?: string | null
+          result?: Json | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job_name?: string
+          request_id?: string | null
+          result?: Json | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       data_terpadu_item: {
         Row: {
           aktif: boolean
@@ -624,6 +663,48 @@ export type Database = {
           target_role?: string
           target_scope?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      dead_letter_jobs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          job_name: string
+          payload: Json
+          replayed_to: string | null
+          request_id: string | null
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          retry_count: number
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_name: string
+          payload?: Json
+          replayed_to?: string | null
+          request_id?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          retry_count?: number
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_name?: string
+          payload?: Json
+          replayed_to?: string | null
+          request_id?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          retry_count?: number
         }
         Relationships: []
       }
@@ -1629,6 +1710,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_hits: {
+        Row: {
+          bucket: string
+          count: number
+          id: string
+          identifier: string
+          last_hit_at: string
+          window_start: string
+        }
+        Insert: {
+          bucket: string
+          count?: number
+          id?: string
+          identifier: string
+          last_hit_at?: string
+          window_start?: string
+        }
+        Update: {
+          bucket?: string
+          count?: number
+          id?: string
+          identifier?: string
+          last_hit_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       rbac_audit: {
         Row: {
           aksi: string
@@ -1659,6 +1767,87 @@ export type Database = {
           id?: string
           target_user_id?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      retention_policies: {
+        Row: {
+          enabled: boolean
+          entity: string
+          last_deleted_count: number | null
+          last_run_at: string | null
+          retention_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          enabled?: boolean
+          entity: string
+          last_deleted_count?: number | null
+          last_run_at?: string | null
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          enabled?: boolean
+          entity?: string
+          last_deleted_count?: number | null
+          last_run_at?: string | null
+          retention_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      retry_queue: {
+        Row: {
+          attempts: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          job_name: string
+          last_attempt_at: string | null
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          next_run_at: string
+          payload: Json
+          request_id: string | null
+          status: string
+        }
+        Insert: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          job_name: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          next_run_at?: string
+          payload?: Json
+          request_id?: string | null
+          status?: string
+        }
+        Update: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          job_name?: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          next_run_at?: string
+          payload?: Json
+          request_id?: string | null
+          status?: string
         }
         Relationships: []
       }
@@ -1729,6 +1918,77 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      uat_results: {
+        Row: {
+          catatan: string | null
+          id: string
+          run_at: string
+          run_by: string | null
+          scenario_id: string
+          status: string
+        }
+        Insert: {
+          catatan?: string | null
+          id?: string
+          run_at?: string
+          run_by?: string | null
+          scenario_id: string
+          status: string
+        }
+        Update: {
+          catatan?: string | null
+          id?: string
+          run_at?: string
+          run_by?: string | null
+          scenario_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "uat_results_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "uat_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      uat_scenarios: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          expected: string | null
+          id: string
+          judul: string
+          langkah: string | null
+          modul: string
+          role: string
+          urutan: number
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          expected?: string | null
+          id?: string
+          judul: string
+          langkah?: string | null
+          modul: string
+          role: string
+          urutan?: number
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          expected?: string | null
+          id?: string
+          judul?: string
+          langkah?: string | null
+          modul?: string
+          role?: string
+          urutan?: number
+        }
+        Relationships: []
       }
       user_permissions: {
         Row: {
@@ -1902,6 +2162,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      aset_compliance: { Args: { _opd_id: string }; Returns: Json }
+      attendance_compliance: {
+        Args: { _from: string; _to: string; _user_id: string }
+        Returns: Json
+      }
       count_permohonan_bulan_ini: { Args: never; Returns: number }
       get_effective_permissions: {
         Args: { _user_id: string }
@@ -1911,6 +2176,7 @@ export type Database = {
       }
       get_user_desa: { Args: { _user_id: string }; Returns: string }
       get_user_opd: { Args: { _user_id: string }; Returns: string }
+      governance_summary: { Args: never; Returns: Json }
       has_permission: {
         Args: { _code: string; _user_id: string }
         Returns: boolean
@@ -1922,6 +2188,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      opd_attendance_today: { Args: { _opd_id: string }; Returns: Json }
       opd_kinerja_agg: {
         Args: never
         Returns: {
@@ -1942,6 +2209,7 @@ export type Database = {
           total_rating: number
         }[]
       }
+      production_health_score: { Args: never; Returns: Json }
       rating_list_admin: {
         Args: never
         Returns: {
