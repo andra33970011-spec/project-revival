@@ -77,6 +77,7 @@ import { Route as AdminFormsIdRouteImport } from './routes/admin.forms.$id'
 import { Route as ApiPublicHooksUploadIntegrityRouteImport } from './routes/api/public/hooks/upload-integrity'
 import { Route as ApiPublicHooksStuckJobsRouteImport } from './routes/api/public/hooks/stuck-jobs'
 import { Route as ApiPublicHooksStorageCleanupRouteImport } from './routes/api/public/hooks/storage-cleanup'
+import { Route as ApiPublicHooksSlaReminderRouteImport } from './routes/api/public/hooks/sla-reminder'
 import { Route as ApiPublicHooksRetryQueueRouteImport } from './routes/api/public/hooks/retry-queue'
 import { Route as ApiPublicHooksRetentionCleanupRouteImport } from './routes/api/public/hooks/retention-cleanup'
 import { Route as ApiPublicHooksCronWatchdogRouteImport } from './routes/api/public/hooks/cron-watchdog'
@@ -430,6 +431,12 @@ const ApiPublicHooksStorageCleanupRoute =
     path: '/api/public/hooks/storage-cleanup',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksSlaReminderRoute =
+  ApiPublicHooksSlaReminderRouteImport.update({
+    id: '/api/public/hooks/sla-reminder',
+    path: '/api/public/hooks/sla-reminder',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksRetryQueueRoute =
   ApiPublicHooksRetryQueueRouteImport.update({
     id: '/api/public/hooks/retry-queue',
@@ -539,6 +546,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
+  '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
   '/api/public/hooks/storage-cleanup': typeof ApiPublicHooksStorageCleanupRoute
   '/api/public/hooks/stuck-jobs': typeof ApiPublicHooksStuckJobsRoute
   '/api/public/hooks/upload-integrity': typeof ApiPublicHooksUploadIntegrityRoute
@@ -615,6 +623,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
+  '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
   '/api/public/hooks/storage-cleanup': typeof ApiPublicHooksStorageCleanupRoute
   '/api/public/hooks/stuck-jobs': typeof ApiPublicHooksStuckJobsRoute
   '/api/public/hooks/upload-integrity': typeof ApiPublicHooksUploadIntegrityRoute
@@ -692,6 +701,7 @@ export interface FileRoutesById {
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
+  '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
   '/api/public/hooks/storage-cleanup': typeof ApiPublicHooksStorageCleanupRoute
   '/api/public/hooks/stuck-jobs': typeof ApiPublicHooksStuckJobsRoute
   '/api/public/hooks/upload-integrity': typeof ApiPublicHooksUploadIntegrityRoute
@@ -770,6 +780,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/cron-watchdog'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
+    | '/api/public/hooks/sla-reminder'
     | '/api/public/hooks/storage-cleanup'
     | '/api/public/hooks/stuck-jobs'
     | '/api/public/hooks/upload-integrity'
@@ -846,6 +857,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/cron-watchdog'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
+    | '/api/public/hooks/sla-reminder'
     | '/api/public/hooks/storage-cleanup'
     | '/api/public/hooks/stuck-jobs'
     | '/api/public/hooks/upload-integrity'
@@ -922,6 +934,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/cron-watchdog'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
+    | '/api/public/hooks/sla-reminder'
     | '/api/public/hooks/storage-cleanup'
     | '/api/public/hooks/stuck-jobs'
     | '/api/public/hooks/upload-integrity'
@@ -996,6 +1009,7 @@ export interface RootRouteChildren {
   ApiPublicHooksCronWatchdogRoute: typeof ApiPublicHooksCronWatchdogRoute
   ApiPublicHooksRetentionCleanupRoute: typeof ApiPublicHooksRetentionCleanupRoute
   ApiPublicHooksRetryQueueRoute: typeof ApiPublicHooksRetryQueueRoute
+  ApiPublicHooksSlaReminderRoute: typeof ApiPublicHooksSlaReminderRoute
   ApiPublicHooksStorageCleanupRoute: typeof ApiPublicHooksStorageCleanupRoute
   ApiPublicHooksStuckJobsRoute: typeof ApiPublicHooksStuckJobsRoute
   ApiPublicHooksUploadIntegrityRoute: typeof ApiPublicHooksUploadIntegrityRoute
@@ -1479,6 +1493,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksStorageCleanupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/sla-reminder': {
+      id: '/api/public/hooks/sla-reminder'
+      path: '/api/public/hooks/sla-reminder'
+      fullPath: '/api/public/hooks/sla-reminder'
+      preLoaderRoute: typeof ApiPublicHooksSlaReminderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/retry-queue': {
       id: '/api/public/hooks/retry-queue'
       path: '/api/public/hooks/retry-queue'
@@ -1619,6 +1640,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksCronWatchdogRoute: ApiPublicHooksCronWatchdogRoute,
   ApiPublicHooksRetentionCleanupRoute: ApiPublicHooksRetentionCleanupRoute,
   ApiPublicHooksRetryQueueRoute: ApiPublicHooksRetryQueueRoute,
+  ApiPublicHooksSlaReminderRoute: ApiPublicHooksSlaReminderRoute,
   ApiPublicHooksStorageCleanupRoute: ApiPublicHooksStorageCleanupRoute,
   ApiPublicHooksStuckJobsRoute: ApiPublicHooksStuckJobsRoute,
   ApiPublicHooksUploadIntegrityRoute: ApiPublicHooksUploadIntegrityRoute,

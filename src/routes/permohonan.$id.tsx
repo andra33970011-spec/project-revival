@@ -149,7 +149,7 @@ function DetailPermohonan() {
     setBusy(true);
     try {
       const oldStatus = item.status;
-      const updatePayload: Record<string, unknown> = { status: statusBaru };
+      const updatePayload: { status: StatusPermohonan; alasan_penolakan?: string } = { status: statusBaru };
       if (statusBaru === "ditolak") updatePayload.alasan_penolakan = catatanStatus.trim();
       const { error } = await supabase
         .from("permohonan")
