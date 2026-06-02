@@ -21,10 +21,13 @@ export type Database = {
           device_info: string | null
           foto_url: string | null
           id: string
+          is_late: boolean | null
           lat: number | null
+          late_minutes: number | null
           lng: number | null
           lokasi: string | null
           opd_id: string | null
+          schedule_id: string | null
           tipe: string
           user_id: string
           waktu: string
@@ -35,10 +38,13 @@ export type Database = {
           device_info?: string | null
           foto_url?: string | null
           id?: string
+          is_late?: boolean | null
           lat?: number | null
+          late_minutes?: number | null
           lng?: number | null
           lokasi?: string | null
           opd_id?: string | null
+          schedule_id?: string | null
           tipe: string
           user_id: string
           waktu?: string
@@ -49,10 +55,13 @@ export type Database = {
           device_info?: string | null
           foto_url?: string | null
           id?: string
+          is_late?: boolean | null
           lat?: number | null
+          late_minutes?: number | null
           lng?: number | null
           lokasi?: string | null
           opd_id?: string | null
+          schedule_id?: string | null
           tipe?: string
           user_id?: string
           waktu?: string
@@ -468,7 +477,9 @@ export type Database = {
       }
       cron_history: {
         Row: {
+          affected_rows: number | null
           created_at: string
+          detail: Json | null
           duration_ms: number | null
           error: string | null
           finished_at: string | null
@@ -480,7 +491,9 @@ export type Database = {
           status: string
         }
         Insert: {
+          affected_rows?: number | null
           created_at?: string
+          detail?: Json | null
           duration_ms?: number | null
           error?: string | null
           finished_at?: string | null
@@ -492,7 +505,9 @@ export type Database = {
           status?: string
         }
         Update: {
+          affected_rows?: number | null
           created_at?: string
+          detail?: Json | null
           duration_ms?: number | null
           error?: string | null
           finished_at?: string | null
@@ -670,6 +685,7 @@ export type Database = {
         Row: {
           created_at: string
           error_message: string | null
+          failed_at: string | null
           id: string
           job_name: string
           payload: Json
@@ -683,6 +699,7 @@ export type Database = {
         Insert: {
           created_at?: string
           error_message?: string | null
+          failed_at?: string | null
           id?: string
           job_name: string
           payload?: Json
@@ -696,6 +713,7 @@ export type Database = {
         Update: {
           created_at?: string
           error_message?: string | null
+          failed_at?: string | null
           id?: string
           job_name?: string
           payload?: Json
@@ -843,6 +861,7 @@ export type Database = {
           finalized_at: string | null
           id: string
           mime: string | null
+          provider: string | null
           size_bytes: number
           storage_path: string
           submission_id: string | null
@@ -856,6 +875,7 @@ export type Database = {
           finalized_at?: string | null
           id?: string
           mime?: string | null
+          provider?: string | null
           size_bytes?: number
           storage_path: string
           submission_id?: string | null
@@ -869,6 +889,7 @@ export type Database = {
           finalized_at?: string | null
           id?: string
           mime?: string | null
+          provider?: string | null
           size_bytes?: number
           storage_path?: string
           submission_id?: string | null
@@ -1027,6 +1048,7 @@ export type Database = {
       forms: {
         Row: {
           allow_multiple_submit: boolean
+          archived_at: string | null
           created_at: string
           created_by: string | null
           deadline: string | null
@@ -1042,6 +1064,7 @@ export type Database = {
         }
         Insert: {
           allow_multiple_submit?: boolean
+          archived_at?: string | null
           created_at?: string
           created_by?: string | null
           deadline?: string | null
@@ -1057,6 +1080,7 @@ export type Database = {
         }
         Update: {
           allow_multiple_submit?: boolean
+          archived_at?: string | null
           created_at?: string
           created_by?: string | null
           deadline?: string | null
@@ -1604,6 +1628,7 @@ export type Database = {
           system_position: string | null
           updated_at: string
           username: string | null
+          verification_status: string | null
           verified_at: string | null
           verified_by: string | null
         }
@@ -1622,6 +1647,7 @@ export type Database = {
           system_position?: string | null
           updated_at?: string
           username?: string | null
+          verification_status?: string | null
           verified_at?: string | null
           verified_by?: string | null
         }
@@ -1640,6 +1666,7 @@ export type Database = {
           system_position?: string | null
           updated_at?: string
           username?: string | null
+          verification_status?: string | null
           verified_at?: string | null
           verified_by?: string | null
         }
@@ -1956,6 +1983,7 @@ export type Database = {
       }
       uat_scenarios: {
         Row: {
+          code: string | null
           created_at: string
           enabled: boolean
           expected: string | null
@@ -1967,6 +1995,7 @@ export type Database = {
           urutan: number
         }
         Insert: {
+          code?: string | null
           created_at?: string
           enabled?: boolean
           expected?: string | null
@@ -1978,6 +2007,7 @@ export type Database = {
           urutan?: number
         }
         Update: {
+          code?: string | null
           created_at?: string
           enabled?: boolean
           expected?: string | null
@@ -2210,6 +2240,10 @@ export type Database = {
         }[]
       }
       production_health_score: { Args: never; Returns: Json }
+      rate_limit_increment: {
+        Args: { _scope: string; _subject: string; _window_start: string }
+        Returns: number
+      }
       rating_list_admin: {
         Args: never
         Returns: {
