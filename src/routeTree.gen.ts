@@ -23,12 +23,14 @@ import { Route as PengisianIndexRouteImport } from './routes/pengisian.index'
 import { Route as LayananIndexRouteImport } from './routes/layanan.index'
 import { Route as DataTerbukaIndexRouteImport } from './routes/data-terbuka.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as VTokenRouteImport } from './routes/v.$token'
 import { Route as TugasAssignmentIdRouteImport } from './routes/tugas.$assignmentId'
 import { Route as PermohonanBaruRouteImport } from './routes/permohonan.baru'
 import { Route as PermohonanIdRouteImport } from './routes/permohonan.$id'
 import { Route as PengisianIdRouteImport } from './routes/pengisian.$id'
 import { Route as LayananSlugRouteImport } from './routes/layanan.$slug'
 import { Route as InstansiSingkatanRouteImport } from './routes/instansi.$singkatan'
+import { Route as IkmIdRouteImport } from './routes/ikm.$id'
 import { Route as DataTerbukaSlugRouteImport } from './routes/data-terbuka.$slug'
 import { Route as AsnVerifikasiRouteImport } from './routes/asn.verifikasi'
 import { Route as AsnTugasRouteImport } from './routes/asn.tugas'
@@ -49,6 +51,7 @@ import { Route as AdminOpdRouteImport } from './routes/admin.opd'
 import { Route as AdminLayananRouteImport } from './routes/admin.layanan'
 import { Route as AdminLaporanRouteImport } from './routes/admin.laporan'
 import { Route as AdminIzinRouteImport } from './routes/admin.izin'
+import { Route as AdminIkmRouteImport } from './routes/admin.ikm'
 import { Route as AdminHariLiburRouteImport } from './routes/admin.hari-libur'
 import { Route as AdminGovernanceRouteImport } from './routes/admin.governance'
 import { Route as AdminFormsRouteImport } from './routes/admin.forms'
@@ -79,6 +82,8 @@ import { Route as AdminSystemBackupStatusRouteImport } from './routes/admin.syst
 import { Route as AdminSecurityPermissionsRouteImport } from './routes/admin.security.permissions'
 import { Route as AdminRbacAuditRouteImport } from './routes/admin.rbac.audit'
 import { Route as AdminRbacUserIdRouteImport } from './routes/admin.rbac.$userId'
+import { Route as AdminLayananEscalationRouteImport } from './routes/admin.layanan.escalation'
+import { Route as AdminLayananDisposisiInboxRouteImport } from './routes/admin.layanan.disposisi-inbox'
 import { Route as AdminFormsIdRouteImport } from './routes/admin.forms.$id'
 import { Route as ApiPublicHooksUploadIntegrityRouteImport } from './routes/api/public/hooks/upload-integrity'
 import { Route as ApiPublicHooksStuckJobsRouteImport } from './routes/api/public/hooks/stuck-jobs'
@@ -164,6 +169,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VTokenRoute = VTokenRouteImport.update({
+  id: '/v/$token',
+  path: '/v/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TugasAssignmentIdRoute = TugasAssignmentIdRouteImport.update({
   id: '/tugas/$assignmentId',
   path: '/tugas/$assignmentId',
@@ -192,6 +202,11 @@ const LayananSlugRoute = LayananSlugRouteImport.update({
 const InstansiSingkatanRoute = InstansiSingkatanRouteImport.update({
   id: '/instansi/$singkatan',
   path: '/instansi/$singkatan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IkmIdRoute = IkmIdRouteImport.update({
+  id: '/ikm/$id',
+  path: '/ikm/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DataTerbukaSlugRoute = DataTerbukaSlugRouteImport.update({
@@ -292,6 +307,11 @@ const AdminLaporanRoute = AdminLaporanRouteImport.update({
 const AdminIzinRoute = AdminIzinRouteImport.update({
   id: '/admin/izin',
   path: '/admin/izin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIkmRoute = AdminIkmRouteImport.update({
+  id: '/admin/ikm',
+  path: '/admin/ikm',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminHariLiburRoute = AdminHariLiburRouteImport.update({
@@ -448,6 +468,17 @@ const AdminRbacUserIdRoute = AdminRbacUserIdRouteImport.update({
   path: '/$userId',
   getParentRoute: () => AdminRbacRoute,
 } as any)
+const AdminLayananEscalationRoute = AdminLayananEscalationRouteImport.update({
+  id: '/escalation',
+  path: '/escalation',
+  getParentRoute: () => AdminLayananRoute,
+} as any)
+const AdminLayananDisposisiInboxRoute =
+  AdminLayananDisposisiInboxRouteImport.update({
+    id: '/disposisi-inbox',
+    path: '/disposisi-inbox',
+    getParentRoute: () => AdminLayananRoute,
+  } as any)
 const AdminFormsIdRoute = AdminFormsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -557,9 +588,10 @@ export interface FileRoutesByFullPath {
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
   '/admin/hari-libur': typeof AdminHariLiburRoute
+  '/admin/ikm': typeof AdminIkmRoute
   '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
-  '/admin/layanan': typeof AdminLayananRoute
+  '/admin/layanan': typeof AdminLayananRouteWithChildren
   '/admin/opd': typeof AdminOpdRoute
   '/admin/pejabat': typeof AdminPejabatRoute
   '/admin/rating': typeof AdminRatingRoute
@@ -577,18 +609,22 @@ export interface FileRoutesByFullPath {
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
+  '/ikm/$id': typeof IkmIdRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
   '/permohonan/$id': typeof PermohonanIdRoute
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
+  '/v/$token': typeof VTokenRoute
   '/admin/': typeof AdminIndexRoute
   '/data-terbuka/': typeof DataTerbukaIndexRoute
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
+  '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
+  '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
   '/admin/rbac/$userId': typeof AdminRbacUserIdRoute
   '/admin/rbac/audit': typeof AdminRbacAuditRoute
   '/admin/security/permissions': typeof AdminSecurityPermissionsRoute
@@ -643,9 +679,10 @@ export interface FileRoutesByTo {
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
   '/admin/hari-libur': typeof AdminHariLiburRoute
+  '/admin/ikm': typeof AdminIkmRoute
   '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
-  '/admin/layanan': typeof AdminLayananRoute
+  '/admin/layanan': typeof AdminLayananRouteWithChildren
   '/admin/opd': typeof AdminOpdRoute
   '/admin/pejabat': typeof AdminPejabatRoute
   '/admin/rating': typeof AdminRatingRoute
@@ -663,18 +700,22 @@ export interface FileRoutesByTo {
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
+  '/ikm/$id': typeof IkmIdRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
   '/permohonan/$id': typeof PermohonanIdRoute
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
+  '/v/$token': typeof VTokenRoute
   '/admin': typeof AdminIndexRoute
   '/data-terbuka': typeof DataTerbukaIndexRoute
   '/layanan': typeof LayananIndexRoute
   '/pengisian': typeof PengisianIndexRoute
   '/permohonan': typeof PermohonanIndexRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
+  '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
+  '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
   '/admin/rbac/$userId': typeof AdminRbacUserIdRoute
   '/admin/rbac/audit': typeof AdminRbacAuditRoute
   '/admin/security/permissions': typeof AdminSecurityPermissionsRoute
@@ -730,9 +771,10 @@ export interface FileRoutesById {
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
   '/admin/hari-libur': typeof AdminHariLiburRoute
+  '/admin/ikm': typeof AdminIkmRoute
   '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
-  '/admin/layanan': typeof AdminLayananRoute
+  '/admin/layanan': typeof AdminLayananRouteWithChildren
   '/admin/opd': typeof AdminOpdRoute
   '/admin/pejabat': typeof AdminPejabatRoute
   '/admin/rating': typeof AdminRatingRoute
@@ -750,18 +792,22 @@ export interface FileRoutesById {
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
+  '/ikm/$id': typeof IkmIdRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
   '/permohonan/$id': typeof PermohonanIdRoute
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
+  '/v/$token': typeof VTokenRoute
   '/admin/': typeof AdminIndexRoute
   '/data-terbuka/': typeof DataTerbukaIndexRoute
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
+  '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
+  '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
   '/admin/rbac/$userId': typeof AdminRbacUserIdRoute
   '/admin/rbac/audit': typeof AdminRbacAuditRoute
   '/admin/security/permissions': typeof AdminSecurityPermissionsRoute
@@ -818,6 +864,7 @@ export interface FileRouteTypes {
     | '/admin/forms'
     | '/admin/governance'
     | '/admin/hari-libur'
+    | '/admin/ikm'
     | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
@@ -838,18 +885,22 @@ export interface FileRouteTypes {
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/data-terbuka/$slug'
+    | '/ikm/$id'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
     | '/permohonan/$id'
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
+    | '/v/$token'
     | '/admin/'
     | '/data-terbuka/'
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
     | '/admin/forms/$id'
+    | '/admin/layanan/disposisi-inbox'
+    | '/admin/layanan/escalation'
     | '/admin/rbac/$userId'
     | '/admin/rbac/audit'
     | '/admin/security/permissions'
@@ -904,6 +955,7 @@ export interface FileRouteTypes {
     | '/admin/forms'
     | '/admin/governance'
     | '/admin/hari-libur'
+    | '/admin/ikm'
     | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
@@ -924,18 +976,22 @@ export interface FileRouteTypes {
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/data-terbuka/$slug'
+    | '/ikm/$id'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
     | '/permohonan/$id'
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
+    | '/v/$token'
     | '/admin'
     | '/data-terbuka'
     | '/layanan'
     | '/pengisian'
     | '/permohonan'
     | '/admin/forms/$id'
+    | '/admin/layanan/disposisi-inbox'
+    | '/admin/layanan/escalation'
     | '/admin/rbac/$userId'
     | '/admin/rbac/audit'
     | '/admin/security/permissions'
@@ -990,6 +1046,7 @@ export interface FileRouteTypes {
     | '/admin/forms'
     | '/admin/governance'
     | '/admin/hari-libur'
+    | '/admin/ikm'
     | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
@@ -1010,18 +1067,22 @@ export interface FileRouteTypes {
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/data-terbuka/$slug'
+    | '/ikm/$id'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
     | '/permohonan/$id'
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
+    | '/v/$token'
     | '/admin/'
     | '/data-terbuka/'
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
     | '/admin/forms/$id'
+    | '/admin/layanan/disposisi-inbox'
+    | '/admin/layanan/escalation'
     | '/admin/rbac/$userId'
     | '/admin/rbac/audit'
     | '/admin/security/permissions'
@@ -1077,9 +1138,10 @@ export interface RootRouteChildren {
   AdminFormsRoute: typeof AdminFormsRouteWithChildren
   AdminGovernanceRoute: typeof AdminGovernanceRoute
   AdminHariLiburRoute: typeof AdminHariLiburRoute
+  AdminIkmRoute: typeof AdminIkmRoute
   AdminIzinRoute: typeof AdminIzinRoute
   AdminLaporanRoute: typeof AdminLaporanRoute
-  AdminLayananRoute: typeof AdminLayananRoute
+  AdminLayananRoute: typeof AdminLayananRouteWithChildren
   AdminOpdRoute: typeof AdminOpdRoute
   AdminPejabatRoute: typeof AdminPejabatRoute
   AdminRatingRoute: typeof AdminRatingRoute
@@ -1097,12 +1159,14 @@ export interface RootRouteChildren {
   AsnTugasRoute: typeof AsnTugasRoute
   AsnVerifikasiRoute: typeof AsnVerifikasiRoute
   DataTerbukaSlugRoute: typeof DataTerbukaSlugRoute
+  IkmIdRoute: typeof IkmIdRoute
   InstansiSingkatanRoute: typeof InstansiSingkatanRoute
   LayananSlugRoute: typeof LayananSlugRoute
   PengisianIdRoute: typeof PengisianIdRoute
   PermohonanIdRoute: typeof PermohonanIdRoute
   PermohonanBaruRoute: typeof PermohonanBaruRoute
   TugasAssignmentIdRoute: typeof TugasAssignmentIdRoute
+  VTokenRoute: typeof VTokenRoute
   AdminIndexRoute: typeof AdminIndexRoute
   DataTerbukaIndexRoute: typeof DataTerbukaIndexRoute
   LayananIndexRoute: typeof LayananIndexRoute
@@ -1235,6 +1299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/v/$token': {
+      id: '/v/$token'
+      path: '/v/$token'
+      fullPath: '/v/$token'
+      preLoaderRoute: typeof VTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tugas/$assignmentId': {
       id: '/tugas/$assignmentId'
       path: '/tugas/$assignmentId'
@@ -1275,6 +1346,13 @@ declare module '@tanstack/react-router' {
       path: '/instansi/$singkatan'
       fullPath: '/instansi/$singkatan'
       preLoaderRoute: typeof InstansiSingkatanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ikm/$id': {
+      id: '/ikm/$id'
+      path: '/ikm/$id'
+      fullPath: '/ikm/$id'
+      preLoaderRoute: typeof IkmIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/data-terbuka/$slug': {
@@ -1415,6 +1493,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/izin'
       fullPath: '/admin/izin'
       preLoaderRoute: typeof AdminIzinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/ikm': {
+      id: '/admin/ikm'
+      path: '/admin/ikm'
+      fullPath: '/admin/ikm'
+      preLoaderRoute: typeof AdminIkmRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/hari-libur': {
@@ -1627,6 +1712,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRbacUserIdRouteImport
       parentRoute: typeof AdminRbacRoute
     }
+    '/admin/layanan/escalation': {
+      id: '/admin/layanan/escalation'
+      path: '/escalation'
+      fullPath: '/admin/layanan/escalation'
+      preLoaderRoute: typeof AdminLayananEscalationRouteImport
+      parentRoute: typeof AdminLayananRoute
+    }
+    '/admin/layanan/disposisi-inbox': {
+      id: '/admin/layanan/disposisi-inbox'
+      path: '/disposisi-inbox'
+      fullPath: '/admin/layanan/disposisi-inbox'
+      preLoaderRoute: typeof AdminLayananDisposisiInboxRouteImport
+      parentRoute: typeof AdminLayananRoute
+    }
     '/admin/forms/$id': {
       id: '/admin/forms/$id'
       path: '/$id'
@@ -1740,6 +1839,20 @@ const AdminFormsRouteWithChildren = AdminFormsRoute._addFileChildren(
   AdminFormsRouteChildren,
 )
 
+interface AdminLayananRouteChildren {
+  AdminLayananDisposisiInboxRoute: typeof AdminLayananDisposisiInboxRoute
+  AdminLayananEscalationRoute: typeof AdminLayananEscalationRoute
+}
+
+const AdminLayananRouteChildren: AdminLayananRouteChildren = {
+  AdminLayananDisposisiInboxRoute: AdminLayananDisposisiInboxRoute,
+  AdminLayananEscalationRoute: AdminLayananEscalationRoute,
+}
+
+const AdminLayananRouteWithChildren = AdminLayananRoute._addFileChildren(
+  AdminLayananRouteChildren,
+)
+
 interface AdminRbacRouteChildren {
   AdminRbacUserIdRoute: typeof AdminRbacUserIdRoute
   AdminRbacAuditRoute: typeof AdminRbacAuditRoute
@@ -1780,9 +1893,10 @@ const rootRouteChildren: RootRouteChildren = {
   AdminFormsRoute: AdminFormsRouteWithChildren,
   AdminGovernanceRoute: AdminGovernanceRoute,
   AdminHariLiburRoute: AdminHariLiburRoute,
+  AdminIkmRoute: AdminIkmRoute,
   AdminIzinRoute: AdminIzinRoute,
   AdminLaporanRoute: AdminLaporanRoute,
-  AdminLayananRoute: AdminLayananRoute,
+  AdminLayananRoute: AdminLayananRouteWithChildren,
   AdminOpdRoute: AdminOpdRoute,
   AdminPejabatRoute: AdminPejabatRoute,
   AdminRatingRoute: AdminRatingRoute,
@@ -1800,12 +1914,14 @@ const rootRouteChildren: RootRouteChildren = {
   AsnTugasRoute: AsnTugasRoute,
   AsnVerifikasiRoute: AsnVerifikasiRoute,
   DataTerbukaSlugRoute: DataTerbukaSlugRoute,
+  IkmIdRoute: IkmIdRoute,
   InstansiSingkatanRoute: InstansiSingkatanRoute,
   LayananSlugRoute: LayananSlugRoute,
   PengisianIdRoute: PengisianIdRoute,
   PermohonanIdRoute: PermohonanIdRoute,
   PermohonanBaruRoute: PermohonanBaruRoute,
   TugasAssignmentIdRoute: TugasAssignmentIdRoute,
+  VTokenRoute: VTokenRoute,
   AdminIndexRoute: AdminIndexRoute,
   DataTerbukaIndexRoute: DataTerbukaIndexRoute,
   LayananIndexRoute: LayananIndexRoute,

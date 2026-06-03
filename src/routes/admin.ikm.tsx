@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/admin/ikm")({
   head: () => ({ meta: [{ title: "IKM — Admin" }, { name: "robots", content: "noindex" }] }),
-  component: () => <AdminGuard><AdminShell title="Survei IKM"><Page /></AdminShell></AdminGuard>,
+  component: () => <AdminGuard><AdminShell breadcrumb={[{ label: "Admin" }]}><Page /></AdminShell></AdminGuard>,
 });
 
 type Row = { id: string; judul: string; periode: string; opd_id: string | null; aktif: boolean; created_at: string };

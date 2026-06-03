@@ -16,7 +16,7 @@ export const Route = createFileRoute("/admin/layanan/escalation")({
   component: () => (
     <AdminGuard>
       <SuperAdminOnly>
-        <AdminShell title="Konfigurasi Escalation SLA">
+        <AdminShell breadcrumb={[{ label: "Admin" }]}>
           <Page />
         </AdminShell>
       </SuperAdminOnly>

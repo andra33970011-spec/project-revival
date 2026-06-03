@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/admin/layanan/disposisi-inbox")({
   head: () => ({ meta: [{ title: "Inbox Disposisi" }, { name: "robots", content: "noindex" }] }),
-  component: () => <AdminGuard><AdminShell title="Inbox Disposisi"><Page /></AdminShell></AdminGuard>,
+  component: () => <AdminGuard><AdminShell breadcrumb={[{ label: "Admin" }]}><Page /></AdminShell></AdminGuard>,
 });
 
 type Row = {
