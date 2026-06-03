@@ -73,11 +73,19 @@ const superNavGroups: NavGroup[] = [
     ],
   },
   {
-    title: "ASN & Aset",
+    title: "ASN",
     items: [
       { to: "/admin/asn", label: "Data ASN", icon: ScanLine },
       { to: "/admin/asn-kepatuhan", label: "Kepatuhan Kehadiran", icon: FileClock },
+      { to: "/admin/izin", label: "Persetujuan Izin/Cuti", icon: ListChecks },
+      { to: "/admin/hari-libur", label: "Hari Libur", icon: FileClock },
+    ],
+  },
+  {
+    title: "Aset",
+    items: [
       { to: "/admin/aset", label: "Data Aset", icon: Boxes },
+      { to: "/admin/aset-extra", label: "Mutasi & Pemeliharaan", icon: ListChecks },
       { to: "/admin/aset-kampanye", label: "Kampanye Verifikasi Aset", icon: ListChecks },
     ],
   },
@@ -102,6 +110,7 @@ const superNavGroups: NavGroup[] = [
     ],
   },
 ];
+
 
 export function AdminShell({
   children,
