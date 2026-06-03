@@ -30,6 +30,7 @@ import { Route as LayananSlugRouteImport } from './routes/layanan.$slug'
 import { Route as InstansiSingkatanRouteImport } from './routes/instansi.$singkatan'
 import { Route as AsnVerifikasiRouteImport } from './routes/asn.verifikasi'
 import { Route as AsnTugasRouteImport } from './routes/asn.tugas'
+import { Route as AsnIzinRouteImport } from './routes/asn.izin'
 import { Route as AsnAsetRouteImport } from './routes/asn.aset'
 import { Route as AsnAbsensiRouteImport } from './routes/asn.absensi'
 import { Route as AdminVerifikasiLogRouteImport } from './routes/admin.verifikasi-log'
@@ -188,6 +189,11 @@ const AsnVerifikasiRoute = AsnVerifikasiRouteImport.update({
 const AsnTugasRoute = AsnTugasRouteImport.update({
   id: '/asn/tugas',
   path: '/asn/tugas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AsnIzinRoute = AsnIzinRouteImport.update({
+  id: '/asn/izin',
+  path: '/asn/izin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AsnAsetRoute = AsnAsetRouteImport.update({
@@ -513,6 +519,7 @@ export interface FileRoutesByFullPath {
   '/admin/verifikasi-log': typeof AdminVerifikasiLogRoute
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
+  '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
@@ -590,6 +597,7 @@ export interface FileRoutesByTo {
   '/admin/verifikasi-log': typeof AdminVerifikasiLogRoute
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
+  '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
@@ -668,6 +676,7 @@ export interface FileRoutesById {
   '/admin/verifikasi-log': typeof AdminVerifikasiLogRoute
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
+  '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
@@ -747,6 +756,7 @@ export interface FileRouteTypes {
     | '/admin/verifikasi-log'
     | '/asn/absensi'
     | '/asn/aset'
+    | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/instansi/$singkatan'
@@ -824,6 +834,7 @@ export interface FileRouteTypes {
     | '/admin/verifikasi-log'
     | '/asn/absensi'
     | '/asn/aset'
+    | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/instansi/$singkatan'
@@ -901,6 +912,7 @@ export interface FileRouteTypes {
     | '/admin/verifikasi-log'
     | '/asn/absensi'
     | '/asn/aset'
+    | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/instansi/$singkatan'
@@ -979,6 +991,7 @@ export interface RootRouteChildren {
   AdminVerifikasiLogRoute: typeof AdminVerifikasiLogRoute
   AsnAbsensiRoute: typeof AsnAbsensiRoute
   AsnAsetRoute: typeof AsnAsetRoute
+  AsnIzinRoute: typeof AsnIzinRoute
   AsnTugasRoute: typeof AsnTugasRoute
   AsnVerifikasiRoute: typeof AsnVerifikasiRoute
   InstansiSingkatanRoute: typeof InstansiSingkatanRoute
@@ -1162,6 +1175,13 @@ declare module '@tanstack/react-router' {
       path: '/asn/tugas'
       fullPath: '/asn/tugas'
       preLoaderRoute: typeof AsnTugasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/asn/izin': {
+      id: '/asn/izin'
+      path: '/asn/izin'
+      fullPath: '/asn/izin'
+      preLoaderRoute: typeof AsnIzinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/asn/aset': {
@@ -1610,6 +1630,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminVerifikasiLogRoute: AdminVerifikasiLogRoute,
   AsnAbsensiRoute: AsnAbsensiRoute,
   AsnAsetRoute: AsnAsetRoute,
+  AsnIzinRoute: AsnIzinRoute,
   AsnTugasRoute: AsnTugasRoute,
   AsnVerifikasiRoute: AsnVerifikasiRoute,
   InstansiSingkatanRoute: InstansiSingkatanRoute,
