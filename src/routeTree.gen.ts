@@ -87,6 +87,7 @@ import { Route as AdminRbacUserIdRouteImport } from './routes/admin.rbac.$userId
 import { Route as AdminLayananEscalationRouteImport } from './routes/admin.layanan.escalation'
 import { Route as AdminLayananDisposisiInboxRouteImport } from './routes/admin.layanan.disposisi-inbox'
 import { Route as AdminFormsIdRouteImport } from './routes/admin.forms.$id'
+import { Route as AdminDatasetReviewRouteImport } from './routes/admin.dataset.review'
 import { Route as AdminAsnShiftRouteImport } from './routes/admin.asn.shift'
 import { Route as AdminAsnPayrollLockRouteImport } from './routes/admin.asn.payroll-lock'
 import { Route as AdminAsnCutiSaldoRouteImport } from './routes/admin.asn.cuti-saldo'
@@ -504,6 +505,11 @@ const AdminFormsIdRoute = AdminFormsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminFormsRoute,
 } as any)
+const AdminDatasetReviewRoute = AdminDatasetReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => AdminDatasetRoute,
+} as any)
 const AdminAsnShiftRoute = AdminAsnShiftRouteImport.update({
   id: '/shift',
   path: '/shift',
@@ -643,7 +649,7 @@ export interface FileRoutesByFullPath {
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/cms': typeof AdminCmsRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/dataset': typeof AdminDatasetRoute
+  '/admin/dataset': typeof AdminDatasetRouteWithChildren
   '/admin/desa': typeof AdminDesaRoute
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
@@ -692,6 +698,7 @@ export interface FileRoutesByFullPath {
   '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
   '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
   '/admin/asn/shift': typeof AdminAsnShiftRoute
+  '/admin/dataset/review': typeof AdminDatasetReviewRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
   '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
   '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
@@ -744,7 +751,7 @@ export interface FileRoutesByTo {
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/cms': typeof AdminCmsRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/dataset': typeof AdminDatasetRoute
+  '/admin/dataset': typeof AdminDatasetRouteWithChildren
   '/admin/desa': typeof AdminDesaRoute
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
@@ -793,6 +800,7 @@ export interface FileRoutesByTo {
   '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
   '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
   '/admin/asn/shift': typeof AdminAsnShiftRoute
+  '/admin/dataset/review': typeof AdminDatasetReviewRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
   '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
   '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
@@ -846,7 +854,7 @@ export interface FileRoutesById {
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/cms': typeof AdminCmsRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/dataset': typeof AdminDatasetRoute
+  '/admin/dataset': typeof AdminDatasetRouteWithChildren
   '/admin/desa': typeof AdminDesaRoute
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
@@ -895,6 +903,7 @@ export interface FileRoutesById {
   '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
   '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
   '/admin/asn/shift': typeof AdminAsnShiftRoute
+  '/admin/dataset/review': typeof AdminDatasetReviewRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
   '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
   '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
@@ -998,6 +1007,7 @@ export interface FileRouteTypes {
     | '/admin/asn/cuti-saldo'
     | '/admin/asn/payroll-lock'
     | '/admin/asn/shift'
+    | '/admin/dataset/review'
     | '/admin/forms/$id'
     | '/admin/layanan/disposisi-inbox'
     | '/admin/layanan/escalation'
@@ -1099,6 +1109,7 @@ export interface FileRouteTypes {
     | '/admin/asn/cuti-saldo'
     | '/admin/asn/payroll-lock'
     | '/admin/asn/shift'
+    | '/admin/dataset/review'
     | '/admin/forms/$id'
     | '/admin/layanan/disposisi-inbox'
     | '/admin/layanan/escalation'
@@ -1200,6 +1211,7 @@ export interface FileRouteTypes {
     | '/admin/asn/cuti-saldo'
     | '/admin/asn/payroll-lock'
     | '/admin/asn/shift'
+    | '/admin/dataset/review'
     | '/admin/forms/$id'
     | '/admin/layanan/disposisi-inbox'
     | '/admin/layanan/escalation'
@@ -1253,7 +1265,7 @@ export interface RootRouteChildren {
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCmsRoute: typeof AdminCmsRoute
   AdminConfigRoute: typeof AdminConfigRoute
-  AdminDatasetRoute: typeof AdminDatasetRoute
+  AdminDatasetRoute: typeof AdminDatasetRouteWithChildren
   AdminDesaRoute: typeof AdminDesaRoute
   AdminEksekutifRoute: typeof AdminEksekutifRoute
   AdminFormsRoute: typeof AdminFormsRouteWithChildren
@@ -1871,6 +1883,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFormsIdRouteImport
       parentRoute: typeof AdminFormsRoute
     }
+    '/admin/dataset/review': {
+      id: '/admin/dataset/review'
+      path: '/review'
+      fullPath: '/admin/dataset/review'
+      preLoaderRoute: typeof AdminDatasetReviewRouteImport
+      parentRoute: typeof AdminDatasetRoute
+    }
     '/admin/asn/shift': {
       id: '/admin/asn/shift'
       path: '/shift'
@@ -2055,6 +2074,18 @@ const AdminAsnRouteWithChildren = AdminAsnRoute._addFileChildren(
   AdminAsnRouteChildren,
 )
 
+interface AdminDatasetRouteChildren {
+  AdminDatasetReviewRoute: typeof AdminDatasetReviewRoute
+}
+
+const AdminDatasetRouteChildren: AdminDatasetRouteChildren = {
+  AdminDatasetReviewRoute: AdminDatasetReviewRoute,
+}
+
+const AdminDatasetRouteWithChildren = AdminDatasetRoute._addFileChildren(
+  AdminDatasetRouteChildren,
+)
+
 interface AdminFormsRouteChildren {
   AdminFormsIdRoute: typeof AdminFormsIdRoute
 }
@@ -2115,7 +2146,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCmsRoute: AdminCmsRoute,
   AdminConfigRoute: AdminConfigRoute,
-  AdminDatasetRoute: AdminDatasetRoute,
+  AdminDatasetRoute: AdminDatasetRouteWithChildren,
   AdminDesaRoute: AdminDesaRoute,
   AdminEksekutifRoute: AdminEksekutifRoute,
   AdminFormsRoute: AdminFormsRouteWithChildren,
