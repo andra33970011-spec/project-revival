@@ -84,6 +84,7 @@ import { Route as ApiPublicHooksUploadIntegrityRouteImport } from './routes/api/
 import { Route as ApiPublicHooksStuckJobsRouteImport } from './routes/api/public/hooks/stuck-jobs'
 import { Route as ApiPublicHooksStorageCleanupRouteImport } from './routes/api/public/hooks/storage-cleanup'
 import { Route as ApiPublicHooksSlaReminderRouteImport } from './routes/api/public/hooks/sla-reminder'
+import { Route as ApiPublicHooksSlaEscalationRouteImport } from './routes/api/public/hooks/sla-escalation'
 import { Route as ApiPublicHooksRetryQueueRouteImport } from './routes/api/public/hooks/retry-queue'
 import { Route as ApiPublicHooksRetentionCleanupRouteImport } from './routes/api/public/hooks/retention-cleanup'
 import { Route as ApiPublicHooksFormDeadlineReminderRouteImport } from './routes/api/public/hooks/form-deadline-reminder'
@@ -475,6 +476,12 @@ const ApiPublicHooksSlaReminderRoute =
     path: '/api/public/hooks/sla-reminder',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksSlaEscalationRoute =
+  ApiPublicHooksSlaEscalationRouteImport.update({
+    id: '/api/public/hooks/sla-escalation',
+    path: '/api/public/hooks/sla-escalation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksRetryQueueRoute =
   ApiPublicHooksRetryQueueRouteImport.update({
     id: '/api/public/hooks/retry-queue',
@@ -604,6 +611,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
+  '/api/public/hooks/sla-escalation': typeof ApiPublicHooksSlaEscalationRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
   '/api/public/hooks/storage-cleanup': typeof ApiPublicHooksStorageCleanupRoute
   '/api/public/hooks/stuck-jobs': typeof ApiPublicHooksStuckJobsRoute
@@ -689,6 +697,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
+  '/api/public/hooks/sla-escalation': typeof ApiPublicHooksSlaEscalationRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
   '/api/public/hooks/storage-cleanup': typeof ApiPublicHooksStorageCleanupRoute
   '/api/public/hooks/stuck-jobs': typeof ApiPublicHooksStuckJobsRoute
@@ -775,6 +784,7 @@ export interface FileRoutesById {
   '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
+  '/api/public/hooks/sla-escalation': typeof ApiPublicHooksSlaEscalationRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
   '/api/public/hooks/storage-cleanup': typeof ApiPublicHooksStorageCleanupRoute
   '/api/public/hooks/stuck-jobs': typeof ApiPublicHooksStuckJobsRoute
@@ -862,6 +872,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
+    | '/api/public/hooks/sla-escalation'
     | '/api/public/hooks/sla-reminder'
     | '/api/public/hooks/storage-cleanup'
     | '/api/public/hooks/stuck-jobs'
@@ -947,6 +958,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
+    | '/api/public/hooks/sla-escalation'
     | '/api/public/hooks/sla-reminder'
     | '/api/public/hooks/storage-cleanup'
     | '/api/public/hooks/stuck-jobs'
@@ -1032,6 +1044,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
+    | '/api/public/hooks/sla-escalation'
     | '/api/public/hooks/sla-reminder'
     | '/api/public/hooks/storage-cleanup'
     | '/api/public/hooks/stuck-jobs'
@@ -1115,6 +1128,7 @@ export interface RootRouteChildren {
   ApiPublicHooksFormDeadlineReminderRoute: typeof ApiPublicHooksFormDeadlineReminderRoute
   ApiPublicHooksRetentionCleanupRoute: typeof ApiPublicHooksRetentionCleanupRoute
   ApiPublicHooksRetryQueueRoute: typeof ApiPublicHooksRetryQueueRoute
+  ApiPublicHooksSlaEscalationRoute: typeof ApiPublicHooksSlaEscalationRoute
   ApiPublicHooksSlaReminderRoute: typeof ApiPublicHooksSlaReminderRoute
   ApiPublicHooksStorageCleanupRoute: typeof ApiPublicHooksStorageCleanupRoute
   ApiPublicHooksStuckJobsRoute: typeof ApiPublicHooksStuckJobsRoute
@@ -1648,6 +1662,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksSlaReminderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/sla-escalation': {
+      id: '/api/public/hooks/sla-escalation'
+      path: '/api/public/hooks/sla-escalation'
+      fullPath: '/api/public/hooks/sla-escalation'
+      preLoaderRoute: typeof ApiPublicHooksSlaEscalationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/retry-queue': {
       id: '/api/public/hooks/retry-queue'
       path: '/api/public/hooks/retry-queue'
@@ -1812,6 +1833,7 @@ const rootRouteChildren: RootRouteChildren = {
     ApiPublicHooksFormDeadlineReminderRoute,
   ApiPublicHooksRetentionCleanupRoute: ApiPublicHooksRetentionCleanupRoute,
   ApiPublicHooksRetryQueueRoute: ApiPublicHooksRetryQueueRoute,
+  ApiPublicHooksSlaEscalationRoute: ApiPublicHooksSlaEscalationRoute,
   ApiPublicHooksSlaReminderRoute: ApiPublicHooksSlaReminderRoute,
   ApiPublicHooksStorageCleanupRoute: ApiPublicHooksStorageCleanupRoute,
   ApiPublicHooksStuckJobsRoute: ApiPublicHooksStuckJobsRoute,

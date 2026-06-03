@@ -58,7 +58,8 @@ export const Route = createFileRoute("/api/public/hooks/sla-escalation")({
             const { data: targets } = await supabaseAdmin
               .from("user_roles")
               .select("user_id, profiles!inner(opd_id)")
-              .eq("role", hit.target_role)
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .eq("role", hit.target_role as any)
               .eq("profiles.opd_id", p.opd_id);
             for (const t of (targets ?? []) as Array<{ user_id: string }>) {
               await enqueueNotification({
