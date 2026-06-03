@@ -10,5 +10,5 @@ export const getExecutiveSummary = createServerFn({ method: "GET" })
     const { supabase } = context;
     const { data, error } = await supabase.rpc("executive_summary");
     if (error) throw new Error(error.message);
-    return data as Record<string, unknown>;
+    return (data ?? {}) as { kabupaten?: Record<string, number>; generated_at?: string };
   });
