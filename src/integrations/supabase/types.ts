@@ -981,6 +981,81 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_checklist: {
+        Row: {
+          bukti_url: string | null
+          catatan: string | null
+          created_at: string
+          deskripsi: string | null
+          domain: string
+          id: string
+          judul: string
+          kode: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          bukti_url?: string | null
+          catatan?: string | null
+          created_at?: string
+          deskripsi?: string | null
+          domain: string
+          id?: string
+          judul: string
+          kode: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          bukti_url?: string | null
+          catatan?: string | null
+          created_at?: string
+          deskripsi?: string | null
+          domain?: string
+          id?: string
+          judul?: string
+          kode?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      consent_log: {
+        Row: {
+          consent_type: string
+          created_at: string
+          granted: boolean
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string
+          version: string
+        }
+        Insert: {
+          consent_type: string
+          created_at?: string
+          granted?: boolean
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id: string
+          version?: string
+        }
+        Update: {
+          consent_type?: string
+          created_at?: string
+          granted?: boolean
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string
+          version?: string
+        }
+        Relationships: []
+      }
       cron_history: {
         Row: {
           affected_rows: number | null
@@ -1093,6 +1168,10 @@ export type Database = {
           id: string
           oleh_user_id: string
           opd_id: string | null
+          review_note: string | null
+          review_status: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           status: string
           submitted_at: string
           template_id: string
@@ -1104,6 +1183,10 @@ export type Database = {
           id?: string
           oleh_user_id: string
           opd_id?: string | null
+          review_note?: string | null
+          review_status?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: string
           submitted_at?: string
           template_id: string
@@ -1115,6 +1198,10 @@ export type Database = {
           id?: string
           oleh_user_id?: string
           opd_id?: string | null
+          review_note?: string | null
+          review_status?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: string
           submitted_at?: string
           template_id?: string
@@ -1129,6 +1216,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      dataset_submission_review: {
+        Row: {
+          aksi: string
+          catatan: string | null
+          created_at: string
+          id: string
+          reviewer_id: string | null
+          submission_id: string
+        }
+        Insert: {
+          aksi: string
+          catatan?: string | null
+          created_at?: string
+          id?: string
+          reviewer_id?: string | null
+          submission_id: string
+        }
+        Update: {
+          aksi?: string
+          catatan?: string | null
+          created_at?: string
+          id?: string
+          reviewer_id?: string | null
+          submission_id?: string
+        }
+        Relationships: []
       }
       dataset_template: {
         Row: {
