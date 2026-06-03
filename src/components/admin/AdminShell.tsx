@@ -180,9 +180,22 @@ export function AdminShell({
             {item.label}
           </Link>
         ))}
+        {isSuperAdmin && (
+          <Link
+            to="/admin"
+            activeOptions={{ exact: true }}
+            onClick={onItem}
+            className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-surface-foreground hover:bg-primary-soft hover:text-primary"
+            activeProps={{ className: "bg-primary-soft text-primary" }}
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </Link>
+        )}
         {isSuperAdmin && superNavGroups.map((group) => (
           <div key={group.title}>
             <div className="my-2 px-3 text-[10px] uppercase tracking-wider text-muted-foreground">{group.title}</div>
+
             {group.items.map((item) => (
               <Link
                 key={item.label}
