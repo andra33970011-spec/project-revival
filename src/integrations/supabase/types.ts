@@ -3765,6 +3765,10 @@ export type Database = {
         Returns: number
       }
       fn_susut_bulanan_run: { Args: { _periode: string }; Returns: Json }
+      fn_susut_bulanan_run_internal: {
+        Args: { _periode: string }
+        Returns: Json
+      }
       get_effective_permissions: {
         Args: { _user_id: string }
         Returns: {

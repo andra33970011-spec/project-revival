@@ -49,6 +49,7 @@ import { Route as AdminRbacRouteImport } from './routes/admin.rbac'
 import { Route as AdminRatingRouteImport } from './routes/admin.rating'
 import { Route as AdminPejabatRouteImport } from './routes/admin.pejabat'
 import { Route as AdminOpdRouteImport } from './routes/admin.opd'
+import { Route as AdminLokasiRouteImport } from './routes/admin.lokasi'
 import { Route as AdminLayananRouteImport } from './routes/admin.layanan'
 import { Route as AdminLaporanRouteImport } from './routes/admin.laporan'
 import { Route as AdminIzinRouteImport } from './routes/admin.izin'
@@ -89,6 +90,10 @@ import { Route as AdminFormsIdRouteImport } from './routes/admin.forms.$id'
 import { Route as AdminAsnShiftRouteImport } from './routes/admin.asn.shift'
 import { Route as AdminAsnPayrollLockRouteImport } from './routes/admin.asn.payroll-lock'
 import { Route as AdminAsnCutiSaldoRouteImport } from './routes/admin.asn.cuti-saldo'
+import { Route as AdminAsetPenyusutanRouteImport } from './routes/admin.aset.penyusutan'
+import { Route as AdminAsetOpnameRouteImport } from './routes/admin.aset.opname'
+import { Route as AdminAsetKibRouteImport } from './routes/admin.aset.kib'
+import { Route as AdminAsetBastRouteImport } from './routes/admin.aset.bast'
 import { Route as ApiPublicHooksUploadIntegrityRouteImport } from './routes/api/public/hooks/upload-integrity'
 import { Route as ApiPublicHooksStuckJobsRouteImport } from './routes/api/public/hooks/stuck-jobs'
 import { Route as ApiPublicHooksStorageCleanupRouteImport } from './routes/api/public/hooks/storage-cleanup'
@@ -102,6 +107,7 @@ import { Route as ApiPublicHooksCleanupUploadsRouteImport } from './routes/api/p
 import { Route as ApiPublicHooksBackupSnapshotRouteImport } from './routes/api/public/hooks/backup-snapshot'
 import { Route as ApiPublicHooksAssignmentReminderRouteImport } from './routes/api/public/hooks/assignment-reminder'
 import { Route as ApiPublicHooksAsetWarrantyReminderRouteImport } from './routes/api/public/hooks/aset-warranty-reminder'
+import { Route as ApiPublicHooksAsetSusutBulananRouteImport } from './routes/api/public/hooks/aset-susut-bulanan'
 
 const TentangRoute = TentangRouteImport.update({
   id: '/tentang',
@@ -301,6 +307,11 @@ const AdminPejabatRoute = AdminPejabatRouteImport.update({
 const AdminOpdRoute = AdminOpdRouteImport.update({
   id: '/admin/opd',
   path: '/admin/opd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLokasiRoute = AdminLokasiRouteImport.update({
+  id: '/admin/lokasi',
+  path: '/admin/lokasi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLayananRoute = AdminLayananRouteImport.update({
@@ -508,6 +519,26 @@ const AdminAsnCutiSaldoRoute = AdminAsnCutiSaldoRouteImport.update({
   path: '/cuti-saldo',
   getParentRoute: () => AdminAsnRoute,
 } as any)
+const AdminAsetPenyusutanRoute = AdminAsetPenyusutanRouteImport.update({
+  id: '/penyusutan',
+  path: '/penyusutan',
+  getParentRoute: () => AdminAsetRoute,
+} as any)
+const AdminAsetOpnameRoute = AdminAsetOpnameRouteImport.update({
+  id: '/opname',
+  path: '/opname',
+  getParentRoute: () => AdminAsetRoute,
+} as any)
+const AdminAsetKibRoute = AdminAsetKibRouteImport.update({
+  id: '/kib',
+  path: '/kib',
+  getParentRoute: () => AdminAsetRoute,
+} as any)
+const AdminAsetBastRoute = AdminAsetBastRouteImport.update({
+  id: '/bast',
+  path: '/bast',
+  getParentRoute: () => AdminAsetRoute,
+} as any)
 const ApiPublicHooksUploadIntegrityRoute =
   ApiPublicHooksUploadIntegrityRouteImport.update({
     id: '/api/public/hooks/upload-integrity',
@@ -585,6 +616,12 @@ const ApiPublicHooksAsetWarrantyReminderRoute =
     path: '/api/public/hooks/aset-warranty-reminder',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksAsetSusutBulananRoute =
+  ApiPublicHooksAsetSusutBulananRouteImport.update({
+    id: '/api/public/hooks/aset-susut-bulanan',
+    path: '/api/public/hooks/aset-susut-bulanan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -596,7 +633,7 @@ export interface FileRoutesByFullPath {
   '/kontak': typeof KontakRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
-  '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset': typeof AdminAsetRouteWithChildren
   '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRouteWithChildren
@@ -616,6 +653,7 @@ export interface FileRoutesByFullPath {
   '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRouteWithChildren
+  '/admin/lokasi': typeof AdminLokasiRoute
   '/admin/opd': typeof AdminOpdRoute
   '/admin/pejabat': typeof AdminPejabatRoute
   '/admin/rating': typeof AdminRatingRoute
@@ -647,6 +685,10 @@ export interface FileRoutesByFullPath {
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
+  '/admin/aset/bast': typeof AdminAsetBastRoute
+  '/admin/aset/kib': typeof AdminAsetKibRoute
+  '/admin/aset/opname': typeof AdminAsetOpnameRoute
+  '/admin/aset/penyusutan': typeof AdminAsetPenyusutanRoute
   '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
   '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
   '/admin/asn/shift': typeof AdminAsnShiftRoute
@@ -667,6 +709,7 @@ export interface FileRoutesByFullPath {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-susut-bulanan': typeof ApiPublicHooksAsetSusutBulananRoute
   '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
@@ -691,7 +734,7 @@ export interface FileRoutesByTo {
   '/kontak': typeof KontakRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
-  '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset': typeof AdminAsetRouteWithChildren
   '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRouteWithChildren
@@ -711,6 +754,7 @@ export interface FileRoutesByTo {
   '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRouteWithChildren
+  '/admin/lokasi': typeof AdminLokasiRoute
   '/admin/opd': typeof AdminOpdRoute
   '/admin/pejabat': typeof AdminPejabatRoute
   '/admin/rating': typeof AdminRatingRoute
@@ -742,6 +786,10 @@ export interface FileRoutesByTo {
   '/layanan': typeof LayananIndexRoute
   '/pengisian': typeof PengisianIndexRoute
   '/permohonan': typeof PermohonanIndexRoute
+  '/admin/aset/bast': typeof AdminAsetBastRoute
+  '/admin/aset/kib': typeof AdminAsetKibRoute
+  '/admin/aset/opname': typeof AdminAsetOpnameRoute
+  '/admin/aset/penyusutan': typeof AdminAsetPenyusutanRoute
   '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
   '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
   '/admin/asn/shift': typeof AdminAsnShiftRoute
@@ -762,6 +810,7 @@ export interface FileRoutesByTo {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-susut-bulanan': typeof ApiPublicHooksAsetSusutBulananRoute
   '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
@@ -787,7 +836,7 @@ export interface FileRoutesById {
   '/kontak': typeof KontakRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
-  '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset': typeof AdminAsetRouteWithChildren
   '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRouteWithChildren
@@ -807,6 +856,7 @@ export interface FileRoutesById {
   '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRouteWithChildren
+  '/admin/lokasi': typeof AdminLokasiRoute
   '/admin/opd': typeof AdminOpdRoute
   '/admin/pejabat': typeof AdminPejabatRoute
   '/admin/rating': typeof AdminRatingRoute
@@ -838,6 +888,10 @@ export interface FileRoutesById {
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
+  '/admin/aset/bast': typeof AdminAsetBastRoute
+  '/admin/aset/kib': typeof AdminAsetKibRoute
+  '/admin/aset/opname': typeof AdminAsetOpnameRoute
+  '/admin/aset/penyusutan': typeof AdminAsetPenyusutanRoute
   '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
   '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
   '/admin/asn/shift': typeof AdminAsnShiftRoute
@@ -858,6 +912,7 @@ export interface FileRoutesById {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-susut-bulanan': typeof ApiPublicHooksAsetSusutBulananRoute
   '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
@@ -904,6 +959,7 @@ export interface FileRouteTypes {
     | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
+    | '/admin/lokasi'
     | '/admin/opd'
     | '/admin/pejabat'
     | '/admin/rating'
@@ -935,6 +991,10 @@ export interface FileRouteTypes {
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
+    | '/admin/aset/bast'
+    | '/admin/aset/kib'
+    | '/admin/aset/opname'
+    | '/admin/aset/penyusutan'
     | '/admin/asn/cuti-saldo'
     | '/admin/asn/payroll-lock'
     | '/admin/asn/shift'
@@ -955,6 +1015,7 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-susut-bulanan'
     | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
@@ -999,6 +1060,7 @@ export interface FileRouteTypes {
     | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
+    | '/admin/lokasi'
     | '/admin/opd'
     | '/admin/pejabat'
     | '/admin/rating'
@@ -1030,6 +1092,10 @@ export interface FileRouteTypes {
     | '/layanan'
     | '/pengisian'
     | '/permohonan'
+    | '/admin/aset/bast'
+    | '/admin/aset/kib'
+    | '/admin/aset/opname'
+    | '/admin/aset/penyusutan'
     | '/admin/asn/cuti-saldo'
     | '/admin/asn/payroll-lock'
     | '/admin/asn/shift'
@@ -1050,6 +1116,7 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-susut-bulanan'
     | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
@@ -1094,6 +1161,7 @@ export interface FileRouteTypes {
     | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
+    | '/admin/lokasi'
     | '/admin/opd'
     | '/admin/pejabat'
     | '/admin/rating'
@@ -1125,6 +1193,10 @@ export interface FileRouteTypes {
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
+    | '/admin/aset/bast'
+    | '/admin/aset/kib'
+    | '/admin/aset/opname'
+    | '/admin/aset/penyusutan'
     | '/admin/asn/cuti-saldo'
     | '/admin/asn/payroll-lock'
     | '/admin/asn/shift'
@@ -1145,6 +1217,7 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-susut-bulanan'
     | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
@@ -1170,7 +1243,7 @@ export interface RootRouteChildren {
   KontakRoute: typeof KontakRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TentangRoute: typeof TentangRoute
-  AdminAsetRoute: typeof AdminAsetRoute
+  AdminAsetRoute: typeof AdminAsetRouteWithChildren
   AdminAsetExtraRoute: typeof AdminAsetExtraRoute
   AdminAsetKampanyeRoute: typeof AdminAsetKampanyeRoute
   AdminAsnRoute: typeof AdminAsnRouteWithChildren
@@ -1190,6 +1263,7 @@ export interface RootRouteChildren {
   AdminIzinRoute: typeof AdminIzinRoute
   AdminLaporanRoute: typeof AdminLaporanRoute
   AdminLayananRoute: typeof AdminLayananRouteWithChildren
+  AdminLokasiRoute: typeof AdminLokasiRoute
   AdminOpdRoute: typeof AdminOpdRoute
   AdminPejabatRoute: typeof AdminPejabatRoute
   AdminRatingRoute: typeof AdminRatingRoute
@@ -1233,6 +1307,7 @@ export interface RootRouteChildren {
   AdminSystemUatRoute: typeof AdminSystemUatRoute
   ApiInternalMetricsRoute: typeof ApiInternalMetricsRoute
   AsnScanTokenRoute: typeof AsnScanTokenRoute
+  ApiPublicHooksAsetSusutBulananRoute: typeof ApiPublicHooksAsetSusutBulananRoute
   ApiPublicHooksAsetWarrantyReminderRoute: typeof ApiPublicHooksAsetWarrantyReminderRoute
   ApiPublicHooksAssignmentReminderRoute: typeof ApiPublicHooksAssignmentReminderRoute
   ApiPublicHooksBackupSnapshotRoute: typeof ApiPublicHooksBackupSnapshotRoute
@@ -1530,6 +1605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOpdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/lokasi': {
+      id: '/admin/lokasi'
+      path: '/admin/lokasi'
+      fullPath: '/admin/lokasi'
+      preLoaderRoute: typeof AdminLokasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/layanan': {
       id: '/admin/layanan'
       path: '/admin/layanan'
@@ -1810,6 +1892,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAsnCutiSaldoRouteImport
       parentRoute: typeof AdminAsnRoute
     }
+    '/admin/aset/penyusutan': {
+      id: '/admin/aset/penyusutan'
+      path: '/penyusutan'
+      fullPath: '/admin/aset/penyusutan'
+      preLoaderRoute: typeof AdminAsetPenyusutanRouteImport
+      parentRoute: typeof AdminAsetRoute
+    }
+    '/admin/aset/opname': {
+      id: '/admin/aset/opname'
+      path: '/opname'
+      fullPath: '/admin/aset/opname'
+      preLoaderRoute: typeof AdminAsetOpnameRouteImport
+      parentRoute: typeof AdminAsetRoute
+    }
+    '/admin/aset/kib': {
+      id: '/admin/aset/kib'
+      path: '/kib'
+      fullPath: '/admin/aset/kib'
+      preLoaderRoute: typeof AdminAsetKibRouteImport
+      parentRoute: typeof AdminAsetRoute
+    }
+    '/admin/aset/bast': {
+      id: '/admin/aset/bast'
+      path: '/bast'
+      fullPath: '/admin/aset/bast'
+      preLoaderRoute: typeof AdminAsetBastRouteImport
+      parentRoute: typeof AdminAsetRoute
+    }
     '/api/public/hooks/upload-integrity': {
       id: '/api/public/hooks/upload-integrity'
       path: '/api/public/hooks/upload-integrity'
@@ -1901,8 +2011,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksAsetWarrantyReminderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/aset-susut-bulanan': {
+      id: '/api/public/hooks/aset-susut-bulanan'
+      path: '/api/public/hooks/aset-susut-bulanan'
+      fullPath: '/api/public/hooks/aset-susut-bulanan'
+      preLoaderRoute: typeof ApiPublicHooksAsetSusutBulananRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface AdminAsetRouteChildren {
+  AdminAsetBastRoute: typeof AdminAsetBastRoute
+  AdminAsetKibRoute: typeof AdminAsetKibRoute
+  AdminAsetOpnameRoute: typeof AdminAsetOpnameRoute
+  AdminAsetPenyusutanRoute: typeof AdminAsetPenyusutanRoute
+}
+
+const AdminAsetRouteChildren: AdminAsetRouteChildren = {
+  AdminAsetBastRoute: AdminAsetBastRoute,
+  AdminAsetKibRoute: AdminAsetKibRoute,
+  AdminAsetOpnameRoute: AdminAsetOpnameRoute,
+  AdminAsetPenyusutanRoute: AdminAsetPenyusutanRoute,
+}
+
+const AdminAsetRouteWithChildren = AdminAsetRoute._addFileChildren(
+  AdminAsetRouteChildren,
+)
 
 interface AdminAsnRouteChildren {
   AdminAsnCutiSaldoRoute: typeof AdminAsnCutiSaldoRoute
@@ -1970,7 +2105,7 @@ const rootRouteChildren: RootRouteChildren = {
   KontakRoute: KontakRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TentangRoute: TentangRoute,
-  AdminAsetRoute: AdminAsetRoute,
+  AdminAsetRoute: AdminAsetRouteWithChildren,
   AdminAsetExtraRoute: AdminAsetExtraRoute,
   AdminAsetKampanyeRoute: AdminAsetKampanyeRoute,
   AdminAsnRoute: AdminAsnRouteWithChildren,
@@ -1990,6 +2125,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIzinRoute: AdminIzinRoute,
   AdminLaporanRoute: AdminLaporanRoute,
   AdminLayananRoute: AdminLayananRouteWithChildren,
+  AdminLokasiRoute: AdminLokasiRoute,
   AdminOpdRoute: AdminOpdRoute,
   AdminPejabatRoute: AdminPejabatRoute,
   AdminRatingRoute: AdminRatingRoute,
@@ -2033,6 +2169,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSystemUatRoute: AdminSystemUatRoute,
   ApiInternalMetricsRoute: ApiInternalMetricsRoute,
   AsnScanTokenRoute: AsnScanTokenRoute,
+  ApiPublicHooksAsetSusutBulananRoute: ApiPublicHooksAsetSusutBulananRoute,
   ApiPublicHooksAsetWarrantyReminderRoute:
     ApiPublicHooksAsetWarrantyReminderRoute,
   ApiPublicHooksAssignmentReminderRoute: ApiPublicHooksAssignmentReminderRoute,
