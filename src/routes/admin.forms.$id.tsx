@@ -10,12 +10,14 @@ import {
   publishForm,
   archiveForm,
 } from "@/lib/forms.functions";
+import { setFormPublic, exportFormSubmissionsXlsx } from "@/lib/forms-extras.functions";
+import { supabase } from "@/integrations/supabase/client";
 import type { FormField } from "@/features/forms/schema/types";
 import { FormMetaTab } from "@/features/forms/builder/FormMetaTab";
 import { FormFieldsTab } from "@/features/forms/builder/FormFieldsTab";
 import { FormTargetsTab } from "@/features/forms/builder/FormTargetsTab";
 import type { FormMeta, Target } from "@/features/forms/builder/types";
-import { Send, Archive, ArrowLeft } from "lucide-react";
+import { Send, Archive, ArrowLeft, Globe, FileSpreadsheet, Save } from "lucide-react";
 
 export const Route = createFileRoute("/admin/forms/$id")({
   head: () => ({ meta: [{ title: "Admin — Edit Form" }, { name: "robots", content: "noindex" }] }),
