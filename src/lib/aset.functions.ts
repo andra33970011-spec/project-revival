@@ -35,6 +35,11 @@ const asetSchema = z.object({
   status: z.enum(["aktif", "rusak", "dihapuskan"]).default("aktif"),
   foto_url: z.string().url().max(1000).optional().nullable(),
   catatan: z.string().max(1000).optional().nullable(),
+  umur_ekonomis_bulan: z.number().int().min(0).max(1200).optional().nullable(),
+  metode_susut: z.enum(["garis_lurus", "saldo_menurun"]).optional().nullable(),
+  garansi_sampai: z.string().date().optional().nullable(),
+  kalibrasi_berikut: z.string().date().optional().nullable(),
+  dokumen_kehilangan_url: z.string().url().max(1000).optional().nullable(),
 });
 
 export const upsertAset = createServerFn({ method: "POST" })
