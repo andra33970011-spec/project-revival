@@ -43,9 +43,10 @@ export function PermohonanGovernancePanel({
       fnSla({ data: { permohonan_id: permohonanId } }),
       fnListDis({ data: { permohonan_id: permohonanId } }),
     ]);
-    setSla((a.rows ?? []) as SlaEvent[]);
+    setSla((a.events ?? []) as SlaEvent[]);
     setDisp((b.rows ?? []) as Disposisi[]);
   }
+
   useEffect(() => { void load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [permohonanId]);
 
   useEffect(() => {
