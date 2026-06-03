@@ -309,12 +309,11 @@ export const listForReview = createServerFn({ method: "POST" })
     const ctx = await getUserContext(supabaseAdmin, userId);
     let q = supabaseAdmin
       .from("form_submissions")
-      .select("id,form_id,user_id,opd_id,status,submitted_at,reviewed_at, forms(judul,opd_pemilik_id), profiles!form_submissions_user_id_fkey(nama_lengkap)", { count: "exact" })
+      .select("id,form_id,user_id,opd_id,status,submitted_at,reviewed_at, forms(judul,opd_pemilik_id)", { count: "exact" })
       .order("submitted_at", { ascending: false, nullsFirst: false })
       .range(data.page * data.pageSize, data.page * data.pageSize + data.pageSize - 1);
     if (data.status) q = q.eq("status", data.status);
     if (!ctx.isElevated && ctx.isAdminOpd && ctx.opdId) {
-      // RLS akan filter, tapi kita tambahkan eksplisit untuk paging benar.
       const { data: formIds } = await supabaseAdmin
         .from("forms")
         .select("id")
@@ -325,7 +324,17 @@ export const listForReview = createServerFn({ method: "POST" })
     }
     const { data: rows, count, error } = await q;
     if (error) throw new Error(error.message);
-    return { rows: rows ?? [], total: count ?? 0 };
+    const userIds = Array.from(new Set((rows ?? []).map((r) => r.user_id).filter(Boolean)));
+    const profileMap = new Map<string, { nama_lengkap: string | null }>();
+    if (userIds.length > 0) {
+      const { data: profs } = await supabaseAdmin
+        .from("profiles")
+        .select("id,nama_lengkap")
+        .in("id", userIds);
+      for (const p of profs ?? []) profileMap.set(p.id, { nama_lengkap: p.nama_lengkap });
+    }
+    const enriched = (rows ?? []).map((r) => ({ ...r, profiles: profileMap.get(r.user_id) ?? null }));
+    return { rows: enriched, total: count ?? 0 };
   });
 
 export const getSubmission = createServerFn({ method: "POST" })
