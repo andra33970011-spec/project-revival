@@ -18,13 +18,17 @@ export const Route = createFileRoute("/api/public/hooks/aset-warranty-reminder")
           const adminsByOpd = new Map<string, string[]>();
           if (opdIds.length > 0) {
             const { data: adminRoles } = await supabaseAdmin.from("user_roles")
-              .select("user_id, profile:profiles!user_id(opd_id)").eq("role", "admin_opd");
-            for (const a of adminRoles ?? []) {
-              const opd = (a.profile as { opd_id: string | null } | null)?.opd_id;
-              if (!opd || !opdIds.includes(opd)) continue;
-              const cur = adminsByOpd.get(opd) ?? [];
-              cur.push(a.user_id);
-              adminsByOpd.set(opd, cur);
+              .select("user_id").eq("role", "admin_opd");
+            const userIds = (adminRoles ?? []).map((r) => r.user_id);
+            if (userIds.length > 0) {
+              const { data: profs } = await supabaseAdmin.from("profiles")
+                .select("id,opd_id").in("id", userIds).in("opd_id", opdIds);
+              for (const p of profs ?? []) {
+                if (!p.opd_id) continue;
+                const cur = adminsByOpd.get(p.opd_id) ?? [];
+                cur.push(p.id);
+                adminsByOpd.set(p.opd_id, cur);
+              }
             }
           }
 
