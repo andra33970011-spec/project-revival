@@ -135,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setPermissions(new Set());
         setAsnType(null);
         setSystemPosition(null);
+        setPimpinanType(null);
         return;
       }
       // Dedupe: skip jika uid sama & sudah ada inflight/snapshot — hindari
