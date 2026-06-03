@@ -166,8 +166,14 @@ function AbsensiPage() {
   return (
     <PageShell>
       <section className="container-page py-8">
-        <h1 className="font-display text-2xl font-bold">Absensi ASN (QR Kantor)</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Pilih tipe absen lalu scan QR yang dipajang di kantor OPD Anda.</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="font-display text-2xl font-bold">Absensi ASN (QR Kantor)</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Pilih tipe absen lalu scan QR. Foto wajah & GPS wajib aktif untuk mencegah titip absen.</p>
+          </div>
+          <Link to="/asn/izin" className="h-9 inline-flex items-center rounded-md border border-border bg-card px-3 text-xs font-semibold">Ajukan Izin / Cuti</Link>
+        </div>
+
 
         {schedule && (() => {
           const now = new Date();
