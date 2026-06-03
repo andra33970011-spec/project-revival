@@ -144,6 +144,23 @@ function Page() {
     finally { setBusy(false); }
   }
 
+  async function saveAkses() {
+    setBusy(true);
+    try {
+      await setFormPublic({ data: { form_id: id, is_public: isPublic, slug: slug.trim() || null } });
+      alert("Pengaturan akses publik tersimpan");
+    } catch (e) { alert(e instanceof Error ? e.message : "Gagal"); }
+    finally { setBusy(false); }
+  }
+  async function doExport() {
+    setBusy(true);
+    try {
+      const r = await exportFormSubmissionsXlsx({ data: { form_id: id } }) as unknown as { url: string; filename: string };
+      const a = document.createElement("a"); a.href = r.url; a.download = r.filename; a.target = "_blank"; a.click();
+    } catch (e) { alert(e instanceof Error ? e.message : "Gagal"); }
+    finally { setBusy(false); }
+  }
+
   if (loading) return <div className="text-sm text-muted-foreground">Memuat…</div>;
 
   return (
