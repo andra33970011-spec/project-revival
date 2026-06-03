@@ -111,6 +111,8 @@ export const submitAbsensi = createServerFn({ method: "POST" })
       lat: z.number(),
       lng: z.number(),
       device_info: z.string().max(200).optional().nullable(),
+      device_fingerprint: z.string().max(200).optional().nullable(),
+      foto_base64: z.string().min(100).max(8_000_000), // wajib — anti titip-absen
     }).parse(input),
   )
   .handler(async ({ data, context }) => {
@@ -128,7 +130,6 @@ export const submitAbsensi = createServerFn({ method: "POST" })
     if (!qr || !qr.aktif) throw new Error("QR tidak valid");
     if (qr.opd_id !== ctx.opdId) throw new Error("QR ini bukan untuk kantor OPD Anda");
 
-    // Validasi jarak terhadap koordinat kantor yang ditetapkan superadmin
     if (qr.lat !== null && qr.lng !== null) {
       const radius = (qr.radius_m as number | null) ?? 100;
       const dist = haversineMeters(Number(qr.lat), Number(qr.lng), data.lat, data.lng);
@@ -139,7 +140,7 @@ export const submitAbsensi = createServerFn({ method: "POST" })
       throw new Error("Koordinat kantor belum ditetapkan superadmin. Hubungi admin.");
     }
 
-    // Cegah duplikat masuk/pulang di hari yang sama (UTC date)
+    // Cegah duplikat masuk/pulang di hari yang sama
     const today = new Date(); today.setUTCHours(0, 0, 0, 0);
     const { data: dup } = await supabaseAdmin
       .from("absensi_asn").select("id")
@@ -147,31 +148,69 @@ export const submitAbsensi = createServerFn({ method: "POST" })
       .gte("waktu", today.toISOString()).maybeSingle();
     if (dup) throw new Error(`Anda sudah absen ${data.tipe} hari ini`);
 
-    // Resolve jadwal aktif user untuk hitung keterlambatan
+    // Resolve jadwal: prioritas shift_assignment hari ini, fallback work_schedule_assignment
     const tglStr = new Date().toISOString().slice(0, 10);
-    const { data: wsa } = await supabaseAdmin
-      .from("work_schedule_assignment")
-      .select("schedule_id, berlaku_dari, berlaku_sampai, schedule:work_schedule!schedule_id(jam_masuk,toleransi_menit,hari_kerja,aktif)")
-      .eq("user_id", userId)
-      .lte("berlaku_dari", tglStr)
-      .order("berlaku_dari", { ascending: false })
-      .limit(5);
-    const ws = (wsa ?? []).find((r) => !r.berlaku_sampai || r.berlaku_sampai >= tglStr);
-    let isLate = false; let lateMin = 0; let scheduleId: string | null = null;
-    type Sch = { jam_masuk: string; toleransi_menit: number; aktif: boolean } | null;
-    const sch = (ws?.schedule as Sch) ?? null;
-    if (ws && sch && sch.aktif && data.tipe === "masuk") {
-      scheduleId = ws.schedule_id;
-      const [hh, mm] = sch.jam_masuk.split(":").map((n: string) => parseInt(n, 10));
+    let scheduleId: string | null = null;
+    let jamMasuk: string | null = null;
+    let toleransi = 15;
+    let sumberJadwal: "shift" | "schedule" | null = null;
+
+    const { data: shiftToday } = await supabaseAdmin.from("shift_assignment")
+      .select("shift:shift!shift_id(id,jam_mulai,aktif)")
+      .eq("user_id", userId).eq("tanggal", tglStr).maybeSingle();
+    type Shift = { id: string; jam_mulai: string; aktif: boolean } | null;
+    const shift = (shiftToday?.shift as Shift) ?? null;
+    if (shift && shift.aktif) {
+      scheduleId = shift.id;
+      jamMasuk = shift.jam_mulai;
+      toleransi = 15;
+      sumberJadwal = "shift";
+    } else {
+      const { data: wsa } = await supabaseAdmin
+        .from("work_schedule_assignment")
+        .select("schedule_id, berlaku_dari, berlaku_sampai, schedule:work_schedule!schedule_id(jam_masuk,toleransi_menit,hari_kerja,aktif)")
+        .eq("user_id", userId)
+        .lte("berlaku_dari", tglStr)
+        .order("berlaku_dari", { ascending: false })
+        .limit(5);
+      const ws = (wsa ?? []).find((r) => !r.berlaku_sampai || r.berlaku_sampai >= tglStr);
+      type Sch = { jam_masuk: string; toleransi_menit: number; aktif: boolean } | null;
+      const sch = (ws?.schedule as Sch) ?? null;
+      if (ws && sch && sch.aktif) {
+        scheduleId = ws.schedule_id;
+        jamMasuk = sch.jam_masuk;
+        toleransi = sch.toleransi_menit ?? 15;
+        sumberJadwal = "schedule";
+      }
+    }
+
+    let isLate = false; let lateMin = 0;
+    if (jamMasuk && data.tipe === "masuk") {
+      const [hh, mm] = jamMasuk.split(":").map((n) => parseInt(n, 10));
       const sched = new Date(); sched.setHours(hh, mm, 0, 0);
-      const tol = sch.toleransi_menit ?? 15;
-      const deadline = new Date(sched.getTime() + tol * 60_000);
+      const deadline = new Date(sched.getTime() + toleransi * 60_000);
       const now = new Date();
       if (now > deadline) {
         isLate = true;
         lateMin = Math.round((now.getTime() - sched.getTime()) / 60_000);
       }
     }
+
+    // Upload foto wajib ke bucket private absensi-foto/{userId}/{yyyy-mm-dd}/{tipe}-{ts}.jpg
+    const m = data.foto_base64.match(/^data:(image\/[a-z+]+);base64,(.+)$/i);
+    if (!m) throw new Error("Format foto tidak valid (harus data URL image/*)");
+    const mime = m[1];
+    if (!/^image\/(jpeg|jpg|png|webp)$/i.test(mime)) throw new Error("Tipe gambar harus JPEG/PNG/WEBP");
+    const bin = Buffer.from(m[2], "base64");
+    if (bin.byteLength > 2_500_000) throw new Error("Ukuran foto maksimal 2.5 MB");
+    const ext = mime.split("/")[1].replace("jpeg", "jpg");
+    const fotoPath = `${userId}/${tglStr}/${data.tipe}-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabaseAdmin.storage
+      .from("absensi-foto").upload(fotoPath, bin, { contentType: mime, upsert: false });
+    if (upErr) throw new Error(`Upload foto gagal: ${upErr.message}`);
+
+    // Hash fingerprint client (sudah di-hash di sisi client) — server simpan apa adanya (max 200)
+    const fpHash = data.device_fingerprint?.slice(0, 200) ?? null;
 
     const { error: insErr } = await supabaseAdmin.from("absensi_asn").insert({
       user_id: userId,
@@ -180,13 +219,16 @@ export const submitAbsensi = createServerFn({ method: "POST" })
       lat: data.lat,
       lng: data.lng,
       device_info: data.device_info ?? null,
+      device_fingerprint_hash: fpHash,
+      foto_url: fotoPath,
       is_late: isLate,
       late_minutes: lateMin,
       schedule_id: scheduleId,
     });
     if (insErr) throw new Error(insErr.message);
-    return { ok: true, is_late: isLate, late_minutes: lateMin };
+    return { ok: true, is_late: isLate, late_minutes: lateMin, sumber_jadwal: sumberJadwal };
   });
+
 
 // ============= LIST ABSENSI =============
 export const listAbsensiSelf = createServerFn({ method: "POST" })

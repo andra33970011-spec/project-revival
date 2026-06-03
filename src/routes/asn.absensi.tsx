@@ -105,17 +105,56 @@ function AbsensiPage() {
   }, []);
 
 
+  // Hash sederhana untuk device fingerprint (UA + screen + tz). Bukan biometrik, hanya untuk deteksi "1 HP banyak ASN".
+  async function getDeviceFingerprint(): Promise<string> {
+    const ua = navigator.userAgent;
+    const scr = `${screen.width}x${screen.height}x${screen.colorDepth}`;
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const raw = `${ua}|${scr}|${tz}`;
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw));
+    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function captureFoto(): Promise<string> {
+    // Buka kamera selfie, ambil 1 frame, kembalikan data URL JPEG.
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    try {
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      await video.play();
+      const w = Math.min(640, video.videoWidth || 640);
+      const h = Math.round((video.videoHeight || 480) * (w / (video.videoWidth || 640)));
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas tidak tersedia");
+      ctx.drawImage(video, 0, 0, w, h);
+      return canvas.toDataURL("image/jpeg", 0.75);
+    } finally {
+      stream.getTracks().forEach((t) => t.stop());
+    }
+  }
+
   async function submit(token: string) {
     if (busy) return;
     if (!coords) { toast.error("GPS wajib aktif untuk absen."); requestGps(); return; }
     setBusy(true);
     try {
-      await submitAbsensi({ data: { token, tipe, lat: coords.lat, lng: coords.lng, device_info: navigator.userAgent.slice(0, 180) } });
+      toast.info("Mengambil foto…");
+      const foto = await captureFoto();
+      const fp = await getDeviceFingerprint();
+      await submitAbsensi({ data: {
+        token, tipe, lat: coords.lat, lng: coords.lng,
+        device_info: navigator.userAgent.slice(0, 180),
+        device_fingerprint: fp,
+        foto_base64: foto,
+      }});
       toast.success(`Absen ${tipe} tercatat`);
       setScanned(null);
       await reload();
     } catch (e) { toast.error((e as Error).message); } finally { setBusy(false); }
   }
+
 
   if (loading) return <PageShell><div className="container-page py-10">Memuat…</div></PageShell>;
   if (!user) return <PageShell><div className="container-page py-10">Silakan <Link to="/auth" className="text-primary underline">masuk</Link> sebagai ASN.</div></PageShell>;
@@ -127,8 +166,14 @@ function AbsensiPage() {
   return (
     <PageShell>
       <section className="container-page py-8">
-        <h1 className="font-display text-2xl font-bold">Absensi ASN (QR Kantor)</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Pilih tipe absen lalu scan QR yang dipajang di kantor OPD Anda.</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="font-display text-2xl font-bold">Absensi ASN (QR Kantor)</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Pilih tipe absen lalu scan QR. Foto wajah & GPS wajib aktif untuk mencegah titip absen.</p>
+          </div>
+          <Link to="/asn/izin" className="h-9 inline-flex items-center rounded-md border border-border bg-card px-3 text-xs font-semibold">Ajukan Izin / Cuti</Link>
+        </div>
+
 
         {schedule && (() => {
           const now = new Date();

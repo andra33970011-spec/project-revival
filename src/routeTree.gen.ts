@@ -30,6 +30,7 @@ import { Route as LayananSlugRouteImport } from './routes/layanan.$slug'
 import { Route as InstansiSingkatanRouteImport } from './routes/instansi.$singkatan'
 import { Route as AsnVerifikasiRouteImport } from './routes/asn.verifikasi'
 import { Route as AsnTugasRouteImport } from './routes/asn.tugas'
+import { Route as AsnIzinRouteImport } from './routes/asn.izin'
 import { Route as AsnAsetRouteImport } from './routes/asn.aset'
 import { Route as AsnAbsensiRouteImport } from './routes/asn.absensi'
 import { Route as AdminVerifikasiLogRouteImport } from './routes/admin.verifikasi-log'
@@ -45,6 +46,8 @@ import { Route as AdminPejabatRouteImport } from './routes/admin.pejabat'
 import { Route as AdminOpdRouteImport } from './routes/admin.opd'
 import { Route as AdminLayananRouteImport } from './routes/admin.layanan'
 import { Route as AdminLaporanRouteImport } from './routes/admin.laporan'
+import { Route as AdminIzinRouteImport } from './routes/admin.izin'
+import { Route as AdminHariLiburRouteImport } from './routes/admin.hari-libur'
 import { Route as AdminGovernanceRouteImport } from './routes/admin.governance'
 import { Route as AdminFormsRouteImport } from './routes/admin.forms'
 import { Route as AdminEksekutifRouteImport } from './routes/admin.eksekutif'
@@ -190,6 +193,11 @@ const AsnTugasRoute = AsnTugasRouteImport.update({
   path: '/asn/tugas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AsnIzinRoute = AsnIzinRouteImport.update({
+  id: '/asn/izin',
+  path: '/asn/izin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AsnAsetRoute = AsnAsetRouteImport.update({
   id: '/asn/aset',
   path: '/asn/aset',
@@ -263,6 +271,16 @@ const AdminLayananRoute = AdminLayananRouteImport.update({
 const AdminLaporanRoute = AdminLaporanRouteImport.update({
   id: '/admin/laporan',
   path: '/admin/laporan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIzinRoute = AdminIzinRouteImport.update({
+  id: '/admin/izin',
+  path: '/admin/izin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminHariLiburRoute = AdminHariLiburRouteImport.update({
+  id: '/admin/hari-libur',
+  path: '/admin/hari-libur',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminGovernanceRoute = AdminGovernanceRouteImport.update({
@@ -498,6 +516,8 @@ export interface FileRoutesByFullPath {
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
+  '/admin/hari-libur': typeof AdminHariLiburRoute
+  '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRoute
   '/admin/opd': typeof AdminOpdRoute
@@ -513,6 +533,7 @@ export interface FileRoutesByFullPath {
   '/admin/verifikasi-log': typeof AdminVerifikasiLogRoute
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
+  '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
@@ -575,6 +596,8 @@ export interface FileRoutesByTo {
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
+  '/admin/hari-libur': typeof AdminHariLiburRoute
+  '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRoute
   '/admin/opd': typeof AdminOpdRoute
@@ -590,6 +613,7 @@ export interface FileRoutesByTo {
   '/admin/verifikasi-log': typeof AdminVerifikasiLogRoute
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
+  '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
@@ -653,6 +677,8 @@ export interface FileRoutesById {
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
+  '/admin/hari-libur': typeof AdminHariLiburRoute
+  '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRoute
   '/admin/opd': typeof AdminOpdRoute
@@ -668,6 +694,7 @@ export interface FileRoutesById {
   '/admin/verifikasi-log': typeof AdminVerifikasiLogRoute
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
+  '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
@@ -732,6 +759,8 @@ export interface FileRouteTypes {
     | '/admin/eksekutif'
     | '/admin/forms'
     | '/admin/governance'
+    | '/admin/hari-libur'
+    | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
     | '/admin/opd'
@@ -747,6 +776,7 @@ export interface FileRouteTypes {
     | '/admin/verifikasi-log'
     | '/asn/absensi'
     | '/asn/aset'
+    | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/instansi/$singkatan'
@@ -809,6 +839,8 @@ export interface FileRouteTypes {
     | '/admin/eksekutif'
     | '/admin/forms'
     | '/admin/governance'
+    | '/admin/hari-libur'
+    | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
     | '/admin/opd'
@@ -824,6 +856,7 @@ export interface FileRouteTypes {
     | '/admin/verifikasi-log'
     | '/asn/absensi'
     | '/asn/aset'
+    | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/instansi/$singkatan'
@@ -886,6 +919,8 @@ export interface FileRouteTypes {
     | '/admin/eksekutif'
     | '/admin/forms'
     | '/admin/governance'
+    | '/admin/hari-libur'
+    | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
     | '/admin/opd'
@@ -901,6 +936,7 @@ export interface FileRouteTypes {
     | '/admin/verifikasi-log'
     | '/asn/absensi'
     | '/asn/aset'
+    | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/instansi/$singkatan'
@@ -964,6 +1000,8 @@ export interface RootRouteChildren {
   AdminEksekutifRoute: typeof AdminEksekutifRoute
   AdminFormsRoute: typeof AdminFormsRouteWithChildren
   AdminGovernanceRoute: typeof AdminGovernanceRoute
+  AdminHariLiburRoute: typeof AdminHariLiburRoute
+  AdminIzinRoute: typeof AdminIzinRoute
   AdminLaporanRoute: typeof AdminLaporanRoute
   AdminLayananRoute: typeof AdminLayananRoute
   AdminOpdRoute: typeof AdminOpdRoute
@@ -979,6 +1017,7 @@ export interface RootRouteChildren {
   AdminVerifikasiLogRoute: typeof AdminVerifikasiLogRoute
   AsnAbsensiRoute: typeof AsnAbsensiRoute
   AsnAsetRoute: typeof AsnAsetRoute
+  AsnIzinRoute: typeof AsnIzinRoute
   AsnTugasRoute: typeof AsnTugasRoute
   AsnVerifikasiRoute: typeof AsnVerifikasiRoute
   InstansiSingkatanRoute: typeof InstansiSingkatanRoute
@@ -1164,6 +1203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AsnTugasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/asn/izin': {
+      id: '/asn/izin'
+      path: '/asn/izin'
+      fullPath: '/asn/izin'
+      preLoaderRoute: typeof AsnIzinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/asn/aset': {
       id: '/asn/aset'
       path: '/asn/aset'
@@ -1267,6 +1313,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/laporan'
       fullPath: '/admin/laporan'
       preLoaderRoute: typeof AdminLaporanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/izin': {
+      id: '/admin/izin'
+      path: '/admin/izin'
+      fullPath: '/admin/izin'
+      preLoaderRoute: typeof AdminIzinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/hari-libur': {
+      id: '/admin/hari-libur'
+      path: '/admin/hari-libur'
+      fullPath: '/admin/hari-libur'
+      preLoaderRoute: typeof AdminHariLiburRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/governance': {
@@ -1595,6 +1655,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminEksekutifRoute: AdminEksekutifRoute,
   AdminFormsRoute: AdminFormsRouteWithChildren,
   AdminGovernanceRoute: AdminGovernanceRoute,
+  AdminHariLiburRoute: AdminHariLiburRoute,
+  AdminIzinRoute: AdminIzinRoute,
   AdminLaporanRoute: AdminLaporanRoute,
   AdminLayananRoute: AdminLayananRoute,
   AdminOpdRoute: AdminOpdRoute,
@@ -1610,6 +1672,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminVerifikasiLogRoute: AdminVerifikasiLogRoute,
   AsnAbsensiRoute: AsnAbsensiRoute,
   AsnAsetRoute: AsnAsetRoute,
+  AsnIzinRoute: AsnIzinRoute,
   AsnTugasRoute: AsnTugasRoute,
   AsnVerifikasiRoute: AsnVerifikasiRoute,
   InstansiSingkatanRoute: InstansiSingkatanRoute,
