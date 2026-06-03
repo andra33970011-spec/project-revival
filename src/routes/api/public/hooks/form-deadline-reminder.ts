@@ -24,13 +24,13 @@ export const Route = createFileRoute("/api/public/hooks/form-deadline-reminder")
             const overdue = a.due_at && a.due_at < now.toISOString();
             const judul = (a.form as { judul?: string } | null)?.judul ?? "formulir";
             await enqueueNotification({
-              user_id: a.user_id,
+              userId: a.user_id,
               tipe: "form_deadline",
               judul: overdue ? `Terlambat: ${judul}` : `Batas waktu besok: ${judul}`,
               body: `Mohon segera selesaikan pengisian formulir ini.`,
               link: `/pengisian/${a.form_id}`,
               meta: { assignment_id: a.id, form_id: a.form_id, overdue: !!overdue },
-              dedupe_key: `form_deadline:${a.id}:${now.toISOString().slice(0, 10)}`,
+              dedupeKey: `form_deadline:${a.id}:${now.toISOString().slice(0, 10)}`,
             });
             sent++;
           }
