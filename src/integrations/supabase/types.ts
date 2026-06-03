@@ -112,6 +112,7 @@ export type Database = {
       }
       aset: {
         Row: {
+          akumulasi_susut: number | null
           catatan: string | null
           created_at: string
           deskripsi: string | null
@@ -121,6 +122,7 @@ export type Database = {
           id: string
           kalibrasi_berikut: string | null
           kategori: string | null
+          kib: Database["public"]["Enums"]["aset_kib"] | null
           kode: string
           kondisi: string
           last_verified_at: string | null
@@ -132,17 +134,20 @@ export type Database = {
           merk: string | null
           metode_susut: string | null
           nama: string
+          nilai_buku: number | null
           nilai_perolehan: number | null
           nomor_seri: string | null
           opd_id: string | null
           pemegang_user_id: string | null
           qr_token: string
+          ruangan_id: string | null
           status: string
           tanggal_perolehan: string | null
           umur_ekonomis_bulan: number | null
           updated_at: string
         }
         Insert: {
+          akumulasi_susut?: number | null
           catatan?: string | null
           created_at?: string
           deskripsi?: string | null
@@ -152,6 +157,7 @@ export type Database = {
           id?: string
           kalibrasi_berikut?: string | null
           kategori?: string | null
+          kib?: Database["public"]["Enums"]["aset_kib"] | null
           kode: string
           kondisi?: string
           last_verified_at?: string | null
@@ -163,17 +169,20 @@ export type Database = {
           merk?: string | null
           metode_susut?: string | null
           nama: string
+          nilai_buku?: number | null
           nilai_perolehan?: number | null
           nomor_seri?: string | null
           opd_id?: string | null
           pemegang_user_id?: string | null
           qr_token: string
+          ruangan_id?: string | null
           status?: string
           tanggal_perolehan?: string | null
           umur_ekonomis_bulan?: number | null
           updated_at?: string
         }
         Update: {
+          akumulasi_susut?: number | null
           catatan?: string | null
           created_at?: string
           deskripsi?: string | null
@@ -183,6 +192,7 @@ export type Database = {
           id?: string
           kalibrasi_berikut?: string | null
           kategori?: string | null
+          kib?: Database["public"]["Enums"]["aset_kib"] | null
           kode?: string
           kondisi?: string
           last_verified_at?: string | null
@@ -194,11 +204,13 @@ export type Database = {
           merk?: string | null
           metode_susut?: string | null
           nama?: string
+          nilai_buku?: number | null
           nilai_perolehan?: number | null
           nomor_seri?: string | null
           opd_id?: string | null
           pemegang_user_id?: string | null
           qr_token?: string
+          ruangan_id?: string | null
           status?: string
           tanggal_perolehan?: string | null
           umur_ekonomis_bulan?: number | null
@@ -217,6 +229,104 @@ export type Database = {
             columns: ["pemegang_user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aset_ruangan_fk"
+            columns: ["ruangan_id"]
+            isOneToOne: false
+            referencedRelation: "lokasi_ruangan"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aset_bast: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          catatan: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          nomor: string | null
+          opd_id: string | null
+          pdf_path: string | null
+          pemberi_user: string | null
+          penerima_user: string | null
+          status: string
+          tanggal: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          catatan?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          nomor?: string | null
+          opd_id?: string | null
+          pdf_path?: string | null
+          pemberi_user?: string | null
+          penerima_user?: string | null
+          status?: string
+          tanggal?: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          catatan?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          nomor?: string | null
+          opd_id?: string | null
+          pdf_path?: string | null
+          pemberi_user?: string | null
+          penerima_user?: string | null
+          status?: string
+          tanggal?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      aset_bast_items: {
+        Row: {
+          aset_id: string
+          bast_id: string
+          id: string
+        }
+        Insert: {
+          aset_id: string
+          bast_id: string
+          id?: string
+        }
+        Update: {
+          aset_id?: string
+          bast_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aset_bast_items_aset_id_fkey"
+            columns: ["aset_id"]
+            isOneToOne: false
+            referencedRelation: "aset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aset_bast_items_aset_id_fkey"
+            columns: ["aset_id"]
+            isOneToOne: false
+            referencedRelation: "aset_nilai_buku"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aset_bast_items_bast_id_fkey"
+            columns: ["bast_id"]
+            isOneToOne: false
+            referencedRelation: "aset_bast"
             referencedColumns: ["id"]
           },
         ]
@@ -290,6 +400,105 @@ export type Database = {
           },
         ]
       }
+      aset_opname: {
+        Row: {
+          catatan: string | null
+          closed_at: string | null
+          created_at: string
+          dibuat_oleh: string | null
+          ditutup_oleh: string | null
+          id: string
+          opd_id: string | null
+          periode: string
+          status: string
+        }
+        Insert: {
+          catatan?: string | null
+          closed_at?: string | null
+          created_at?: string
+          dibuat_oleh?: string | null
+          ditutup_oleh?: string | null
+          id?: string
+          opd_id?: string | null
+          periode: string
+          status?: string
+        }
+        Update: {
+          catatan?: string | null
+          closed_at?: string | null
+          created_at?: string
+          dibuat_oleh?: string | null
+          ditutup_oleh?: string | null
+          id?: string
+          opd_id?: string | null
+          periode?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aset_opname_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aset_opname_items: {
+        Row: {
+          aset_id: string
+          catatan: string | null
+          hadir: boolean | null
+          id: string
+          kondisi_temuan: string | null
+          opname_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          aset_id: string
+          catatan?: string | null
+          hadir?: boolean | null
+          id?: string
+          kondisi_temuan?: string | null
+          opname_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          aset_id?: string
+          catatan?: string | null
+          hadir?: boolean | null
+          id?: string
+          kondisi_temuan?: string | null
+          opname_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aset_opname_items_aset_id_fkey"
+            columns: ["aset_id"]
+            isOneToOne: false
+            referencedRelation: "aset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aset_opname_items_aset_id_fkey"
+            columns: ["aset_id"]
+            isOneToOne: false
+            referencedRelation: "aset_nilai_buku"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aset_opname_items_opname_id_fkey"
+            columns: ["opname_id"]
+            isOneToOne: false
+            referencedRelation: "aset_opname"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aset_pemeliharaan: {
         Row: {
           aset_id: string
@@ -343,6 +552,51 @@ export type Database = {
           },
           {
             foreignKeyName: "aset_pemeliharaan_aset_id_fkey"
+            columns: ["aset_id"]
+            isOneToOne: false
+            referencedRelation: "aset_nilai_buku"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aset_penyusutan_history: {
+        Row: {
+          akumulasi: number
+          aset_id: string
+          created_at: string
+          id: string
+          nilai_buku: number
+          periode: string
+          susut_bulan: number
+        }
+        Insert: {
+          akumulasi?: number
+          aset_id: string
+          created_at?: string
+          id?: string
+          nilai_buku?: number
+          periode: string
+          susut_bulan?: number
+        }
+        Update: {
+          akumulasi?: number
+          aset_id?: string
+          created_at?: string
+          id?: string
+          nilai_buku?: number
+          periode?: string
+          susut_bulan?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aset_penyusutan_history_aset_id_fkey"
+            columns: ["aset_id"]
+            isOneToOne: false
+            referencedRelation: "aset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aset_penyusutan_history_aset_id_fkey"
             columns: ["aset_id"]
             isOneToOne: false
             referencedRelation: "aset_nilai_buku"
@@ -1991,6 +2245,108 @@ export type Database = {
           },
         ]
       }
+      lokasi_gedung: {
+        Row: {
+          alamat: string | null
+          created_at: string
+          id: string
+          nama: string
+          opd_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          alamat?: string | null
+          created_at?: string
+          id?: string
+          nama: string
+          opd_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          alamat?: string | null
+          created_at?: string
+          id?: string
+          nama?: string
+          opd_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lokasi_gedung_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lokasi_lantai: {
+        Row: {
+          created_at: string
+          gedung_id: string
+          id: string
+          nama: string
+          urutan: number | null
+        }
+        Insert: {
+          created_at?: string
+          gedung_id: string
+          id?: string
+          nama: string
+          urutan?: number | null
+        }
+        Update: {
+          created_at?: string
+          gedung_id?: string
+          id?: string
+          nama?: string
+          urutan?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lokasi_lantai_gedung_id_fkey"
+            columns: ["gedung_id"]
+            isOneToOne: false
+            referencedRelation: "lokasi_gedung"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lokasi_ruangan: {
+        Row: {
+          created_at: string
+          id: string
+          kode: string | null
+          lantai_id: string
+          nama: string
+          pic_user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kode?: string | null
+          lantai_id: string
+          nama: string
+          pic_user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kode?: string | null
+          lantai_id?: string
+          nama?: string
+          pic_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lokasi_ruangan_lantai_id_fkey"
+            columns: ["lantai_id"]
+            isOneToOne: false
+            referencedRelation: "lokasi_lantai"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nomor_surat_issued: {
         Row: {
           id: string
@@ -3408,6 +3764,7 @@ export type Database = {
         Args: { _id: string }
         Returns: number
       }
+      fn_susut_bulanan_run: { Args: { _periode: string }; Returns: Json }
       get_effective_permissions: {
         Args: { _user_id: string }
         Returns: {
@@ -3561,6 +3918,7 @@ export type Database = {
         | "admin_desa"
         | "asn"
         | "admin_pemda"
+      aset_kib: "A" | "B" | "C" | "D" | "E" | "F"
       jenis_izin:
         | "cuti_tahunan"
         | "cuti_sakit"
@@ -3712,6 +4070,7 @@ export const Constants = {
         "asn",
         "admin_pemda",
       ],
+      aset_kib: ["A", "B", "C", "D", "E", "F"],
       jenis_izin: [
         "cuti_tahunan",
         "cuti_sakit",
