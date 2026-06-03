@@ -61,14 +61,29 @@ export const listIzinAdmin = createServerFn({ method: "POST" })
     const c = await ctxOf(context.userId);
     if (!c.isSuper && !c.isAdminOpd) throw new Error("Forbidden");
     let q = supabaseAdmin.from("pengajuan_izin")
-      .select("id,user_id,opd_id,jenis,dari,sampai,alasan,lampiran_url,status,catatan_approval,created_at, profile:profiles!user_id(nama_lengkap,nip), opd:opd!opd_id(nama,singkatan)")
+      .select("id,user_id,opd_id,jenis,dari,sampai,alasan,lampiran_url,status,catatan_approval,created_at")
       .order("created_at", { ascending: false }).limit(300);
     if (data.status) q = q.eq("status", data.status);
     const filterOpd = c.isSuper ? data.opd_id : c.opdId;
     if (filterOpd) q = q.eq("opd_id", filterOpd);
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
-    return { rows: rows ?? [] };
+    const list = rows ?? [];
+    // Enrich profile + opd
+    const userIds = [...new Set(list.map((r) => r.user_id))];
+    const opdIds = [...new Set(list.map((r) => r.opd_id).filter((x): x is string => !!x))];
+    const [{ data: profs }, { data: opds }] = await Promise.all([
+      userIds.length
+        ? supabaseAdmin.from("profiles").select("id,nama_lengkap,nip").in("id", userIds)
+        : Promise.resolve({ data: [] as { id: string; nama_lengkap: string | null; nip: string | null }[] }),
+      opdIds.length
+        ? supabaseAdmin.from("opd").select("id,nama,singkatan").in("id", opdIds)
+        : Promise.resolve({ data: [] as { id: string; nama: string; singkatan: string }[] }),
+    ]);
+    const profMap = new Map((profs ?? []).map((p) => [p.id, { nama_lengkap: p.nama_lengkap, nip: p.nip }]));
+    const opdMap = new Map((opds ?? []).map((o) => [o.id, { nama: o.nama, singkatan: o.singkatan }]));
+    return { rows: list.map((r) => ({ ...r, profile: profMap.get(r.user_id) ?? null, opd: r.opd_id ? opdMap.get(r.opd_id) ?? null : null })) };
+
   });
 
 export const decideIzin = createServerFn({ method: "POST" })

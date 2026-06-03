@@ -46,6 +46,7 @@ import { Route as AdminPejabatRouteImport } from './routes/admin.pejabat'
 import { Route as AdminOpdRouteImport } from './routes/admin.opd'
 import { Route as AdminLayananRouteImport } from './routes/admin.layanan'
 import { Route as AdminLaporanRouteImport } from './routes/admin.laporan'
+import { Route as AdminIzinRouteImport } from './routes/admin.izin'
 import { Route as AdminGovernanceRouteImport } from './routes/admin.governance'
 import { Route as AdminFormsRouteImport } from './routes/admin.forms'
 import { Route as AdminEksekutifRouteImport } from './routes/admin.eksekutif'
@@ -269,6 +270,11 @@ const AdminLayananRoute = AdminLayananRouteImport.update({
 const AdminLaporanRoute = AdminLaporanRouteImport.update({
   id: '/admin/laporan',
   path: '/admin/laporan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIzinRoute = AdminIzinRouteImport.update({
+  id: '/admin/izin',
+  path: '/admin/izin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminGovernanceRoute = AdminGovernanceRouteImport.update({
@@ -504,6 +510,7 @@ export interface FileRoutesByFullPath {
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
+  '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRoute
   '/admin/opd': typeof AdminOpdRoute
@@ -582,6 +589,7 @@ export interface FileRoutesByTo {
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
+  '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRoute
   '/admin/opd': typeof AdminOpdRoute
@@ -661,6 +669,7 @@ export interface FileRoutesById {
   '/admin/eksekutif': typeof AdminEksekutifRoute
   '/admin/forms': typeof AdminFormsRouteWithChildren
   '/admin/governance': typeof AdminGovernanceRoute
+  '/admin/izin': typeof AdminIzinRoute
   '/admin/laporan': typeof AdminLaporanRoute
   '/admin/layanan': typeof AdminLayananRoute
   '/admin/opd': typeof AdminOpdRoute
@@ -741,6 +750,7 @@ export interface FileRouteTypes {
     | '/admin/eksekutif'
     | '/admin/forms'
     | '/admin/governance'
+    | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
     | '/admin/opd'
@@ -819,6 +829,7 @@ export interface FileRouteTypes {
     | '/admin/eksekutif'
     | '/admin/forms'
     | '/admin/governance'
+    | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
     | '/admin/opd'
@@ -897,6 +908,7 @@ export interface FileRouteTypes {
     | '/admin/eksekutif'
     | '/admin/forms'
     | '/admin/governance'
+    | '/admin/izin'
     | '/admin/laporan'
     | '/admin/layanan'
     | '/admin/opd'
@@ -976,6 +988,7 @@ export interface RootRouteChildren {
   AdminEksekutifRoute: typeof AdminEksekutifRoute
   AdminFormsRoute: typeof AdminFormsRouteWithChildren
   AdminGovernanceRoute: typeof AdminGovernanceRoute
+  AdminIzinRoute: typeof AdminIzinRoute
   AdminLaporanRoute: typeof AdminLaporanRoute
   AdminLayananRoute: typeof AdminLayananRoute
   AdminOpdRoute: typeof AdminOpdRoute
@@ -1287,6 +1300,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/laporan'
       fullPath: '/admin/laporan'
       preLoaderRoute: typeof AdminLaporanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/izin': {
+      id: '/admin/izin'
+      path: '/admin/izin'
+      fullPath: '/admin/izin'
+      preLoaderRoute: typeof AdminIzinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/governance': {
@@ -1615,6 +1635,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminEksekutifRoute: AdminEksekutifRoute,
   AdminFormsRoute: AdminFormsRouteWithChildren,
   AdminGovernanceRoute: AdminGovernanceRoute,
+  AdminIzinRoute: AdminIzinRoute,
   AdminLaporanRoute: AdminLaporanRoute,
   AdminLayananRoute: AdminLayananRoute,
   AdminOpdRoute: AdminOpdRoute,
