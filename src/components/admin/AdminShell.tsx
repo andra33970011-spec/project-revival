@@ -135,7 +135,7 @@ export function AdminShell({
   opdAktifId?: string;
   onChangeOpd?: (id: string) => void;
 }) {
-  const { isSuperAdmin, isAdminDesa, isAdminPemda, isAdminOpd, can, signOut } = useAuth();
+  const { isSuperAdmin, isAdminDesa, isAdminPemda, isAdminOpd, can, signOut, isPimpinan } = useAuth();
   const [opdList, setOpdList] = useState<Opd[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const branding = useSiteBranding();
@@ -157,6 +157,8 @@ export function AdminShell({
   // Pemilihan nav cerdas: super_admin pakai superNavGroups saja (tanpa baseNav agar tidak duplikat).
   const rawNav: NavItem[] = isSuperAdmin
     ? []
+    : isPimpinan
+    ? pimpinanNav
     : isAdminPemda
     ? pemdaNav
     : isAdminDesa && !isAdminOpd
@@ -169,6 +171,8 @@ export function AdminShell({
     ? "super_admin"
     : isAdminPemda
     ? "admin_pemda"
+    : isPimpinan
+    ? "pimpinan"
     : isAdminOpd
     ? "admin_opd"
     : isAdminDesa
