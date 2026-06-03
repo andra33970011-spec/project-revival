@@ -35,7 +35,7 @@ export const getIkmDashboard = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => z.object({ survey_id: z.string().uuid() }).parse(i))
   .handler(async ({ data }) => {
     const { data: agg } = await supabaseAdmin.rpc("fn_ikm_dashboard", { _survey_id: data.survey_id });
-    return (agg as Record<string, unknown>) ?? {};
+    return { agg: (agg ?? null) as unknown as Record<string, number | string | null> | null };
   });
 
 export const listIkmSurveys = createServerFn({ method: "POST" })
