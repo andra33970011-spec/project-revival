@@ -4,16 +4,35 @@
 export const ROLES = {
   super_admin: "super_admin",
   admin_pemda: "admin_pemda",
+  pimpinan: "pimpinan",
   admin_opd: "admin_opd",
   admin_desa: "admin_desa",
   asn: "asn",
   warga: "warga",
 } as const;
 
+export const PIMPINAN_TYPES = {
+  bupati: "bupati",
+  wakil_bupati: "wakil_bupati",
+  sekda: "sekda",
+  asisten: "asisten",
+  kepala_opd: "kepala_opd",
+} as const;
+
+export const PIMPINAN_TYPE_LABEL: Record<keyof typeof PIMPINAN_TYPES, string> = {
+  bupati: "Bupati",
+  wakil_bupati: "Wakil Bupati",
+  sekda: "Sekretaris Daerah",
+  asisten: "Asisten",
+  kepala_opd: "Kepala OPD",
+};
+
 export const ASN_TYPES = {
   pns: "pns",
   pppk_penuh_waktu: "pppk_penuh_waktu",
   pppk_paruh_waktu: "pppk_paruh_waktu",
+  // Deprecated — dimigrasi otomatis ke `pppk_paruh_waktu` (PPPK_PW). Tetap
+  // valid sebagai label legacy untuk backward compatibility tampilan.
   honorer: "honorer",
 } as const;
 
