@@ -42,8 +42,9 @@ export const upsertLeaveBalance = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     await supabaseAdmin.from("audit_log").insert({
       user_id: context.userId, aksi: "leave.balance_upsert", entitas: "leave_balances",
-      data_sesudah: data as unknown as Record<string, unknown>,
+      data_sesudah: { user_id: data.user_id, tahun: data.tahun, jenis: data.jenis, kuota: data.kuota },
     });
+
     return { ok: true };
   });
 
