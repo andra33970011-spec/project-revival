@@ -53,9 +53,39 @@ function KinerjaOpdPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["kinerja-opd"],
     queryFn: fetchAllOpdKinerja,
-    staleTime: 5 * 60_000, // 5 menit
+    staleTime: 5 * 60_000,
     enabled: !blocked && accessMode !== null && !authLoading,
   });
+
+  const { data: trendData } = useQuery({
+    queryKey: ["kinerja-trend"],
+    queryFn: () => opdKinerjaTrend({ data: { months: 12 } }).then((r) => (r as { rows: TrendRow[] }).rows),
+    staleTime: 5 * 60_000,
+    enabled: !blocked && accessMode !== null,
+  });
+  const { data: skorData } = useQuery({
+    queryKey: ["kinerja-skor"],
+    queryFn: () => opdSkorKomposit().then((r) => (r as { rows: SkorRow[] }).rows),
+    staleTime: 5 * 60_000,
+    enabled: !blocked && accessMode !== null,
+  });
+  const { data: layananData } = useQuery({
+    queryKey: ["kinerja-layanan"],
+    queryFn: () => layananKinerjaAgg().then((r) => (r as { rows: LayananAggRow[] }).rows),
+    staleTime: 5 * 60_000,
+    enabled: !blocked && accessMode !== null,
+  });
+
+  async function handleExport() {
+    try {
+      const r = await exportKinerjaXlsx();
+      const { url, filename } = r as { url: string; filename: string };
+      const a = document.createElement("a");
+      a.href = url; a.download = filename; a.click();
+      toast.success("Laporan diunduh");
+    } catch (e) { toast.error((e as Error).message); }
+  }
+
 
   if (blocked) {
     return (
