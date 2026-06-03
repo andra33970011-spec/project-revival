@@ -1,258 +1,152 @@
+# Struktur Role Pemda + Pimpinan Daerah
 
-# Rencana Implementasi P0 + P1 — Pre Go-Live Pemda
+Implementasi additive & backward compatible. Tidak menghapus role/data lama.
 
-Semua perubahan **additive**, **backward compatible**, **zero-downtime**, tanpa menyentuh RBAC (`super_admin`, `admin_opd`, `admin_desa`, `asn`, `warga` + `asn_type`). Dieksekusi 5 sprint berurutan. Setiap sprint = 1 batch migration + server fns + UI + cron + audit.
+## 1. Database Migration (additive)
 
----
+### M1 — Enum & atribut role
+```sql
+-- Tambah enum value (idempotent via DO block)
+ALTER TYPE app_role ADD VALUE IF NOT EXISTS 'admin_pemda';
+ALTER TYPE app_role ADD VALUE IF NOT EXISTS 'pimpinan';
 
-## SPRINT A — Governance & Layanan Masyarakat
+-- Atribut pimpinan_type
+CREATE TYPE pimpinan_type AS ENUM
+  ('bupati','wakil_bupati','sekda','asisten','kepala_opd');
 
-### Migrasi & tabel baru
-- `submission_sla_events` (submission_id, event_type[`pause`|`resume`|`overdue_l1/l2/l3`], started_at, ended_at, duration_seconds, reason, actor)
-- `submission_dispositions` (submission_id, from_user, to_user, level[`kepala_opd`|`kabid`|`staf`|`review`], note, status, created_at, acted_at)
-- `nomor_surat_sequence` (opd_id, tahun, format_template, last_number) — unique(opd_id,tahun)
-- `nomor_surat_issued` (permohonan_id, nomor, opd_id, tahun, issued_at, issued_by)
-- `ikm_surveys` (id, periode, judul, aktif), `ikm_responses` (survey_id, user_id?, permohonan_id?, u1..u9 smallint, saran, created_at) — 9 unsur PermenPAN-RB 14/2017
-- `escalation_config` (opd_id nullable, level, threshold_days, target_role) — defaults 1/3/7
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS pimpinan_type pimpinan_type;
+```
 
-### Kolom tambah (non-breaking, nullable)
-- `permohonan`: `sla_paused_at timestamptz`, `sla_total_pause_seconds bigint default 0`, `nomor_surat text`, `dokumen_final_path text`, `current_disposition_id uuid`
-- `opd`: `nomor_surat_format text default '{kode}/{seq}/{singkatan}/{tahun}'`
+### M2 — Rename asn_type HONORER → PPPK_PW
+- Tambah enum value `PPPK_PW` (idempotent).
+- UPDATE `profiles` SET `asn_type='PPPK_PW'` WHERE `asn_type='HONORER'`.
+- Pertahankan label HONORER di enum (deprecated, tidak dihapus untuk backward compat).
+- Tambah `CHECK` lewat trigger soft (warning) — JANGAN drop value.
 
-### DB functions / triggers
-- `trg_permohonan_status_sla_pause` — saat status → `menunggu_dokumen`/`dikembalikan` insert event `pause`; saat keluar dari status itu insert `resume` + akumulasi `sla_total_pause_seconds`.
-- `fn_permohonan_effective_sla_seconds(id)` — durasi efektif.
-- `fn_generate_nomor_surat(opd_id, tahun)` — atomic increment via SELECT FOR UPDATE.
-- View `v_permohonan_overdue` untuk cron escalation.
+### M3 — Permissions baru
+INSERT ke `permission_catalog` (atau tabel ekuivalen):
+- `view_all_opd`, `view_all_submissions`, `view_all_attendance`,
+  `view_all_assets`, `view_all_datasets`, `view_all_reports`,
+  `view_all_performance`, `view_all_surveys`,
+  `view_kabupaten_dashboard`, `view_executive_dashboard`,
+  `view_cross_opd_analytics`.
+- Auto-grant ke `admin_pemda` (semua) dan `pimpinan` (view_executive_dashboard, view_kabupaten_dashboard, view_cross_opd_analytics).
 
-### Server functions baru (`src/lib/`)
-- `sla.functions.ts`: `getSlaTimeline`, `forcePauseSla`, `forceResumeSla` (super_admin).
-- `disposisi.functions.ts`: `dispose`, `listDisposisiByPermohonan`, `myInbox`.
-- `nomor-surat.functions.ts`: `issueNomorSurat`, `previewNomor`.
-- `dokumen-final.functions.ts`: `generateDokumenFinal` (PDF via `pdf-lib`, kop + QR verifikasi → `/v/{token}`, hash di tabel `dokumen_verifikasi`). Extension point `signature_provider` (default `none`, siap `bsre`).
-- `ikm.functions.ts`: `submitIkm`, `getIkmDashboard`, CRUD survey.
+### M4 — Helper functions
+```sql
+CREATE OR REPLACE FUNCTION public.is_admin_pemda(_uid uuid)
+  RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public
+  AS $$ SELECT public.has_role(_uid,'admin_pemda') $$;
 
-### Route & UI baru
-- `/admin/layanan/escalation` — config threshold
-- `/admin/layanan/disposisi-inbox`
-- `/admin/ikm` + `/ikm/[surveyId]` (publik post-selesai)
-- `/v/$token` — halaman verifikasi dokumen publik
-- Tambah panel di `permohonan.$id.tsx`: SLA timeline (pause/resume), disposisi tree, tombol "Terbitkan Nomor & Dokumen Final".
+CREATE OR REPLACE FUNCTION public.is_pimpinan(_uid uuid)
+  RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public
+  AS $$ SELECT public.has_role(_uid,'pimpinan') $$;
 
-### Cron baru
-- `escalation-runner` (tiap 30 menit) → POST `/api/public/hooks/sla-escalation`
-- `ikm-invite` harian — kirim notifikasi IKM ke pemohon yang permohonannya selesai 24 jam lalu.
+CREATE OR REPLACE FUNCTION public.is_elevated_view(_uid uuid)
+  RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public
+  AS $$ SELECT public.has_role(_uid,'super_admin')
+        OR public.has_role(_uid,'admin_pemda')
+        OR public.has_role(_uid,'pimpinan') $$;
+```
 
-### Audit & notification
-- Audit: `sla.pause`, `sla.resume`, `disposisi.create`, `nomor_surat.issue`, `dokumen.generate`, `ikm.submit`.
-- Notif: eskalasi L1/L2/L3, disposisi masuk, IKM tersedia.
+### M5 — RLS audit (additive policies, JANGAN drop policy lama)
+Untuk tabel cross-OPD (permohonan, form_submissions, absensi_asn, aset,
+dataset_submission, laporan_masyarakat, audit_log, ikm_responses,
+permohonan_rating, opd, profiles):
+- Tambah policy SELECT `"pemda_read_all"` USING `is_admin_pemda(auth.uid())`.
+- Tambah policy SELECT `"pimpinan_read_all"` USING `is_pimpinan(auth.uid())`.
+- Pimpinan TIDAK diberi policy INSERT/UPDATE/DELETE → otomatis ditolak.
 
----
+## 2. Constants & Guards (src code)
 
-## SPRINT B — Absensi ASN Production
+`src/features/rbac/constants.ts`:
+- ROLES sudah punya `admin_pemda`. Tambah `pimpinan: "pimpinan"`.
+- Tambah `PIMPINAN_TYPES`, `PIMPINAN_TYPE_LABEL`.
+- Tambah `ASN_TYPES.pppk_pw`, label "PPPK Paruh Waktu (eks Honorer)".
+- Tambah PERMISSIONS baru.
 
-### Tabel baru
-- `attendance_shifts` (id, opd_id, nama, jam_masuk, jam_pulang, toleransi_menit, jenis[`pagi`|`malam`|`khusus`])
-- `attendance_shift_assignment` (user_id, shift_id, tanggal/rentang, aktif) — gantikan `shift_assignment` lama bila ada, dengan view kompatibilitas.
-- `leave_balances` (user_id, tahun, jenis, kuota, terpakai)
-- `leave_requests` (extend `pengajuan_izin` jika perlu; tambah kolom `mengurangi_saldo bool`, `saldo_terpotong int`)
-- `overtime_requests` (user_id, tanggal, jam_mulai, jam_selesai, alasan, status, approver_id)
-- `payroll_periods` (opd_id, tahun, bulan, locked_at, locked_by) — unique(opd_id,tahun,bulan)
-- `geofence_audit` (absensi_id, lat, lng, dist_m, radius_m, valid, reason)
+`src/features/rbac/guards.ts`:
+- `AuthzContext` sudah punya `isPemda`. Tambah `isPimpinan`, `isReadOnly`.
+- Helper `canWrite(ctx)` = !isPimpinan.
+- `isElevated` sudah mencakup super + pemda → extend `isElevatedView` mencakup pimpinan untuk akses baca.
 
-### Server-side geofence
-- Pindahkan validasi haversine ke `submitAbsensi` (sudah ada) — tambah strict mode: tolak request tanpa koordinat valid, tulis ke `geofence_audit`. Hapus jalur trust-client.
+`src/lib/auth-context.tsx`:
+- expose `isPimpinan`, `isAdminPemda` (kalau belum), `pimpinanType`.
 
-### Payroll lock guard
-- Trigger `trg_block_locked_attendance` — UPDATE/DELETE pada `absensi_asn` ditolak jika `payroll_periods.locked_at` ada, kecuali role super_admin (check via `has_role`).
+## 3. Routes baru
 
-### Server fns
-- `shifts.functions.ts`, `leave.functions.ts` (request, approve, saldo), `overtime.functions.ts`, `payroll.functions.ts` (lock/unlock).
+- `src/routes/executive.tsx` — dashboard pimpinan (read-only).
+  Cards: Layanan, Kinerja OPD, Pengaduan, Absensi, Aset, Dataset.
+- `src/routes/pemda.tsx` — dashboard admin pemda (operasional cross-OPD).
+- Re-use existing RPC: `governance_summary`, `opd_skor_komposit`,
+  `opd_kinerja_trend`, `aset_compliance`, `attendance_compliance`,
+  `fn_ikm_dashboard`.
+- Tambah RPC `executive_summary()` (SECURITY DEFINER, gate via has_role pimpinan/pemda/super).
 
-### Route & UI
-- `/admin/asn/shift` — kelola shift + assignment
-- `/admin/asn/cuti-saldo` — kelola saldo tahunan
-- `/asn/cuti` (extend), `/asn/lembur`
-- `/admin/asn/payroll-lock`
+Guard: AdminGuard diperluas → `ExecutiveGuard` / `PemdaGuard`.
 
-### Cron & audit
-- Cron `leave-balance-rollover` (1 Jan, 00:30) — generate saldo tahunan.
-- Audit: `shift.assign`, `leave.approve`, `overtime.approve`, `payroll.lock/unlock`.
+## 4. Notifications
 
----
+`src/lib/notifications.functions.ts` — tambah helper:
+- `notifyAdminPemda(type, payload)` — fanout ke semua user_roles=admin_pemda.
+- Cron: tambah trigger `sla-escalation` insert ke pemda untuk kritis.
+- Cron baru: `executive-daily-digest` (07:00) & `executive-weekly-digest`
+  (Senin 07:00) → ringkasan ke pimpinan via notifications.
 
-## SPRINT C — Tracking Aset Production
+Tabel tetap `notifications` (additive type: `executive_digest`, `pemda_alert`).
 
-### Tabel baru
-- `aset_kib` enum (`A`..`F`) — kolom tambah `aset.kib char(1)`, `aset.umur_ekonomis_bulan int`, `aset.metode_susut text default 'garis_lurus'`, `aset.akumulasi_susut numeric`, `aset.nilai_buku numeric`.
-- `aset_penyusutan_history` (aset_id, periode `YYYY-MM`, susut_bulan, akumulasi, nilai_buku) — unique.
-- `aset_bast` (id, nomor, pemberi_user, penerima_user, tanggal, pdf_path, status)
-- `aset_bast_items` (bast_id, aset_id)
-- `aset_opname` (id, opd_id, periode, status, dibuat_oleh, ditutup_oleh)
-- `aset_opname_items` (opname_id, aset_id, kondisi_temuan, hadir bool, catatan)
-- `lokasi_gedung`, `lokasi_lantai`, `lokasi_ruangan` (hierarki) — kolom `aset.ruangan_id` nullable; legacy `lokasi text` dipertahankan.
+## 5. Reporting
 
-### DB functions
-- `fn_susut_bulanan_run(periode)` — hitung garis lurus untuk semua aset dengan `umur_ekonomis_bulan>0`, idempotent via unique.
-- Trigger BAST `apply_bast_transfer` saat status `approved` → update `pemegang_user_id`.
+`src/lib/reports.functions.ts` (baru):
+- `reportKabupaten(period)` → aggregate.
+- `reportPerOpd`, `reportPerKecamatan`, `reportPerDesa`.
+- Export PDF (pdf-lib) & Excel (xlsx via `bun add xlsx`).
+- Endpoint: `/admin/reports/kabupaten` (admin_pemda + super).
 
-### Server fns
-- `aset-kib.functions.ts`, `aset-susut.functions.ts`, `aset-bast.functions.ts` (PDF), `aset-opname.functions.ts`, `lokasi.functions.ts`.
+## 6. Menu & terminologi
 
-### Route & UI
-- `/admin/aset/kib` (mapping bulk),
-- `/admin/aset/penyusutan` (jalankan periode, lihat history),
-- `/admin/aset/bast` + detail,
-- `/admin/aset/opname` + `/admin/aset/opname/$id`,
-- `/admin/lokasi` (gedung→lantai→ruangan).
-
-### Cron
-- `aset-susut-bulanan` — tiap tanggal 1, 02:00.
-
-### Audit
-- `aset.kib_set`, `aset.susut_run`, `bast.issue/approve`, `opname.open/close`, `lokasi.create`.
-
----
-
-## SPRINT D — Dataset & Form Builder Production
-
-### Tabel baru
-- `form_rules` (form_id, field_kode, condition jsonb, action enum[`show`|`hide`|`required`|`readonly`|`set_value`], priority)
-- `form_schema_versions` (form_id, version int, schema jsonb, published_at, published_by) — extend tabel forms.
-- Kolom `form_submissions.schema_version int`, `form_submissions.schema_snapshot jsonb` (immutable per submission).
-- `submission_reviews` (submission_id, level enum[`operator`|`verifikator`|`approver`], reviewer_id, status, note, decided_at)
-- `master_data_sets` (kode, judul, deskripsi) + `master_data_items` (set_id, kode, label, parent_id nullable, meta jsonb) — untuk wilayah/jabatan/golongan/pendidikan.
-- `import_jobs` (id, form_id, file_path, status[`uploaded`|`validating`|`dry_run_ok`|`committed`|`failed`], summary jsonb, created_by)
-- `import_job_rows` (job_id, row_no, raw jsonb, errors jsonb, committed bool)
-
-### Server fns
-- `form-rules.functions.ts` (CRUD + evaluator yang dipanggil renderer)
-- `form-versions.functions.ts` (publish increments version, snapshot stored)
-- `submission-review.functions.ts` (3 level workflow)
-- `master-data.functions.ts` (CRUD + lookup)
-- `import.functions.ts` (upload → dry run → commit) — pakai `xlsx` package (Worker-safe build) atau parse di client lalu kirim JSON chunk.
-
-### Renderer
-- Tambah engine evaluasi rules ke `FieldRenderer` (nested AND/OR). Submission lama tetap render dari `schema_snapshot`.
-
-### Route & UI
-- Builder tab baru "Logika" (rules visual), "Versi" (history)
-- `/admin/master-data`
-- `/admin/forms/$id/import`
-- `/admin/forms/$id/review-queue`
-
-### Audit
-- `form.rule.save`, `form.publish_version`, `submission.review`, `master_data.upsert`, `import.commit`.
-
----
-
-## SPRINT E — Compliance & Resilience
-
-### Tabel baru
-- `dr_drills` (id, jenis[`backup`|`restore`|`failover`], dijalankan_oleh, mulai, selesai, hasil[`ok`|`gagal`], catatan, artefak_path)
-- `data_classification` (table_name, column_name, level enum[`PUBLIC`|`INTERNAL`|`CONFIDENTIAL`|`PERSONAL`], pii bool) — seed untuk NIK, alamat, no_hp, dst.
-- `spbe_checklist_items` (kategori[`layanan`|`keamanan`|`tata_kelola`|`data`], kode, judul, deskripsi, bobot)
-- `spbe_assessment` (item_id, status[`belum`|`sebagian`|`tercapai`], bukti_url, dinilai_oleh, dinilai_at, catatan)
-
-### Server fns
-- `dr.functions.ts` — record drill, attach bukti.
-- `classification.functions.ts` — tagging + view sensitif (untuk masking di export).
-- `spbe.functions.ts` — checklist CRUD + skor agregat.
-
-### Route & UI
-- `/admin/system/dr-drills` (extend halaman DR existing)
-- `/admin/governance/data-classification`
-- `/admin/governance/spbe`
-
-### Audit
-- `dr.drill`, `classification.set`, `spbe.update`.
-
----
-
-## Ringkasan Output
-
-### Tabel baru (≈30)
-SLA/disposisi/nomor/ikm (6), Absensi (6), Aset (8), Dataset (8), Compliance (4).
-
-### Tabel diubah (kolom nullable, default aman)
-`permohonan`, `opd`, `aset`, `forms`, `form_submissions`, `absensi_asn` (tidak ada drop/rename).
-
-### Route baru
-~22 admin + 2 publik (`/v/$token`, `/ikm/$id`).
-
-### Cron baru
-`sla-escalation`, `ikm-invite`, `leave-balance-rollover`, `aset-susut-bulanan` (+ existing tetap).
-
-### Notifikasi baru
-Eskalasi SLA, disposisi masuk, IKM, cuti approved/rejected, lembur approved, BAST diterima, opname dibuka, review dataset.
-
-### Audit log baru
-Semua aksi di atas — entitas: `sla`, `disposisi`, `nomor_surat`, `dokumen`, `ikm`, `shift`, `leave`, `overtime`, `payroll`, `aset_kib`, `aset_susut`, `bast`, `opname`, `lokasi`, `form_rule`, `form_version`, `submission_review`, `master_data`, `import`, `dr`, `classification`, `spbe`.
-
----
-
-## Risk Analysis & Mitigasi
-
-| Risiko | Mitigasi |
+`src/components/admin/AdminShell.tsx` — sidebar pakai label baru:
+| Lama | Baru |
 |---|---|
-| Migration besar = downtime | Semua kolom nullable + default; backfill async via cron, bukan dalam DDL |
-| SLA recompute mengubah laporan historis | `sla_total_pause_seconds` default 0 → laporan lama identik; pause hanya berlaku untuk event setelah deploy |
-| Geofence strict menolak ASN lama | Feature flag `attendance.strict_geofence` per OPD, default off, dinyalakan bertahap |
-| Payroll lock memblok admin OPD | Bypass khusus `super_admin`; UI warning sebelum lock |
-| Penyusutan retroaktif salah | Run pertama hanya untuk periode berjalan; backfill manual via tool admin |
-| Rules engine memblok form lama | Form tanpa rules = perilaku identik (default empty) |
-| Import Excel di Worker (memory) | Batas 5MB / 5000 baris per job; chunk via `import_job_rows` |
-| PDF generation berat | `pdf-lib` (pure JS, Worker-safe), bukan puppeteer |
+| Permission Matrix | Hak Akses |
+| Dead Letter Queue | Tugas Gagal |
+| Retry Queue | Tugas Menunggu Diproses |
+| Cron History | Riwayat Otomatisasi |
+| Feature Flags | Fitur Sistem |
+| Storage Provider | Penyimpanan File |
+| Dataset Submission | Pelaporan Data |
+| Assignment | Penugasan |
 
-## Rollback Strategy
+Pure rename label (route & key tetap untuk backward compat).
 
-- Setiap sprint = 1 migration file + 1 feature flag (`feature_flags`):
-  - `sla.pause_enabled`, `escalation.enabled`, `disposisi.enabled`, `nomor_surat.enabled`, `dokumen_final.enabled`, `ikm.enabled`
-  - `shift.v2`, `geofence.strict`, `leave.v2`, `overtime.enabled`, `payroll.lock`
-  - `aset.kib`, `aset.susut`, `bast.enabled`, `opname.enabled`, `lokasi.hirarkis`
-  - `form.rules`, `form.versioning`, `form.review`, `master_data`, `import.excel`
-  - `dr.drills`, `classification`, `spbe`
-- Rollback = matikan flag (kode lama tetap jalan). Schema baru tetap di DB (additive, tidak mengganggu).
-- Migration tidak DROP / RENAME apapun.
+Menu visibility:
+- Pimpinan → hanya `/executive`, `/kinerja-opd`, view-only audit & laporan.
+- Admin Pemda → `/pemda` + monitoring cross-OPD (read all).
+- Hide setting sensitive (system, feature-flags, storage-provider,
+  permissions-global) untuk admin_pemda.
 
-## Backward Compatibility
+## 7. Output deliverables (tercantum di balasan akhir)
 
-- Tidak ada kolom existing dihapus/ditipe-ulang.
-- Workflow lama berfungsi penuh saat flag baru = off.
-- Renderer form lama membaca `schema_snapshot` jika ada, fallback ke `form_fields` jika tidak.
-- View kompatibilitas untuk `shift_assignment` ↔ `attendance_shift_assignment`.
-- `permohonan` tanpa nomor surat tetap valid; nomor hanya wajib saat user klik "Terbitkan".
+- Daftar 4 migration files
+- Tabel berubah: `profiles` (+pimpinan_type), `user_roles` (data baru), `notifications` (+ tipe), `permission_catalog`
+- Permission baru (11)
+- Route baru: `/executive`, `/pemda`, `/admin/reports/kabupaten`
+- Dashboard baru: Executive, Pemda
+- Menu yang diubah: 8 label
+- RLS: tambah policy `pemda_read_all` & `pimpinan_read_all` di 10 tabel
+- Notification: tipe `executive_digest`, `pemda_alert` + 2 cron baru
+- Reporting: Kabupaten/OPD/Kecamatan/Desa, PDF+Excel
+- Backward compat: role lama dipertahankan, HONORER enum value tetap ada
+- Risk: enum ALTER butuh commit terpisah → split migration; mitigasi via 2 migration berurutan
+- Rollback: DROP policy baru, REVERT data update (HONORER→PPPK_PW) tersimpan di tabel audit
+- Production readiness: zero downtime, additive only
 
-## Production Readiness Setelah Implementasi
+## Technical notes
 
-| Aspek | Sebelum | Sesudah |
-|---|---|---|
-| SLA fairness | ❌ no pause | ✅ pause/resume + audit |
-| Eskalasi otomatis | ❌ | ✅ 3 level configurable |
-| Dokumen resmi | ❌ | ✅ PDF + QR verifikasi |
-| IKM PermenPAN-RB | ❌ | ✅ 9 unsur |
-| Absensi shift | parsial | ✅ shift + geofence server + payroll lock |
-| Cuti/lembur | parsial | ✅ saldo + workflow |
-| Aset KIB & penyusutan | ❌ | ✅ Permendagri 47/2021 |
-| BAST & opname | ❌ | ✅ |
-| Form conditional + versi | ❌ | ✅ |
-| Review berjenjang | ❌ | ✅ |
-| Master data | ❌ | ✅ |
-| Import Excel | ❌ | ✅ dry-run + commit |
-| DR drill | manual | ✅ tercatat |
-| Klasifikasi data | ❌ | ✅ PII tagged |
-| SPBE | ❌ | ✅ checklist + skor |
+- Postgres ALTER TYPE ADD VALUE harus di-commit sebelum dipakai → pisahkan ke migration A (enum) lalu B (policy/data).
+- pg_cron untuk digest pakai pattern existing `api/public/hooks/*`.
+- Tidak ubah `client.ts`, `client.server.ts`, `auth-middleware.ts`.
+- xlsx package perlu `bun add xlsx`.
 
-**Hasil**: skor kesiapan naik dari ~75% → ~95% untuk go-live pemda; sisanya (TTE BSrE, SIMDA-BMD, SSO BKN) di-park sebagai P2 dengan extension point sudah disiapkan.
-
----
-
-## Urutan Eksekusi yang Direkomendasikan
-
-1. **Sprint A** (paling mendesak untuk warga & SLA fairness)
-2. **Sprint B** (kepatuhan ASN harian)
-3. **Sprint C** (regulasi BMD)
-4. **Sprint D** (kualitas data)
-5. **Sprint E** (compliance & audit eksternal)
-
-Setiap sprint dideploy independen, satu migration batch + UI + flag, lalu diaktifkan bertahap per OPD pilot sebelum global.
+Lanjut implementasi setelah disetujui.

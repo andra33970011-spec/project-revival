@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-// AppRole mencakup role baru `admin_pemda` (Fase 1 RBAC). Role lama tetap.
-export type AppRole = "warga" | "admin_opd" | "super_admin" | "admin_desa" | "asn" | "admin_pemda";
+// AppRole mencakup role baru `admin_pemda` & `pimpinan`. Role lama tetap.
+export type AppRole = "warga" | "admin_opd" | "super_admin" | "admin_desa" | "asn" | "admin_pemda" | "pimpinan";
 
 export type AsnTypeValue = "pns" | "pppk_penuh_waktu" | "pppk_paruh_waktu" | "honorer";
 export type SystemPositionValue =
@@ -30,8 +30,11 @@ type AuthCtx = {
   isAdminDesa: boolean;
   isAdminOpd: boolean;
   isAdminPemda: boolean;
-  /** Super admin atau Admin Pemda — punya cakupan lintas-OPD. */
+  isPimpinan: boolean;
+  /** Super admin atau Admin Pemda — punya cakupan lintas-OPD (read+write). */
   isElevated: boolean;
+  /** Super admin / Admin Pemda / Pimpinan — boleh membaca lintas-OPD. */
+  isElevatedView: boolean;
   isAsn: boolean;
   isStaff: boolean;
   isVerified: boolean;
@@ -39,6 +42,7 @@ type AuthCtx = {
   permissions: Set<string>;
   asnType: AsnTypeValue | null;
   systemPosition: SystemPositionValue | null;
+  pimpinanType: string | null;
   can: (permission: string) => boolean;
   signOut: () => Promise<void>;
   refreshRoles: () => Promise<void>;
@@ -56,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [permissions, setPermissions] = useState<Set<string>>(new Set());
   const [asnType, setAsnType] = useState<AsnTypeValue | null>(null);
   const [systemPosition, setSystemPosition] = useState<SystemPositionValue | null>(null);
+  const [pimpinanType, setPimpinanType] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const DEBUG_AUTH = typeof import.meta !== "undefined" && import.meta.env?.DEV;
@@ -69,11 +74,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function loadProfile(uid: string) {
     const { data, error } = await supabase
       .from("profiles")
-      .select("nama_lengkap,nik,no_hp,desa,verified_at,verified_by,asn_type,system_position")
+      .select("nama_lengkap,nik,no_hp,desa,verified_at,verified_by,asn_type,system_position,pimpinan_type")
       .eq("id", uid)
       .maybeSingle();
     if (error) { debug("loadProfile error", error.message); return; }
-    const row = data as (AuthProfile & { asn_type?: AsnTypeValue | null; system_position?: SystemPositionValue | null }) | null;
+    const row = data as (AuthProfile & { asn_type?: AsnTypeValue | null; system_position?: SystemPositionValue | null; pimpinan_type?: string | null }) | null;
     setProfile(row ? {
       nama_lengkap: row.nama_lengkap,
       nik: row.nik,
@@ -84,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } : null);
     setAsnType(row?.asn_type ?? null);
     setSystemPosition(row?.system_position ?? null);
+    setPimpinanType(row?.pimpinan_type ?? null);
   }
   async function loadPermissions(uid: string, attempt = 0): Promise<void> {
     const { data, error } = await supabase.rpc("get_effective_permissions", { _user_id: uid });
@@ -129,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setPermissions(new Set());
         setAsnType(null);
         setSystemPosition(null);
+        setPimpinanType(null);
         return;
       }
       // Dedupe: skip jika uid sama & sudah ada inflight/snapshot — hindari
@@ -282,11 +289,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAdminDesa: roles.includes("admin_desa"),
     isAdminOpd: roles.includes("admin_opd"),
     isAdminPemda: roles.includes("admin_pemda"),
+    isPimpinan: roles.includes("pimpinan"),
     isElevated: roles.includes("super_admin") || roles.includes("admin_pemda"),
+    isElevatedView: roles.includes("super_admin") || roles.includes("admin_pemda") || roles.includes("pimpinan"),
     isAsn: roles.includes("asn"),
     isStaff:
       roles.includes("super_admin") ||
       roles.includes("admin_pemda") ||
+      roles.includes("pimpinan") ||
       roles.includes("admin_opd") ||
       roles.includes("admin_desa") ||
       roles.includes("asn"),
@@ -294,11 +304,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       !!profile?.verified_at ||
       roles.includes("super_admin") ||
       roles.includes("admin_pemda") ||
+      roles.includes("pimpinan") ||
       roles.includes("admin_opd") ||
       roles.includes("admin_desa"),
     permissions,
     asnType,
     systemPosition,
+    pimpinanType,
     can: (p: string) => roles.includes("super_admin") || permissions.has(p),
     signOut: async () => {
       await supabase.auth.signOut();

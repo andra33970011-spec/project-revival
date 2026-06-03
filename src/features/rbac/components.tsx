@@ -65,6 +65,7 @@ export function RoleBadge({ role, className = "" }: { role: AppRole; className?:
   const tone: Record<AppRole, string> = {
     super_admin: "bg-destructive/10 text-destructive border-destructive/30",
     admin_pemda: "bg-accent/15 text-accent border-accent/30",
+    pimpinan: "bg-gold/20 text-gold-foreground border-gold/40",
     admin_opd: "bg-primary/10 text-primary border-primary/30",
     admin_desa: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
     asn: "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/30",

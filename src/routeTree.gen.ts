@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TentangRouteImport } from './routes/tentang'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PemdaRouteImport } from './routes/pemda'
 import { Route as KontakRouteImport } from './routes/kontak'
 import { Route as KinerjaOpdRouteImport } from './routes/kinerja-opd'
+import { Route as ExecutiveRouteImport } from './routes/executive'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as BeritaRouteImport } from './routes/berita'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -121,6 +123,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PemdaRoute = PemdaRouteImport.update({
+  id: '/pemda',
+  path: '/pemda',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KontakRoute = KontakRouteImport.update({
   id: '/kontak',
   path: '/kontak',
@@ -129,6 +136,11 @@ const KontakRoute = KontakRouteImport.update({
 const KinerjaOpdRoute = KinerjaOpdRouteImport.update({
   id: '/kinerja-opd',
   path: '/kinerja-opd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExecutiveRoute = ExecutiveRouteImport.update({
+  id: '/executive',
+  path: '/executive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DataRoute = DataRouteImport.update({
@@ -641,8 +653,10 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/berita': typeof BeritaRoute
   '/data': typeof DataRoute
+  '/executive': typeof ExecutiveRoute
   '/kinerja-opd': typeof KinerjaOpdRoute
   '/kontak': typeof KontakRoute
+  '/pemda': typeof PemdaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRouteWithChildren
@@ -744,8 +758,10 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/berita': typeof BeritaRoute
   '/data': typeof DataRoute
+  '/executive': typeof ExecutiveRoute
   '/kinerja-opd': typeof KinerjaOpdRoute
   '/kontak': typeof KontakRoute
+  '/pemda': typeof PemdaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRouteWithChildren
@@ -848,8 +864,10 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/berita': typeof BeritaRoute
   '/data': typeof DataRoute
+  '/executive': typeof ExecutiveRoute
   '/kinerja-opd': typeof KinerjaOpdRoute
   '/kontak': typeof KontakRoute
+  '/pemda': typeof PemdaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRouteWithChildren
@@ -953,8 +971,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/berita'
     | '/data'
+    | '/executive'
     | '/kinerja-opd'
     | '/kontak'
+    | '/pemda'
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
@@ -1056,8 +1076,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/berita'
     | '/data'
+    | '/executive'
     | '/kinerja-opd'
     | '/kontak'
+    | '/pemda'
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
@@ -1159,8 +1181,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/berita'
     | '/data'
+    | '/executive'
     | '/kinerja-opd'
     | '/kontak'
+    | '/pemda'
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
@@ -1263,8 +1287,10 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BeritaRoute: typeof BeritaRoute
   DataRoute: typeof DataRoute
+  ExecutiveRoute: typeof ExecutiveRoute
   KinerjaOpdRoute: typeof KinerjaOpdRoute
   KontakRoute: typeof KontakRoute
+  PemdaRoute: typeof PemdaRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TentangRoute: typeof TentangRoute
   AdminAsetRoute: typeof AdminAsetRouteWithChildren
@@ -1364,6 +1390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pemda': {
+      id: '/pemda'
+      path: '/pemda'
+      fullPath: '/pemda'
+      preLoaderRoute: typeof PemdaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kontak': {
       id: '/kontak'
       path: '/kontak'
@@ -1376,6 +1409,13 @@ declare module '@tanstack/react-router' {
       path: '/kinerja-opd'
       fullPath: '/kinerja-opd'
       preLoaderRoute: typeof KinerjaOpdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/executive': {
+      id: '/executive'
+      path: '/executive'
+      fullPath: '/executive'
+      preLoaderRoute: typeof ExecutiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/data': {
@@ -2152,8 +2192,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BeritaRoute: BeritaRoute,
   DataRoute: DataRoute,
+  ExecutiveRoute: ExecutiveRoute,
   KinerjaOpdRoute: KinerjaOpdRoute,
   KontakRoute: KontakRoute,
+  PemdaRoute: PemdaRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TentangRoute: TentangRoute,
   AdminAsetRoute: AdminAsetRouteWithChildren,
@@ -2241,13 +2283,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
