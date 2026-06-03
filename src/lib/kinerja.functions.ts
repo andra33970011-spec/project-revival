@@ -24,7 +24,7 @@ export const opdKinerjaTrend = createServerFn({ method: "POST" })
   }).parse(i))
   .handler(async ({ data }) => {
     const { data: rows, error } = await supabaseAdmin.rpc("opd_kinerja_trend", {
-      _opd: data.opd_id ?? null, _months: data.months,
+      _opd: data.opd_id, _months: data.months,
     });
     if (error) throw new Error(error.message);
     return { rows: (rows ?? []) as TrendRow[] };
