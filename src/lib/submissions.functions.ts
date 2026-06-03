@@ -329,9 +329,9 @@ export const listForReview = createServerFn({ method: "POST" })
     if (userIds.length > 0) {
       const { data: profs } = await supabaseAdmin
         .from("profiles")
-        .select("user_id,nama_lengkap")
-        .in("user_id", userIds);
-      for (const p of profs ?? []) profileMap.set(p.user_id, { nama_lengkap: p.nama_lengkap });
+        .select("id,nama_lengkap")
+        .in("id", userIds);
+      for (const p of profs ?? []) profileMap.set(p.id, { nama_lengkap: p.nama_lengkap });
     }
     const enriched = (rows ?? []).map((r) => ({ ...r, profiles: profileMap.get(r.user_id) ?? null }));
     return { rows: enriched, total: count ?? 0 };
