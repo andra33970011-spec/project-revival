@@ -42,6 +42,15 @@ function Page() {
     } catch (ex) { alert(ex instanceof Error ? ex.message : "Gagal ekspor"); }
   }
 
+  async function onMigrate(id: string, judul: string) {
+    if (!confirm(`Pindahkan template "${judul}" ke Form Builder?\n\nTemplate akan dikloning menjadi form baru (kolom, target, & status). Template lama akan dinonaktifkan.`)) return;
+    try {
+      const r = await migrateDatasetToForm({ data: { template_id: id } }) as unknown as { form_id: string };
+      alert("Berhasil dipindahkan. Form ID: " + r.form_id);
+      await load();
+    } catch (ex) { alert(ex instanceof Error ? ex.message : "Gagal migrasi"); }
+  }
+
   return (
     <div>
       <div className="mb-4 rounded-xl border border-amber-300/50 bg-amber-50 px-4 py-3 text-xs text-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
