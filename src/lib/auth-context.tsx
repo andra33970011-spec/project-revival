@@ -60,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [permissions, setPermissions] = useState<Set<string>>(new Set());
   const [asnType, setAsnType] = useState<AsnTypeValue | null>(null);
   const [systemPosition, setSystemPosition] = useState<SystemPositionValue | null>(null);
+  const [pimpinanType, setPimpinanType] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const DEBUG_AUTH = typeof import.meta !== "undefined" && import.meta.env?.DEV;
