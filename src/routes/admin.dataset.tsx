@@ -98,6 +98,7 @@ function Page() {
                     <IconBtn onClick={() => setViewSubs(t.id)} title="Lihat Submission"><Eye className="h-3.5 w-3.5" /></IconBtn>
                     <IconBtn onClick={() => onExport(t.id)} title="Ekspor Excel"><FileSpreadsheet className="h-3.5 w-3.5" /></IconBtn>
                     <IconBtn onClick={() => onToggle(t.id, t.aktif)} title="Toggle Aktif"><Power className="h-3.5 w-3.5" /></IconBtn>
+                    <IconBtn onClick={() => onMigrate(t.id, t.judul)} title="Pindahkan ke Form Builder"><ArrowRightCircle className="h-3.5 w-3.5 text-primary" /></IconBtn>
                   </div>
                 </td>
               </tr>
