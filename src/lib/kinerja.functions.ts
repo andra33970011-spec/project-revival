@@ -63,7 +63,7 @@ export const exportKinerjaXlsx = createServerFn({ method: "POST" })
     const { data: skorRows, error: e1 } = await supabaseAdmin.rpc("opd_skor_komposit");
     if (e1) throw new Error(e1.message);
     const { data: trendRows, error: e2 } = await supabaseAdmin
-      .rpc("opd_kinerja_trend", { _opd: null, _months: 12 });
+      .rpc("opd_kinerja_trend", { _months: 12 });
     if (e2) throw new Error(e2.message);
     const { data: layananRows, error: e3 } = await supabaseAdmin.rpc("layanan_kinerja_agg");
     if (e3) throw new Error(e3.message);
