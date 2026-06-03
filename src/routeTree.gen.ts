@@ -63,6 +63,7 @@ import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminAsnKepatuhanRouteImport } from './routes/admin.asn-kepatuhan'
 import { Route as AdminAsnRouteImport } from './routes/admin.asn'
 import { Route as AdminAsetKampanyeRouteImport } from './routes/admin.aset-kampanye'
+import { Route as AdminAsetExtraRouteImport } from './routes/admin.aset-extra'
 import { Route as AdminAsetRouteImport } from './routes/admin.aset'
 import { Route as AsnScanTokenRouteImport } from './routes/asn.scan.$token'
 import { Route as ApiInternalMetricsRouteImport } from './routes/api/internal/metrics'
@@ -362,6 +363,11 @@ const AdminAsetKampanyeRoute = AdminAsetKampanyeRouteImport.update({
   path: '/admin/aset-kampanye',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAsetExtraRoute = AdminAsetExtraRouteImport.update({
+  id: '/admin/aset-extra',
+  path: '/admin/aset-extra',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAsetRoute = AdminAsetRouteImport.update({
   id: '/admin/aset',
   path: '/admin/aset',
@@ -529,6 +535,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRoute
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
@@ -613,6 +620,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRoute
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
@@ -698,6 +706,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRoute
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
@@ -784,6 +793,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
+    | '/admin/aset-extra'
     | '/admin/aset-kampanye'
     | '/admin/asn'
     | '/admin/asn-kepatuhan'
@@ -868,6 +878,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
+    | '/admin/aset-extra'
     | '/admin/aset-kampanye'
     | '/admin/asn'
     | '/admin/asn-kepatuhan'
@@ -952,6 +963,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
+    | '/admin/aset-extra'
     | '/admin/aset-kampanye'
     | '/admin/asn'
     | '/admin/asn-kepatuhan'
@@ -1037,6 +1049,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   TentangRoute: typeof TentangRoute
   AdminAsetRoute: typeof AdminAsetRoute
+  AdminAsetExtraRoute: typeof AdminAsetExtraRoute
   AdminAsetKampanyeRoute: typeof AdminAsetKampanyeRoute
   AdminAsnRoute: typeof AdminAsnRoute
   AdminAsnKepatuhanRoute: typeof AdminAsnKepatuhanRoute
@@ -1488,6 +1501,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAsetKampanyeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/aset-extra': {
+      id: '/admin/aset-extra'
+      path: '/admin/aset-extra'
+      fullPath: '/admin/aset-extra'
+      preLoaderRoute: typeof AdminAsetExtraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/aset': {
       id: '/admin/aset'
       path: '/admin/aset'
@@ -1724,6 +1744,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   TentangRoute: TentangRoute,
   AdminAsetRoute: AdminAsetRoute,
+  AdminAsetExtraRoute: AdminAsetExtraRoute,
   AdminAsetKampanyeRoute: AdminAsetKampanyeRoute,
   AdminAsnRoute: AdminAsnRoute,
   AdminAsnKepatuhanRoute: AdminAsnKepatuhanRoute,
