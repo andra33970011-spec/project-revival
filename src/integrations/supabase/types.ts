@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           catatan: string | null
           created_at: string
+          device_fingerprint_hash: string | null
           device_info: string | null
           foto_url: string | null
           id: string
@@ -35,6 +36,7 @@ export type Database = {
         Insert: {
           catatan?: string | null
           created_at?: string
+          device_fingerprint_hash?: string | null
           device_info?: string | null
           foto_url?: string | null
           id?: string
@@ -52,6 +54,7 @@ export type Database = {
         Update: {
           catatan?: string | null
           created_at?: string
+          device_fingerprint_hash?: string | null
           device_info?: string | null
           foto_url?: string | null
           id?: string
@@ -1096,6 +1099,33 @@ export type Database = {
         }
         Relationships: []
       }
+      hari_libur: {
+        Row: {
+          catatan: string | null
+          created_at: string
+          nama: string
+          nasional: boolean
+          tanggal: string
+          updated_at: string
+        }
+        Insert: {
+          catatan?: string | null
+          created_at?: string
+          nama: string
+          nasional?: boolean
+          tanggal: string
+          updated_at?: string
+        }
+        Update: {
+          catatan?: string | null
+          created_at?: string
+          nama?: string
+          nasional?: boolean
+          tanggal?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       job_queue: {
         Row: {
           attempts: number
@@ -1438,6 +1468,57 @@ export type Database = {
           updated_at?: string
           urutan?: number
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      pengajuan_izin: {
+        Row: {
+          alasan: string
+          approved_at: string | null
+          approved_by: string | null
+          catatan_approval: string | null
+          created_at: string
+          dari: string
+          id: string
+          jenis: Database["public"]["Enums"]["jenis_izin"]
+          lampiran_url: string | null
+          opd_id: string | null
+          sampai: string
+          status: Database["public"]["Enums"]["status_izin"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alasan: string
+          approved_at?: string | null
+          approved_by?: string | null
+          catatan_approval?: string | null
+          created_at?: string
+          dari: string
+          id?: string
+          jenis: Database["public"]["Enums"]["jenis_izin"]
+          lampiran_url?: string | null
+          opd_id?: string | null
+          sampai: string
+          status?: Database["public"]["Enums"]["status_izin"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alasan?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          catatan_approval?: string | null
+          created_at?: string
+          dari?: string
+          id?: string
+          jenis?: Database["public"]["Enums"]["jenis_izin"]
+          lampiran_url?: string | null
+          opd_id?: string | null
+          sampai?: string
+          status?: Database["public"]["Enums"]["status_izin"]
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -2263,6 +2344,18 @@ export type Database = {
         Args: { _from: string; _to: string; _user_id: string }
         Returns: Json
       }
+      attendance_device_alert: {
+        Args: { _days?: number }
+        Returns: {
+          device_fingerprint_hash: string
+          jumlah_user: number
+          user_ids: string[]
+        }[]
+      }
+      attendance_rekap_bulanan: {
+        Args: { _month: number; _user_id: string; _year: number }
+        Returns: Json
+      }
       count_permohonan_bulan_ini: { Args: never; Returns: number }
       get_effective_permissions: {
         Args: { _user_id: string }
@@ -2294,7 +2387,33 @@ export type Database = {
         }
         Returns: string
       }
+      layanan_kinerja_agg: {
+        Args: never
+        Returns: {
+          kategori: string
+          layanan_id: string
+          layanan_judul: string
+          on_time: number
+          opd_id: string
+          opd_singkatan: string
+          rata_hari_selesai: number
+          selesai: number
+          selesai_dengan_sla: number
+          total: number
+        }[]
+      }
       opd_attendance_today: { Args: { _opd_id: string }; Returns: Json }
+      opd_kategori_benchmark: {
+        Args: { _kategori: string }
+        Returns: {
+          opd_id: string
+          opd_singkatan: string
+          rating_avg: number
+          skor: number
+          sla_pct: number
+          total: number
+        }[]
+      }
       opd_kinerja_agg: {
         Args: never
         Returns: {
@@ -2307,12 +2426,37 @@ export type Database = {
           total_hari_selesai: number
         }[]
       }
+      opd_kinerja_trend: {
+        Args: { _months?: number; _opd?: string }
+        Returns: {
+          bulan: string
+          masuk: number
+          on_time: number
+          selesai: number
+          selesai_dengan_sla: number
+        }[]
+      }
       opd_rating_agg: {
         Args: never
         Returns: {
           jumlah_rating: number
           opd_id: string
           total_rating: number
+        }[]
+      }
+      opd_skor_komposit: {
+        Args: never
+        Returns: {
+          completion_pct: number
+          kategori: string[]
+          opd_id: string
+          opd_nama: string
+          opd_singkatan: string
+          rating_avg: number
+          selesai: number
+          skor: number
+          sla_pct: number
+          total: number
         }[]
       }
       production_health_score: { Args: never; Returns: Json }
@@ -2358,7 +2502,14 @@ export type Database = {
         | "admin_desa"
         | "asn"
         | "admin_pemda"
+      jenis_izin:
+        | "cuti_tahunan"
+        | "cuti_sakit"
+        | "dinas_luar"
+        | "wfh"
+        | "lainnya"
       job_status: "pending" | "running" | "success" | "failed" | "dead"
+      status_izin: "pending" | "approved" | "rejected" | "dibatalkan"
       status_permohonan:
         | "baru"
         | "diproses"
@@ -2502,7 +2653,15 @@ export const Constants = {
         "asn",
         "admin_pemda",
       ],
+      jenis_izin: [
+        "cuti_tahunan",
+        "cuti_sakit",
+        "dinas_luar",
+        "wfh",
+        "lainnya",
+      ],
       job_status: ["pending", "running", "success", "failed", "dead"],
+      status_izin: ["pending", "approved", "rejected", "dibatalkan"],
       status_permohonan: [
         "baru",
         "diproses",
