@@ -88,6 +88,7 @@ import { Route as ApiPublicHooksCronWatchdogRouteImport } from './routes/api/pub
 import { Route as ApiPublicHooksCleanupUploadsRouteImport } from './routes/api/public/hooks/cleanup-uploads'
 import { Route as ApiPublicHooksBackupSnapshotRouteImport } from './routes/api/public/hooks/backup-snapshot'
 import { Route as ApiPublicHooksAssignmentReminderRouteImport } from './routes/api/public/hooks/assignment-reminder'
+import { Route as ApiPublicHooksAsetWarrantyReminderRouteImport } from './routes/api/public/hooks/aset-warranty-reminder'
 
 const TentangRoute = TentangRouteImport.update({
   id: '/tentang',
@@ -498,6 +499,12 @@ const ApiPublicHooksAssignmentReminderRoute =
     path: '/api/public/hooks/assignment-reminder',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksAsetWarrantyReminderRoute =
+  ApiPublicHooksAsetWarrantyReminderRouteImport.update({
+    id: '/api/public/hooks/aset-warranty-reminder',
+    path: '/api/public/hooks/aset-warranty-reminder',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -568,6 +575,7 @@ export interface FileRoutesByFullPath {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
@@ -649,6 +657,7 @@ export interface FileRoutesByTo {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
@@ -731,6 +740,7 @@ export interface FileRoutesById {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
@@ -814,6 +824,7 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
@@ -895,6 +906,7 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
@@ -976,6 +988,7 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
@@ -1055,6 +1068,7 @@ export interface RootRouteChildren {
   AdminSystemUatRoute: typeof AdminSystemUatRoute
   ApiInternalMetricsRoute: typeof ApiInternalMetricsRoute
   AsnScanTokenRoute: typeof AsnScanTokenRoute
+  ApiPublicHooksAsetWarrantyReminderRoute: typeof ApiPublicHooksAsetWarrantyReminderRoute
   ApiPublicHooksAssignmentReminderRoute: typeof ApiPublicHooksAssignmentReminderRoute
   ApiPublicHooksBackupSnapshotRoute: typeof ApiPublicHooksBackupSnapshotRoute
   ApiPublicHooksCleanupUploadsRoute: typeof ApiPublicHooksCleanupUploadsRoute
@@ -1623,6 +1637,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksAssignmentReminderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/aset-warranty-reminder': {
+      id: '/api/public/hooks/aset-warranty-reminder'
+      path: '/api/public/hooks/aset-warranty-reminder'
+      fullPath: '/api/public/hooks/aset-warranty-reminder'
+      preLoaderRoute: typeof ApiPublicHooksAsetWarrantyReminderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1718,6 +1739,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSystemUatRoute: AdminSystemUatRoute,
   ApiInternalMetricsRoute: ApiInternalMetricsRoute,
   AsnScanTokenRoute: AsnScanTokenRoute,
+  ApiPublicHooksAsetWarrantyReminderRoute:
+    ApiPublicHooksAsetWarrantyReminderRoute,
   ApiPublicHooksAssignmentReminderRoute: ApiPublicHooksAssignmentReminderRoute,
   ApiPublicHooksBackupSnapshotRoute: ApiPublicHooksBackupSnapshotRoute,
   ApiPublicHooksCleanupUploadsRoute: ApiPublicHooksCleanupUploadsRoute,

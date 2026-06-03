@@ -15,16 +15,17 @@ export const Route = createFileRoute("/api/public/hooks/aset-warranty-reminder")
           if (list.length === 0) return Response.json({ ok: true, sent: 0 });
 
           const opdIds = Array.from(new Set(list.map((r) => r.opd_id).filter(Boolean) as string[]));
-          const { data: admins } = await supabaseAdmin.from("profiles")
-            .select("id,opd_id, ur:user_roles!user_roles_user_id_fkey(role)")
-            .in("opd_id", opdIds.length > 0 ? opdIds : ["00000000-0000-0000-0000-000000000000"]);
           const adminsByOpd = new Map<string, string[]>();
-          for (const a of admins ?? []) {
-            const isAdminOpd = ((a.ur as { role: string }[] | null) ?? []).some((r) => r.role === "admin_opd");
-            if (!isAdminOpd || !a.opd_id) continue;
-            const cur = adminsByOpd.get(a.opd_id) ?? [];
-            cur.push(a.id);
-            adminsByOpd.set(a.opd_id, cur);
+          if (opdIds.length > 0) {
+            const { data: adminRoles } = await supabaseAdmin.from("user_roles")
+              .select("user_id, profile:profiles!user_id(opd_id)").eq("role", "admin_opd");
+            for (const a of adminRoles ?? []) {
+              const opd = (a.profile as { opd_id: string | null } | null)?.opd_id;
+              if (!opd || !opdIds.includes(opd)) continue;
+              const cur = adminsByOpd.get(opd) ?? [];
+              cur.push(a.user_id);
+              adminsByOpd.set(opd, cur);
+            }
           }
 
           let sent = 0;
