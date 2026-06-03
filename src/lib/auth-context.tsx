@@ -30,8 +30,11 @@ type AuthCtx = {
   isAdminDesa: boolean;
   isAdminOpd: boolean;
   isAdminPemda: boolean;
-  /** Super admin atau Admin Pemda — punya cakupan lintas-OPD. */
+  isPimpinan: boolean;
+  /** Super admin atau Admin Pemda — punya cakupan lintas-OPD (read+write). */
   isElevated: boolean;
+  /** Super admin / Admin Pemda / Pimpinan — boleh membaca lintas-OPD. */
+  isElevatedView: boolean;
   isAsn: boolean;
   isStaff: boolean;
   isVerified: boolean;
@@ -39,6 +42,7 @@ type AuthCtx = {
   permissions: Set<string>;
   asnType: AsnTypeValue | null;
   systemPosition: SystemPositionValue | null;
+  pimpinanType: string | null;
   can: (permission: string) => boolean;
   signOut: () => Promise<void>;
   refreshRoles: () => Promise<void>;
