@@ -74,11 +74,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function loadProfile(uid: string) {
     const { data, error } = await supabase
       .from("profiles")
-      .select("nama_lengkap,nik,no_hp,desa,verified_at,verified_by,asn_type,system_position")
+      .select("nama_lengkap,nik,no_hp,desa,verified_at,verified_by,asn_type,system_position,pimpinan_type")
       .eq("id", uid)
       .maybeSingle();
     if (error) { debug("loadProfile error", error.message); return; }
-    const row = data as (AuthProfile & { asn_type?: AsnTypeValue | null; system_position?: SystemPositionValue | null }) | null;
+    const row = data as (AuthProfile & { asn_type?: AsnTypeValue | null; system_position?: SystemPositionValue | null; pimpinan_type?: string | null }) | null;
     setProfile(row ? {
       nama_lengkap: row.nama_lengkap,
       nik: row.nik,
@@ -89,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } : null);
     setAsnType(row?.asn_type ?? null);
     setSystemPosition(row?.system_position ?? null);
+    setPimpinanType(row?.pimpinan_type ?? null);
   }
   async function loadPermissions(uid: string, attempt = 0): Promise<void> {
     const { data, error } = await supabase.rpc("get_effective_permissions", { _user_id: uid });
