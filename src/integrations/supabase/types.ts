@@ -4036,6 +4036,7 @@ export type Database = {
         | "admin_desa"
         | "asn"
         | "admin_pemda"
+        | "pimpinan"
       aset_kib: "A" | "B" | "C" | "D" | "E" | "F"
       jenis_izin:
         | "cuti_tahunan"
@@ -4044,6 +4045,12 @@ export type Database = {
         | "wfh"
         | "lainnya"
       job_status: "pending" | "running" | "success" | "failed" | "dead"
+      pimpinan_type:
+        | "bupati"
+        | "wakil_bupati"
+        | "sekda"
+        | "asisten"
+        | "kepala_opd"
       status_izin: "pending" | "approved" | "rejected" | "dibatalkan"
       status_permohonan:
         | "baru"
@@ -4187,6 +4194,7 @@ export const Constants = {
         "admin_desa",
         "asn",
         "admin_pemda",
+        "pimpinan",
       ],
       aset_kib: ["A", "B", "C", "D", "E", "F"],
       jenis_izin: [
@@ -4197,6 +4205,13 @@ export const Constants = {
         "lainnya",
       ],
       job_status: ["pending", "running", "success", "failed", "dead"],
+      pimpinan_type: [
+        "bupati",
+        "wakil_bupati",
+        "sekda",
+        "asisten",
+        "kepala_opd",
+      ],
       status_izin: ["pending", "approved", "rejected", "dibatalkan"],
       status_permohonan: [
         "baru",
