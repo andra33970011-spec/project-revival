@@ -6,7 +6,8 @@ import {
   upsertTemplate, listTemplatesAdmin, toggleTemplateAktif,
   listSubmissions, exportSubmissionsXlsx,
 } from "@/lib/dataset.functions";
-import { Plus, X, FileSpreadsheet, Eye, Power, Save } from "lucide-react";
+import { migrateDatasetToForm } from "@/lib/forms-extras.functions";
+import { Plus, X, FileSpreadsheet, Eye, Power, Save, ArrowRightCircle } from "lucide-react";
 
 export const Route = createFileRoute("/admin/dataset")({
   head: () => ({ meta: [{ title: "Admin — Dataset" }, { name: "robots", content: "noindex" }] }),
