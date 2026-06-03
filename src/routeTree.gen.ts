@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PermohonanIndexRouteImport } from './routes/permohonan.index'
 import { Route as PengisianIndexRouteImport } from './routes/pengisian.index'
 import { Route as LayananIndexRouteImport } from './routes/layanan.index'
+import { Route as DataTerbukaIndexRouteImport } from './routes/data-terbuka.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as TugasAssignmentIdRouteImport } from './routes/tugas.$assignmentId'
 import { Route as PermohonanBaruRouteImport } from './routes/permohonan.baru'
@@ -148,6 +149,11 @@ const PengisianIndexRoute = PengisianIndexRouteImport.update({
 const LayananIndexRoute = LayananIndexRouteImport.update({
   id: '/layanan/',
   path: '/layanan/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataTerbukaIndexRoute = DataTerbukaIndexRouteImport.update({
+  id: '/data-terbuka/',
+  path: '/data-terbuka/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -557,6 +563,7 @@ export interface FileRoutesByFullPath {
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/data-terbuka/': typeof DataTerbukaIndexRoute
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
@@ -639,6 +646,7 @@ export interface FileRoutesByTo {
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
   '/admin': typeof AdminIndexRoute
+  '/data-terbuka': typeof DataTerbukaIndexRoute
   '/layanan': typeof LayananIndexRoute
   '/pengisian': typeof PengisianIndexRoute
   '/permohonan': typeof PermohonanIndexRoute
@@ -722,6 +730,7 @@ export interface FileRoutesById {
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/data-terbuka/': typeof DataTerbukaIndexRoute
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
@@ -806,6 +815,7 @@ export interface FileRouteTypes {
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
     | '/admin/'
+    | '/data-terbuka/'
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
@@ -888,6 +898,7 @@ export interface FileRouteTypes {
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
     | '/admin'
+    | '/data-terbuka'
     | '/layanan'
     | '/pengisian'
     | '/permohonan'
@@ -970,6 +981,7 @@ export interface FileRouteTypes {
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
     | '/admin/'
+    | '/data-terbuka/'
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
@@ -1053,6 +1065,7 @@ export interface RootRouteChildren {
   PermohonanBaruRoute: typeof PermohonanBaruRoute
   TugasAssignmentIdRoute: typeof TugasAssignmentIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  DataTerbukaIndexRoute: typeof DataTerbukaIndexRoute
   LayananIndexRoute: typeof LayananIndexRoute
   PengisianIndexRoute: typeof PengisianIndexRoute
   PermohonanIndexRoute: typeof PermohonanIndexRoute
@@ -1166,6 +1179,13 @@ declare module '@tanstack/react-router' {
       path: '/layanan'
       fullPath: '/layanan/'
       preLoaderRoute: typeof LayananIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-terbuka/': {
+      id: '/data-terbuka/'
+      path: '/data-terbuka'
+      fullPath: '/data-terbuka/'
+      preLoaderRoute: typeof DataTerbukaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -1724,6 +1744,7 @@ const rootRouteChildren: RootRouteChildren = {
   PermohonanBaruRoute: PermohonanBaruRoute,
   TugasAssignmentIdRoute: TugasAssignmentIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  DataTerbukaIndexRoute: DataTerbukaIndexRoute,
   LayananIndexRoute: LayananIndexRoute,
   PengisianIndexRoute: PengisianIndexRoute,
   PermohonanIndexRoute: PermohonanIndexRoute,
