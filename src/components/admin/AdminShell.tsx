@@ -40,8 +40,20 @@ const desaBaseNav: NavItem[] = [
 ];
 // Admin Pemda: monitoring lintas-OPD, audit, dan persetujuan
 const pemdaNav: NavItem[] = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/admin/audit", label: "Audit Log", icon: FileClock, permission: "can_view_audit_logs" },
+  { to: "/pemda", label: "Dashboard Pemda", icon: LayoutDashboard },
+  { to: "/executive", label: "Dashboard Pimpinan", icon: LayoutDashboard },
+  { to: "/admin/layanan", label: "Monitoring Layanan", icon: ListChecks },
+  { to: "/admin/laporan", label: "Pengaduan Masyarakat", icon: MessageSquare },
+  { to: "/admin/asn-kepatuhan", label: "Kepatuhan Absensi", icon: ScanLine },
+  { to: "/admin/aset", label: "Aset Pemda", icon: Boxes },
+  { to: "/admin/dataset", label: "Pelaporan Data", icon: DbIcon },
+  { to: "/admin/audit", label: "Riwayat Audit", icon: FileClock, permission: "can_view_audit_logs" },
+];
+
+// Pimpinan Daerah: read-only dashboard saja.
+const pimpinanNav: NavItem[] = [
+  { to: "/executive", label: "Dashboard Eksekutif", icon: LayoutDashboard },
+  { to: "/kinerja-opd", label: "Kinerja OPD", icon: ListChecks },
 ];
 
 // F5.9 — Sidebar Super Admin diorganisir per grup operasional.
