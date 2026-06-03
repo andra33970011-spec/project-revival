@@ -133,12 +133,19 @@ export const submitAbsensi = createServerFn({ method: "POST" })
     if (qr.lat !== null && qr.lng !== null) {
       const radius = (qr.radius_m as number | null) ?? 100;
       const dist = haversineMeters(Number(qr.lat), Number(qr.lng), data.lat, data.lng);
-      if (dist > radius) {
+      const valid = dist <= radius;
+      await supabaseAdmin.from("geofence_audit").insert({
+        user_id: userId, opd_id: qr.opd_id, lat: data.lat, lng: data.lng,
+        dist_m: Math.round(dist), radius_m: radius, valid,
+        reason: valid ? null : `out_of_range ${Math.round(dist)}m`,
+      });
+      if (!valid) {
         throw new Error(`Absen gagal. Anda berada ${Math.round(dist)} m dari kantor (maks ${radius} m). Mendekatlah ke titik kantor lalu coba lagi.`);
       }
     } else {
       throw new Error("Koordinat kantor belum ditetapkan superadmin. Hubungi admin.");
     }
+
 
     // Cegah duplikat masuk/pulang di hari yang sama
     const today = new Date(); today.setUTCHours(0, 0, 0, 0);
