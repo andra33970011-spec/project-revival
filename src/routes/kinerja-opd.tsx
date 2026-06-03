@@ -6,23 +6,16 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PageShell, PageHero } from "@/components/site/PageShell";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend, LineChart, Line,
 } from "recharts";
-import { Building2, CheckCircle2, ThumbsUp, TrendingUp, AlertCircle, Lock } from "lucide-react";
+import { Building2, CheckCircle2, ThumbsUp, TrendingUp, AlertCircle, Lock, Download, Trophy } from "lucide-react";
 import { fetchAllOpdKinerja } from "@/lib/kinerja-queries";
+import { opdKinerjaTrend, opdSkorKomposit, layananKinerjaAgg, exportKinerjaXlsx, type TrendRow, type SkorRow, type LayananAggRow } from "@/lib/kinerja.functions";
 import { STATUS_TONE } from "@/lib/permohonan";
 import { useAuth } from "@/lib/auth-context";
 import { getAccessMode, type AccessMode } from "@/lib/access-mode";
+
 
 export const Route = createFileRoute("/kinerja-opd")({
   head: () => ({
