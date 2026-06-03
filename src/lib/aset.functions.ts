@@ -81,7 +81,8 @@ export const upsertAset = createServerFn({ method: "POST" })
     const key = idemKey("aset:create", context.userId, { nama: data.nama, opd_id: data.opd_id });
     return withIdempotency(key, 30_000, async () => {
       const kode = genKode();
-      const { data: row, error } = await supabaseAdmin.from("aset").insert({ ...payload, kode }).select("id,kode").single();
+      // qr_token diisi otomatis oleh trigger aset_set_qr_token; cast agar lulus type check
+      const { data: row, error } = await supabaseAdmin.from("aset").insert({ ...payload, kode } as never).select("id,kode").single();
       if (error) {
         log.error("aset.create.fail", { userId: context.userId, correlationId, error: error.message });
         throw new Error(error.message);
