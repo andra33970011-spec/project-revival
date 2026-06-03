@@ -64,10 +64,13 @@ export const updateChecklistItem = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const userId = (context as { userId: string }).userId;
     await assertSuper(userId);
-    const patch: Record<string, unknown> = { updated_by: userId, updated_at: new Date().toISOString() };
-    if (data.status !== undefined) patch.status = data.status;
-    if (data.bukti_url !== undefined) patch.bukti_url = data.bukti_url;
-    if (data.catatan !== undefined) patch.catatan = data.catatan;
+    const patch = {
+      updated_by: userId,
+      updated_at: new Date().toISOString(),
+      ...(data.status !== undefined ? { status: data.status } : {}),
+      ...(data.bukti_url !== undefined ? { bukti_url: data.bukti_url } : {}),
+      ...(data.catatan !== undefined ? { catatan: data.catatan } : {}),
+    };
     const { error } = await supabaseAdmin.from("compliance_checklist").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
