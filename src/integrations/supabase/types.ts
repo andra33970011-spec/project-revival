@@ -3092,6 +3092,7 @@ export type Database = {
           nip: string | null
           no_hp: string | null
           opd_id: string | null
+          pimpinan_type: Database["public"]["Enums"]["pimpinan_type"] | null
           status: string
           system_position: string | null
           updated_at: string
@@ -3111,6 +3112,7 @@ export type Database = {
           nip?: string | null
           no_hp?: string | null
           opd_id?: string | null
+          pimpinan_type?: Database["public"]["Enums"]["pimpinan_type"] | null
           status?: string
           system_position?: string | null
           updated_at?: string
@@ -3130,6 +3132,7 @@ export type Database = {
           nip?: string | null
           no_hp?: string | null
           opd_id?: string | null
+          pimpinan_type?: Database["public"]["Enums"]["pimpinan_type"] | null
           status?: string
           system_position?: string | null
           updated_at?: string
@@ -3869,6 +3872,7 @@ export type Database = {
         Returns: Json
       }
       count_permohonan_bulan_ini: { Args: never; Returns: number }
+      executive_summary: { Args: never; Returns: Json }
       fn_generate_nomor_surat: {
         Args: { _opd_id: string; _permohonan_id: string }
         Returns: string
@@ -3903,10 +3907,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin_pemda: { Args: { _uid: string }; Returns: boolean }
+      is_elevated_view: { Args: { _uid: string }; Returns: boolean }
       is_payroll_locked: {
         Args: { _opd_id: string; _ts: string }
         Returns: boolean
       }
+      is_pimpinan: { Args: { _uid: string }; Returns: boolean }
       konversi_laporan_ke_permohonan: {
         Args: {
           _kategori: string
