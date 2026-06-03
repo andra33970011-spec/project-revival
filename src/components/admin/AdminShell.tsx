@@ -109,10 +109,17 @@ const superNavGroups: NavGroup[] = [
     ],
   },
   {
+    title: "Pemda & Eksekutif",
+    items: [
+      { to: "/pemda", label: "Dashboard Pemda", icon: LayoutDashboard },
+      { to: "/executive", label: "Dashboard Eksekutif", icon: LayoutDashboard },
+      { to: "/admin/eksekutif", label: "Pimpinan (Detail)", icon: LayoutDashboard },
+    ],
+  },
+  {
     title: "Data & Laporan",
     items: [
-      { to: "/admin/dataset", label: "Dataset", icon: DbIcon },
-      { to: "/admin/eksekutif", label: "Dashboard Pimpinan", icon: LayoutDashboard },
+      { to: "/admin/dataset", label: "Pelaporan Data", icon: DbIcon },
     ],
   },
   {
