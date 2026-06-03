@@ -71,6 +71,18 @@ export const PERMISSIONS = {
   can_request_data: "can_request_data",
   can_approve_data_request: "can_approve_data_request",
   can_approve_registration: "can_approve_registration",
+  // Tahap Pemda (read-only & cross-OPD) — diberikan ke admin_pemda / pimpinan.
+  view_all_opd: "view_all_opd",
+  view_all_submissions: "view_all_submissions",
+  view_all_attendance: "view_all_attendance",
+  view_all_assets: "view_all_assets",
+  view_all_datasets: "view_all_datasets",
+  view_all_reports: "view_all_reports",
+  view_all_performance: "view_all_performance",
+  view_all_surveys: "view_all_surveys",
+  view_kabupaten_dashboard: "view_kabupaten_dashboard",
+  view_executive_dashboard: "view_executive_dashboard",
+  view_cross_opd_analytics: "view_cross_opd_analytics",
 } as const;
 
 export const ASN_TYPE_LABEL: Record<AsnType, string> = {
