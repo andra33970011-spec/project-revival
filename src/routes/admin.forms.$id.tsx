@@ -76,6 +76,9 @@ function Page() {
         })),
       );
       setTargets(r.targets);
+      // Load is_public/slug terpisah
+      const { data: extra } = await supabase.from("forms").select("is_public,slug").eq("id", id).maybeSingle();
+      if (extra) { setIsPublic(!!extra.is_public); setSlug(extra.slug ?? ""); }
     } catch (e) {
       alert(e instanceof Error ? e.message : "Gagal memuat");
     } finally {
