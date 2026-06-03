@@ -43,7 +43,9 @@ function Page() {
   });
   const [fields, setFields] = useState<FormField[]>([]);
   const [targets, setTargets] = useState<Target[]>([]);
-  const [tab, setTab] = useState<"meta" | "fields" | "targets">("meta");
+  const [tab, setTab] = useState<"meta" | "fields" | "targets" | "akses">("meta");
+  const [isPublic, setIsPublic] = useState(false);
+  const [slug, setSlug] = useState("");
 
   async function load() {
     setLoading(true);
