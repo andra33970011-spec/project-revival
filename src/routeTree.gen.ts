@@ -61,6 +61,7 @@ import { Route as AdminEksekutifRouteImport } from './routes/admin.eksekutif'
 import { Route as AdminDesaRouteImport } from './routes/admin.desa'
 import { Route as AdminDatasetRouteImport } from './routes/admin.dataset'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
+import { Route as AdminComplianceRouteImport } from './routes/admin.compliance'
 import { Route as AdminCmsRouteImport } from './routes/admin.cms'
 import { Route as AdminBrandingRouteImport } from './routes/admin.branding'
 import { Route as AdminBackupRouteImport } from './routes/admin.backup'
@@ -370,6 +371,11 @@ const AdminConfigRoute = AdminConfigRouteImport.update({
   path: '/admin/config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminComplianceRoute = AdminComplianceRouteImport.update({
+  id: '/admin/compliance',
+  path: '/admin/compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminCmsRoute = AdminCmsRouteImport.update({
   id: '/admin/cms',
   path: '/admin/cms',
@@ -648,6 +654,7 @@ export interface FileRoutesByFullPath {
   '/admin/backup': typeof AdminBackupRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/cms': typeof AdminCmsRoute
+  '/admin/compliance': typeof AdminComplianceRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/dataset': typeof AdminDatasetRouteWithChildren
   '/admin/desa': typeof AdminDesaRoute
@@ -750,6 +757,7 @@ export interface FileRoutesByTo {
   '/admin/backup': typeof AdminBackupRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/cms': typeof AdminCmsRoute
+  '/admin/compliance': typeof AdminComplianceRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/dataset': typeof AdminDatasetRouteWithChildren
   '/admin/desa': typeof AdminDesaRoute
@@ -853,6 +861,7 @@ export interface FileRoutesById {
   '/admin/backup': typeof AdminBackupRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/cms': typeof AdminCmsRoute
+  '/admin/compliance': typeof AdminComplianceRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/dataset': typeof AdminDatasetRouteWithChildren
   '/admin/desa': typeof AdminDesaRoute
@@ -957,6 +966,7 @@ export interface FileRouteTypes {
     | '/admin/backup'
     | '/admin/branding'
     | '/admin/cms'
+    | '/admin/compliance'
     | '/admin/config'
     | '/admin/dataset'
     | '/admin/desa'
@@ -1059,6 +1069,7 @@ export interface FileRouteTypes {
     | '/admin/backup'
     | '/admin/branding'
     | '/admin/cms'
+    | '/admin/compliance'
     | '/admin/config'
     | '/admin/dataset'
     | '/admin/desa'
@@ -1161,6 +1172,7 @@ export interface FileRouteTypes {
     | '/admin/backup'
     | '/admin/branding'
     | '/admin/cms'
+    | '/admin/compliance'
     | '/admin/config'
     | '/admin/dataset'
     | '/admin/desa'
@@ -1264,6 +1276,7 @@ export interface RootRouteChildren {
   AdminBackupRoute: typeof AdminBackupRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCmsRoute: typeof AdminCmsRoute
+  AdminComplianceRoute: typeof AdminComplianceRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminDatasetRoute: typeof AdminDatasetRouteWithChildren
   AdminDesaRoute: typeof AdminDesaRoute
@@ -1699,6 +1712,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/config'
       fullPath: '/admin/config'
       preLoaderRoute: typeof AdminConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/compliance': {
+      id: '/admin/compliance'
+      path: '/admin/compliance'
+      fullPath: '/admin/compliance'
+      preLoaderRoute: typeof AdminComplianceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/cms': {
@@ -2145,6 +2165,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBackupRoute: AdminBackupRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCmsRoute: AdminCmsRoute,
+  AdminComplianceRoute: AdminComplianceRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminDatasetRoute: AdminDatasetRouteWithChildren,
   AdminDesaRoute: AdminDesaRoute,
