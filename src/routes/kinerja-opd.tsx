@@ -227,6 +227,104 @@ function KinerjaOpdPage() {
           </div>
         </div>
 
+        {/* Export */}
+        {user && (
+          <div className="mt-4 flex justify-end">
+            <button onClick={handleExport} className="inline-flex items-center gap-2 h-9 rounded-md bg-gradient-primary px-4 text-xs font-semibold text-primary-foreground">
+              <Download className="h-3.5 w-3.5" /> Unduh Laporan Excel
+            </button>
+          </div>
+        )}
+
+        {/* Tren 12 bulan */}
+        {trendData && trendData.length > 0 && (
+          <div className="mt-8 rounded-xl border border-border bg-card p-5 shadow-soft">
+            <h2 className="text-lg font-semibold">Tren 12 Bulan Terakhir</h2>
+            <p className="text-sm text-muted-foreground">Permohonan masuk vs selesai per bulan (seluruh OPD)</p>
+            <div className="mt-4 h-72 w-full">
+              <ResponsiveContainer>
+                <LineChart data={trendData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="bulan" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="masuk" stroke="#3b82f6" name="Masuk" />
+                  <Line type="monotone" dataKey="selesai" stroke="#10b981" name="Selesai" />
+                  <Line type="monotone" dataKey="on_time" stroke="#f59e0b" name="Tepat Waktu" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Leaderboard skor komposit */}
+        {skorData && skorData.length > 0 && (
+          <div className="mt-8 rounded-xl border border-border bg-card p-5 shadow-soft">
+            <div className="flex items-center gap-2">
+              <Trophy className="h-5 w-5 text-warning" />
+              <h2 className="text-lg font-semibold">Peringkat OPD (Skor Komposit)</h2>
+            </div>
+            <p className="text-sm text-muted-foreground">Skor = 40% SLA + 30% rating warga + 30% completion rate</p>
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[640px] text-sm">
+                <thead className="bg-surface text-left text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="px-3 py-2">#</th><th className="px-3 py-2">OPD</th>
+                    <th className="px-3 py-2">SLA %</th><th className="px-3 py-2">Rating</th>
+                    <th className="px-3 py-2">Completion %</th><th className="px-3 py-2">Skor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...skorData].sort((a, b) => (b.skor ?? 0) - (a.skor ?? 0)).slice(0, 10).map((r, i) => (
+                    <tr key={r.opd_id} className="border-t border-border">
+                      <td className="px-3 py-2 font-bold">{i + 1}</td>
+                      <td className="px-3 py-2">{r.opd_nama} <span className="text-xs text-muted-foreground">({r.opd_singkatan})</span></td>
+                      <td className="px-3 py-2">{r.sla_pct?.toFixed(1) ?? "—"}</td>
+                      <td className="px-3 py-2">{r.rating_avg?.toFixed(1) ?? "—"}</td>
+                      <td className="px-3 py-2">{r.completion_pct?.toFixed(1) ?? "—"}</td>
+                      <td className="px-3 py-2 font-semibold">{r.skor?.toFixed(1) ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Drill-down per layanan */}
+        {layananData && layananData.length > 0 && (
+          <div className="mt-8 rounded-xl border border-border bg-card p-5 shadow-soft">
+            <h2 className="text-lg font-semibold">Kinerja per Jenis Layanan</h2>
+            <p className="text-sm text-muted-foreground">Drill-down ke layanan individu</p>
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[720px] text-sm">
+                <thead className="bg-surface text-left text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="px-3 py-2">Layanan</th><th className="px-3 py-2">OPD</th>
+                    <th className="px-3 py-2">Total</th><th className="px-3 py-2">Selesai</th>
+                    <th className="px-3 py-2">Tepat Waktu</th><th className="px-3 py-2">Rata Hari</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {layananData.slice(0, 50).map((r) => (
+                    <tr key={r.layanan_id} className="border-t border-border">
+                      <td className="px-3 py-2">{r.layanan_judul}</td>
+                      <td className="px-3 py-2 text-xs">{r.opd_singkatan ?? "-"}</td>
+                      <td className="px-3 py-2">{r.total}</td>
+                      <td className="px-3 py-2">{r.selesai}</td>
+                      <td className="px-3 py-2">{r.on_time}/{r.selesai_dengan_sla}</td>
+                      <td className="px-3 py-2 text-xs">{r.rata_hari_selesai ? Number(r.rata_hari_selesai).toFixed(1) : "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+
+
         {/* Chart Batang Total Permohonan per OPD */}
         <div className="mt-10 rounded-xl border border-border bg-card p-5 shadow-soft">
           <h2 className="text-lg font-semibold">Total Permohonan per OPD</h2>
