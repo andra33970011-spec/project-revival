@@ -83,6 +83,7 @@ import { Route as ApiPublicHooksStorageCleanupRouteImport } from './routes/api/p
 import { Route as ApiPublicHooksSlaReminderRouteImport } from './routes/api/public/hooks/sla-reminder'
 import { Route as ApiPublicHooksRetryQueueRouteImport } from './routes/api/public/hooks/retry-queue'
 import { Route as ApiPublicHooksRetentionCleanupRouteImport } from './routes/api/public/hooks/retention-cleanup'
+import { Route as ApiPublicHooksFormDeadlineReminderRouteImport } from './routes/api/public/hooks/form-deadline-reminder'
 import { Route as ApiPublicHooksCronWatchdogRouteImport } from './routes/api/public/hooks/cron-watchdog'
 import { Route as ApiPublicHooksCleanupUploadsRouteImport } from './routes/api/public/hooks/cleanup-uploads'
 import { Route as ApiPublicHooksBackupSnapshotRouteImport } from './routes/api/public/hooks/backup-snapshot'
@@ -467,6 +468,12 @@ const ApiPublicHooksRetentionCleanupRoute =
     path: '/api/public/hooks/retention-cleanup',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksFormDeadlineReminderRoute =
+  ApiPublicHooksFormDeadlineReminderRouteImport.update({
+    id: '/api/public/hooks/form-deadline-reminder',
+    path: '/api/public/hooks/form-deadline-reminder',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksCronWatchdogRoute =
   ApiPublicHooksCronWatchdogRouteImport.update({
     id: '/api/public/hooks/cron-watchdog',
@@ -565,6 +572,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
+  '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
@@ -645,6 +653,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
+  '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
@@ -726,6 +735,7 @@ export interface FileRoutesById {
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
+  '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
@@ -808,6 +818,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
     | '/api/public/hooks/cron-watchdog'
+    | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
     | '/api/public/hooks/sla-reminder'
@@ -888,6 +899,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
     | '/api/public/hooks/cron-watchdog'
+    | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
     | '/api/public/hooks/sla-reminder'
@@ -968,6 +980,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
     | '/api/public/hooks/cron-watchdog'
+    | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
     | '/api/public/hooks/sla-reminder'
@@ -1046,6 +1059,7 @@ export interface RootRouteChildren {
   ApiPublicHooksBackupSnapshotRoute: typeof ApiPublicHooksBackupSnapshotRoute
   ApiPublicHooksCleanupUploadsRoute: typeof ApiPublicHooksCleanupUploadsRoute
   ApiPublicHooksCronWatchdogRoute: typeof ApiPublicHooksCronWatchdogRoute
+  ApiPublicHooksFormDeadlineReminderRoute: typeof ApiPublicHooksFormDeadlineReminderRoute
   ApiPublicHooksRetentionCleanupRoute: typeof ApiPublicHooksRetentionCleanupRoute
   ApiPublicHooksRetryQueueRoute: typeof ApiPublicHooksRetryQueueRoute
   ApiPublicHooksSlaReminderRoute: typeof ApiPublicHooksSlaReminderRoute
@@ -1574,6 +1588,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksRetentionCleanupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/form-deadline-reminder': {
+      id: '/api/public/hooks/form-deadline-reminder'
+      path: '/api/public/hooks/form-deadline-reminder'
+      fullPath: '/api/public/hooks/form-deadline-reminder'
+      preLoaderRoute: typeof ApiPublicHooksFormDeadlineReminderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/cron-watchdog': {
       id: '/api/public/hooks/cron-watchdog'
       path: '/api/public/hooks/cron-watchdog'
@@ -1701,6 +1722,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksBackupSnapshotRoute: ApiPublicHooksBackupSnapshotRoute,
   ApiPublicHooksCleanupUploadsRoute: ApiPublicHooksCleanupUploadsRoute,
   ApiPublicHooksCronWatchdogRoute: ApiPublicHooksCronWatchdogRoute,
+  ApiPublicHooksFormDeadlineReminderRoute:
+    ApiPublicHooksFormDeadlineReminderRoute,
   ApiPublicHooksRetentionCleanupRoute: ApiPublicHooksRetentionCleanupRoute,
   ApiPublicHooksRetryQueueRoute: ApiPublicHooksRetryQueueRoute,
   ApiPublicHooksSlaReminderRoute: ApiPublicHooksSlaReminderRoute,
