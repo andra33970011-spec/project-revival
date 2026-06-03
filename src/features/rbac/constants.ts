@@ -96,6 +96,7 @@ export const POSITION_LABEL: Record<SystemPosition, string> = {
 export const ROLE_LABEL: Record<AppRole, string> = {
   super_admin: "Super Admin",
   admin_pemda: "Admin Pemda",
+  pimpinan: "Pimpinan Daerah",
   admin_opd: "Admin OPD",
   admin_desa: "Admin Desa",
   asn: "ASN",
