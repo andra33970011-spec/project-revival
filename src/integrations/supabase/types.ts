@@ -506,6 +506,101 @@ export type Database = {
           },
         ]
       }
+      attendance_shift_assignment: {
+        Row: {
+          aktif: boolean
+          created_at: string
+          created_by: string | null
+          dari: string
+          id: string
+          sampai: string | null
+          shift_id: string
+          user_id: string
+        }
+        Insert: {
+          aktif?: boolean
+          created_at?: string
+          created_by?: string | null
+          dari: string
+          id?: string
+          sampai?: string | null
+          shift_id: string
+          user_id: string
+        }
+        Update: {
+          aktif?: boolean
+          created_at?: string
+          created_by?: string | null
+          dari?: string
+          id?: string
+          sampai?: string | null
+          shift_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_shift_assignment_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_shifts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_shift_assignment_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance_shifts: {
+        Row: {
+          aktif: boolean
+          created_at: string
+          id: string
+          jam_masuk: string
+          jam_pulang: string
+          jenis: string
+          nama: string
+          opd_id: string | null
+          toleransi_menit: number
+          updated_at: string
+        }
+        Insert: {
+          aktif?: boolean
+          created_at?: string
+          id?: string
+          jam_masuk: string
+          jam_pulang: string
+          jenis?: string
+          nama: string
+          opd_id?: string | null
+          toleransi_menit?: number
+          updated_at?: string
+        }
+        Update: {
+          aktif?: boolean
+          created_at?: string
+          id?: string
+          jam_masuk?: string
+          jam_pulang?: string
+          jenis?: string
+          nama?: string
+          opd_id?: string | null
+          toleransi_menit?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_shifts_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           actor_id: string | null
@@ -1404,6 +1499,70 @@ export type Database = {
         }
         Relationships: []
       }
+      geofence_audit: {
+        Row: {
+          absensi_id: string | null
+          created_at: string
+          dist_m: number | null
+          id: string
+          lat: number | null
+          lng: number | null
+          opd_id: string | null
+          radius_m: number | null
+          reason: string | null
+          user_id: string | null
+          valid: boolean
+        }
+        Insert: {
+          absensi_id?: string | null
+          created_at?: string
+          dist_m?: number | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          opd_id?: string | null
+          radius_m?: number | null
+          reason?: string | null
+          user_id?: string | null
+          valid: boolean
+        }
+        Update: {
+          absensi_id?: string | null
+          created_at?: string
+          dist_m?: number | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          opd_id?: string | null
+          radius_m?: number | null
+          reason?: string | null
+          user_id?: string | null
+          valid?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geofence_audit_absensi_id_fkey"
+            columns: ["absensi_id"]
+            isOneToOne: false
+            referencedRelation: "absensi_asn"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "geofence_audit_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "geofence_audit_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hari_libur: {
         Row: {
           catatan: string | null
@@ -1791,6 +1950,47 @@ export type Database = {
           },
         ]
       }
+      leave_balances: {
+        Row: {
+          catatan: string | null
+          id: string
+          jenis: string
+          kuota: number
+          tahun: number
+          terpakai: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          catatan?: string | null
+          id?: string
+          jenis: string
+          kuota?: number
+          tahun: number
+          terpakai?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          catatan?: string | null
+          id?: string
+          jenis?: string
+          kuota?: number
+          tahun?: number
+          terpakai?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leave_balances_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nomor_surat_issued: {
         Row: {
           id: string
@@ -1938,6 +2138,116 @@ export type Database = {
         }
         Relationships: []
       }
+      overtime_requests: {
+        Row: {
+          alasan: string
+          approved_at: string | null
+          approver_id: string | null
+          catatan_approval: string | null
+          created_at: string
+          id: string
+          jam_mulai: string
+          jam_selesai: string
+          opd_id: string | null
+          status: string
+          tanggal: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alasan: string
+          approved_at?: string | null
+          approver_id?: string | null
+          catatan_approval?: string | null
+          created_at?: string
+          id?: string
+          jam_mulai: string
+          jam_selesai: string
+          opd_id?: string | null
+          status?: string
+          tanggal: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alasan?: string
+          approved_at?: string | null
+          approver_id?: string | null
+          catatan_approval?: string | null
+          created_at?: string
+          id?: string
+          jam_mulai?: string
+          jam_selesai?: string
+          opd_id?: string | null
+          status?: string
+          tanggal?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "overtime_requests_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "overtime_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payroll_periods: {
+        Row: {
+          bulan: number
+          catatan: string | null
+          created_at: string
+          id: string
+          locked_at: string | null
+          locked_by: string | null
+          opd_id: string | null
+          tahun: number
+          unlocked_at: string | null
+          unlocked_by: string | null
+        }
+        Insert: {
+          bulan: number
+          catatan?: string | null
+          created_at?: string
+          id?: string
+          locked_at?: string | null
+          locked_by?: string | null
+          opd_id?: string | null
+          tahun: number
+          unlocked_at?: string | null
+          unlocked_by?: string | null
+        }
+        Update: {
+          bulan?: number
+          catatan?: string | null
+          created_at?: string
+          id?: string
+          locked_at?: string | null
+          locked_by?: string | null
+          opd_id?: string | null
+          tahun?: number
+          unlocked_at?: string | null
+          unlocked_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_periods_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pejabat: {
         Row: {
           aktif: boolean
@@ -1988,7 +2298,9 @@ export type Database = {
           id: string
           jenis: Database["public"]["Enums"]["jenis_izin"]
           lampiran_url: string | null
+          mengurangi_saldo: boolean
           opd_id: string | null
+          saldo_terpotong: number
           sampai: string
           status: Database["public"]["Enums"]["status_izin"]
           updated_at: string
@@ -2004,7 +2316,9 @@ export type Database = {
           id?: string
           jenis: Database["public"]["Enums"]["jenis_izin"]
           lampiran_url?: string | null
+          mengurangi_saldo?: boolean
           opd_id?: string | null
+          saldo_terpotong?: number
           sampai: string
           status?: Database["public"]["Enums"]["status_izin"]
           updated_at?: string
@@ -2020,7 +2334,9 @@ export type Database = {
           id?: string
           jenis?: Database["public"]["Enums"]["jenis_izin"]
           lampiran_url?: string | null
+          mengurangi_saldo?: boolean
           opd_id?: string | null
+          saldo_terpotong?: number
           sampai?: string
           status?: Database["public"]["Enums"]["status_izin"]
           updated_at?: string
@@ -3110,6 +3426,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_payroll_locked: {
+        Args: { _opd_id: string; _ts: string }
         Returns: boolean
       }
       konversi_laporan_ke_permohonan: {

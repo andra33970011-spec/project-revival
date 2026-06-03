@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { STATUS_LABEL, STATUS_TONE, fmtDateTime, type StatusPermohonan } from "@/lib/permohonan";
 import { logAudit } from "@/lib/audit";
+import { PermohonanGovernancePanel } from "@/components/admin/PermohonanGovernancePanel";
+
 
 export const Route = createFileRoute("/permohonan/$id")({
   head: ({ params }) => ({
@@ -45,9 +47,12 @@ type Permohonan = {
   atas_nama_hp: string | null;
   wakil_ambil_nama: string | null;
   wakil_ambil_nik: string | null;
+  nomor_surat: string | null;
+  dokumen_final_path: string | null;
   opd: { nama: string; singkatan: string } | null;
   profiles: { nama_lengkap: string; nik: string | null; no_hp: string | null } | null;
 };
+
 type Riwayat = { id: string; ts?: string; created_at: string; aksi: string; catatan: string | null; oleh: string | null; nama_petugas?: string | null; email_petugas?: string | null };
 type Berkas = { name: string; size: number };
 
@@ -401,7 +406,14 @@ function DetailPermohonan() {
               {busy ? "Menyimpan…" : "Simpan Perubahan"}
             </button>
           </div>
+          <PermohonanGovernancePanel
+            permohonanId={item.id}
+            opdId={item.opd_id}
+            nomorSurat={item.nomor_surat}
+            dokumenFinalPath={item.dokumen_final_path}
+          />
         </aside>
+
       </div>
     </AdminShell>
   );
