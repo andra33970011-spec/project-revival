@@ -34,6 +34,7 @@ import { Route as IkmIdRouteImport } from './routes/ikm.$id'
 import { Route as DataTerbukaSlugRouteImport } from './routes/data-terbuka.$slug'
 import { Route as AsnVerifikasiRouteImport } from './routes/asn.verifikasi'
 import { Route as AsnTugasRouteImport } from './routes/asn.tugas'
+import { Route as AsnLemburRouteImport } from './routes/asn.lembur'
 import { Route as AsnIzinRouteImport } from './routes/asn.izin'
 import { Route as AsnAsetRouteImport } from './routes/asn.aset'
 import { Route as AsnAbsensiRouteImport } from './routes/asn.absensi'
@@ -85,6 +86,9 @@ import { Route as AdminRbacUserIdRouteImport } from './routes/admin.rbac.$userId
 import { Route as AdminLayananEscalationRouteImport } from './routes/admin.layanan.escalation'
 import { Route as AdminLayananDisposisiInboxRouteImport } from './routes/admin.layanan.disposisi-inbox'
 import { Route as AdminFormsIdRouteImport } from './routes/admin.forms.$id'
+import { Route as AdminAsnShiftRouteImport } from './routes/admin.asn.shift'
+import { Route as AdminAsnPayrollLockRouteImport } from './routes/admin.asn.payroll-lock'
+import { Route as AdminAsnCutiSaldoRouteImport } from './routes/admin.asn.cuti-saldo'
 import { Route as ApiPublicHooksUploadIntegrityRouteImport } from './routes/api/public/hooks/upload-integrity'
 import { Route as ApiPublicHooksStuckJobsRouteImport } from './routes/api/public/hooks/stuck-jobs'
 import { Route as ApiPublicHooksStorageCleanupRouteImport } from './routes/api/public/hooks/storage-cleanup'
@@ -222,6 +226,11 @@ const AsnVerifikasiRoute = AsnVerifikasiRouteImport.update({
 const AsnTugasRoute = AsnTugasRouteImport.update({
   id: '/asn/tugas',
   path: '/asn/tugas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AsnLemburRoute = AsnLemburRouteImport.update({
+  id: '/asn/lembur',
+  path: '/asn/lembur',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AsnIzinRoute = AsnIzinRouteImport.update({
@@ -484,6 +493,21 @@ const AdminFormsIdRoute = AdminFormsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminFormsRoute,
 } as any)
+const AdminAsnShiftRoute = AdminAsnShiftRouteImport.update({
+  id: '/shift',
+  path: '/shift',
+  getParentRoute: () => AdminAsnRoute,
+} as any)
+const AdminAsnPayrollLockRoute = AdminAsnPayrollLockRouteImport.update({
+  id: '/payroll-lock',
+  path: '/payroll-lock',
+  getParentRoute: () => AdminAsnRoute,
+} as any)
+const AdminAsnCutiSaldoRoute = AdminAsnCutiSaldoRouteImport.update({
+  id: '/cuti-saldo',
+  path: '/cuti-saldo',
+  getParentRoute: () => AdminAsnRoute,
+} as any)
 const ApiPublicHooksUploadIntegrityRoute =
   ApiPublicHooksUploadIntegrityRouteImport.update({
     id: '/api/public/hooks/upload-integrity',
@@ -575,7 +599,7 @@ export interface FileRoutesByFullPath {
   '/admin/aset': typeof AdminAsetRoute
   '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
-  '/admin/asn': typeof AdminAsnRoute
+  '/admin/asn': typeof AdminAsnRouteWithChildren
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/backup': typeof AdminBackupRoute
@@ -606,6 +630,7 @@ export interface FileRoutesByFullPath {
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
   '/asn/izin': typeof AsnIzinRoute
+  '/asn/lembur': typeof AsnLemburRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
@@ -622,6 +647,9 @@ export interface FileRoutesByFullPath {
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
+  '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
+  '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
+  '/admin/asn/shift': typeof AdminAsnShiftRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
   '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
   '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
@@ -666,7 +694,7 @@ export interface FileRoutesByTo {
   '/admin/aset': typeof AdminAsetRoute
   '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
-  '/admin/asn': typeof AdminAsnRoute
+  '/admin/asn': typeof AdminAsnRouteWithChildren
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/backup': typeof AdminBackupRoute
@@ -697,6 +725,7 @@ export interface FileRoutesByTo {
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
   '/asn/izin': typeof AsnIzinRoute
+  '/asn/lembur': typeof AsnLemburRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
@@ -713,6 +742,9 @@ export interface FileRoutesByTo {
   '/layanan': typeof LayananIndexRoute
   '/pengisian': typeof PengisianIndexRoute
   '/permohonan': typeof PermohonanIndexRoute
+  '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
+  '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
+  '/admin/asn/shift': typeof AdminAsnShiftRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
   '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
   '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
@@ -758,7 +790,7 @@ export interface FileRoutesById {
   '/admin/aset': typeof AdminAsetRoute
   '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
-  '/admin/asn': typeof AdminAsnRoute
+  '/admin/asn': typeof AdminAsnRouteWithChildren
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/backup': typeof AdminBackupRoute
@@ -789,6 +821,7 @@ export interface FileRoutesById {
   '/asn/absensi': typeof AsnAbsensiRoute
   '/asn/aset': typeof AsnAsetRoute
   '/asn/izin': typeof AsnIzinRoute
+  '/asn/lembur': typeof AsnLemburRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
   '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
@@ -805,6 +838,9 @@ export interface FileRoutesById {
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
+  '/admin/asn/cuti-saldo': typeof AdminAsnCutiSaldoRoute
+  '/admin/asn/payroll-lock': typeof AdminAsnPayrollLockRoute
+  '/admin/asn/shift': typeof AdminAsnShiftRoute
   '/admin/forms/$id': typeof AdminFormsIdRoute
   '/admin/layanan/disposisi-inbox': typeof AdminLayananDisposisiInboxRoute
   '/admin/layanan/escalation': typeof AdminLayananEscalationRoute
@@ -882,6 +918,7 @@ export interface FileRouteTypes {
     | '/asn/absensi'
     | '/asn/aset'
     | '/asn/izin'
+    | '/asn/lembur'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/data-terbuka/$slug'
@@ -898,6 +935,9 @@ export interface FileRouteTypes {
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
+    | '/admin/asn/cuti-saldo'
+    | '/admin/asn/payroll-lock'
+    | '/admin/asn/shift'
     | '/admin/forms/$id'
     | '/admin/layanan/disposisi-inbox'
     | '/admin/layanan/escalation'
@@ -973,6 +1013,7 @@ export interface FileRouteTypes {
     | '/asn/absensi'
     | '/asn/aset'
     | '/asn/izin'
+    | '/asn/lembur'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/data-terbuka/$slug'
@@ -989,6 +1030,9 @@ export interface FileRouteTypes {
     | '/layanan'
     | '/pengisian'
     | '/permohonan'
+    | '/admin/asn/cuti-saldo'
+    | '/admin/asn/payroll-lock'
+    | '/admin/asn/shift'
     | '/admin/forms/$id'
     | '/admin/layanan/disposisi-inbox'
     | '/admin/layanan/escalation'
@@ -1064,6 +1108,7 @@ export interface FileRouteTypes {
     | '/asn/absensi'
     | '/asn/aset'
     | '/asn/izin'
+    | '/asn/lembur'
     | '/asn/tugas'
     | '/asn/verifikasi'
     | '/data-terbuka/$slug'
@@ -1080,6 +1125,9 @@ export interface FileRouteTypes {
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
+    | '/admin/asn/cuti-saldo'
+    | '/admin/asn/payroll-lock'
+    | '/admin/asn/shift'
     | '/admin/forms/$id'
     | '/admin/layanan/disposisi-inbox'
     | '/admin/layanan/escalation'
@@ -1125,7 +1173,7 @@ export interface RootRouteChildren {
   AdminAsetRoute: typeof AdminAsetRoute
   AdminAsetExtraRoute: typeof AdminAsetExtraRoute
   AdminAsetKampanyeRoute: typeof AdminAsetKampanyeRoute
-  AdminAsnRoute: typeof AdminAsnRoute
+  AdminAsnRoute: typeof AdminAsnRouteWithChildren
   AdminAsnKepatuhanRoute: typeof AdminAsnKepatuhanRoute
   AdminAuditRoute: typeof AdminAuditRoute
   AdminBackupRoute: typeof AdminBackupRoute
@@ -1156,6 +1204,7 @@ export interface RootRouteChildren {
   AsnAbsensiRoute: typeof AsnAbsensiRoute
   AsnAsetRoute: typeof AsnAsetRoute
   AsnIzinRoute: typeof AsnIzinRoute
+  AsnLemburRoute: typeof AsnLemburRoute
   AsnTugasRoute: typeof AsnTugasRoute
   AsnVerifikasiRoute: typeof AsnVerifikasiRoute
   DataTerbukaSlugRoute: typeof DataTerbukaSlugRoute
@@ -1374,6 +1423,13 @@ declare module '@tanstack/react-router' {
       path: '/asn/tugas'
       fullPath: '/asn/tugas'
       preLoaderRoute: typeof AsnTugasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/asn/lembur': {
+      id: '/asn/lembur'
+      path: '/asn/lembur'
+      fullPath: '/asn/lembur'
+      preLoaderRoute: typeof AsnLemburRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/asn/izin': {
@@ -1733,6 +1789,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFormsIdRouteImport
       parentRoute: typeof AdminFormsRoute
     }
+    '/admin/asn/shift': {
+      id: '/admin/asn/shift'
+      path: '/shift'
+      fullPath: '/admin/asn/shift'
+      preLoaderRoute: typeof AdminAsnShiftRouteImport
+      parentRoute: typeof AdminAsnRoute
+    }
+    '/admin/asn/payroll-lock': {
+      id: '/admin/asn/payroll-lock'
+      path: '/payroll-lock'
+      fullPath: '/admin/asn/payroll-lock'
+      preLoaderRoute: typeof AdminAsnPayrollLockRouteImport
+      parentRoute: typeof AdminAsnRoute
+    }
+    '/admin/asn/cuti-saldo': {
+      id: '/admin/asn/cuti-saldo'
+      path: '/cuti-saldo'
+      fullPath: '/admin/asn/cuti-saldo'
+      preLoaderRoute: typeof AdminAsnCutiSaldoRouteImport
+      parentRoute: typeof AdminAsnRoute
+    }
     '/api/public/hooks/upload-integrity': {
       id: '/api/public/hooks/upload-integrity'
       path: '/api/public/hooks/upload-integrity'
@@ -1827,6 +1904,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminAsnRouteChildren {
+  AdminAsnCutiSaldoRoute: typeof AdminAsnCutiSaldoRoute
+  AdminAsnPayrollLockRoute: typeof AdminAsnPayrollLockRoute
+  AdminAsnShiftRoute: typeof AdminAsnShiftRoute
+}
+
+const AdminAsnRouteChildren: AdminAsnRouteChildren = {
+  AdminAsnCutiSaldoRoute: AdminAsnCutiSaldoRoute,
+  AdminAsnPayrollLockRoute: AdminAsnPayrollLockRoute,
+  AdminAsnShiftRoute: AdminAsnShiftRoute,
+}
+
+const AdminAsnRouteWithChildren = AdminAsnRoute._addFileChildren(
+  AdminAsnRouteChildren,
+)
+
 interface AdminFormsRouteChildren {
   AdminFormsIdRoute: typeof AdminFormsIdRoute
 }
@@ -1880,7 +1973,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAsetRoute: AdminAsetRoute,
   AdminAsetExtraRoute: AdminAsetExtraRoute,
   AdminAsetKampanyeRoute: AdminAsetKampanyeRoute,
-  AdminAsnRoute: AdminAsnRoute,
+  AdminAsnRoute: AdminAsnRouteWithChildren,
   AdminAsnKepatuhanRoute: AdminAsnKepatuhanRoute,
   AdminAuditRoute: AdminAuditRoute,
   AdminBackupRoute: AdminBackupRoute,
@@ -1911,6 +2004,7 @@ const rootRouteChildren: RootRouteChildren = {
   AsnAbsensiRoute: AsnAbsensiRoute,
   AsnAsetRoute: AsnAsetRoute,
   AsnIzinRoute: AsnIzinRoute,
+  AsnLemburRoute: AsnLemburRoute,
   AsnTugasRoute: AsnTugasRoute,
   AsnVerifikasiRoute: AsnVerifikasiRoute,
   DataTerbukaSlugRoute: DataTerbukaSlugRoute,
