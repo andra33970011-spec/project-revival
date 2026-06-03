@@ -29,6 +29,7 @@ import { Route as PermohonanIdRouteImport } from './routes/permohonan.$id'
 import { Route as PengisianIdRouteImport } from './routes/pengisian.$id'
 import { Route as LayananSlugRouteImport } from './routes/layanan.$slug'
 import { Route as InstansiSingkatanRouteImport } from './routes/instansi.$singkatan'
+import { Route as DataTerbukaSlugRouteImport } from './routes/data-terbuka.$slug'
 import { Route as AsnVerifikasiRouteImport } from './routes/asn.verifikasi'
 import { Route as AsnTugasRouteImport } from './routes/asn.tugas'
 import { Route as AsnIzinRouteImport } from './routes/asn.izin'
@@ -189,6 +190,11 @@ const LayananSlugRoute = LayananSlugRouteImport.update({
 const InstansiSingkatanRoute = InstansiSingkatanRouteImport.update({
   id: '/instansi/$singkatan',
   path: '/instansi/$singkatan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataTerbukaSlugRoute = DataTerbukaSlugRouteImport.update({
+  id: '/data-terbuka/$slug',
+  path: '/data-terbuka/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AsnVerifikasiRoute = AsnVerifikasiRouteImport.update({
@@ -556,6 +562,7 @@ export interface FileRoutesByFullPath {
   '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
+  '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
@@ -639,6 +646,7 @@ export interface FileRoutesByTo {
   '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
+  '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
@@ -723,6 +731,7 @@ export interface FileRoutesById {
   '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
+  '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
@@ -808,6 +817,7 @@ export interface FileRouteTypes {
     | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
+    | '/data-terbuka/$slug'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
@@ -891,6 +901,7 @@ export interface FileRouteTypes {
     | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
+    | '/data-terbuka/$slug'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
@@ -974,6 +985,7 @@ export interface FileRouteTypes {
     | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
+    | '/data-terbuka/$slug'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
@@ -1058,6 +1070,7 @@ export interface RootRouteChildren {
   AsnIzinRoute: typeof AsnIzinRoute
   AsnTugasRoute: typeof AsnTugasRoute
   AsnVerifikasiRoute: typeof AsnVerifikasiRoute
+  DataTerbukaSlugRoute: typeof DataTerbukaSlugRoute
   InstansiSingkatanRoute: typeof InstansiSingkatanRoute
   LayananSlugRoute: typeof LayananSlugRoute
   PengisianIdRoute: typeof PengisianIdRoute
@@ -1235,6 +1248,13 @@ declare module '@tanstack/react-router' {
       path: '/instansi/$singkatan'
       fullPath: '/instansi/$singkatan'
       preLoaderRoute: typeof InstansiSingkatanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-terbuka/$slug': {
+      id: '/data-terbuka/$slug'
+      path: '/data-terbuka/$slug'
+      fullPath: '/data-terbuka/$slug'
+      preLoaderRoute: typeof DataTerbukaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/asn/verifikasi': {
@@ -1737,6 +1757,7 @@ const rootRouteChildren: RootRouteChildren = {
   AsnIzinRoute: AsnIzinRoute,
   AsnTugasRoute: AsnTugasRoute,
   AsnVerifikasiRoute: AsnVerifikasiRoute,
+  DataTerbukaSlugRoute: DataTerbukaSlugRoute,
   InstansiSingkatanRoute: InstansiSingkatanRoute,
   LayananSlugRoute: LayananSlugRoute,
   PengisianIdRoute: PengisianIdRoute,
