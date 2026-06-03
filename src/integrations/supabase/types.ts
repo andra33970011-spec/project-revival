@@ -910,6 +910,116 @@ export type Database = {
         }
         Relationships: []
       }
+      dokumen_verifikasi: {
+        Row: {
+          created_at: string
+          diterbitkan_oleh: string | null
+          nomor_surat: string | null
+          permohonan_id: string | null
+          sha256: string | null
+          signature_provider: string
+          storage_path: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          diterbitkan_oleh?: string | null
+          nomor_surat?: string | null
+          permohonan_id?: string | null
+          sha256?: string | null
+          signature_provider?: string
+          storage_path: string
+          token: string
+        }
+        Update: {
+          created_at?: string
+          diterbitkan_oleh?: string | null
+          nomor_surat?: string | null
+          permohonan_id?: string | null
+          sha256?: string | null
+          signature_provider?: string
+          storage_path?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dokumen_verifikasi_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "permohonan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dokumen_verifikasi_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "v_permohonan_overdue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escalation_config: {
+        Row: {
+          aktif: boolean
+          created_at: string
+          id: string
+          level: number
+          opd_id: string | null
+          target_role: string
+          threshold_days: number
+        }
+        Insert: {
+          aktif?: boolean
+          created_at?: string
+          id?: string
+          level: number
+          opd_id?: string | null
+          target_role?: string
+          threshold_days: number
+        }
+        Update: {
+          aktif?: boolean
+          created_at?: string
+          id?: string
+          level?: number
+          opd_id?: string | null
+          target_role?: string
+          threshold_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escalation_config_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_flags: {
+        Row: {
+          description: string | null
+          enabled: boolean
+          flag_key: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          description?: string | null
+          enabled?: boolean
+          flag_key: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          description?: string | null
+          enabled?: boolean
+          flag_key?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       form_assignments: {
         Row: {
           assigned_at: string
@@ -1321,6 +1431,120 @@ export type Database = {
         }
         Relationships: []
       }
+      ikm_responses: {
+        Row: {
+          created_at: string
+          id: string
+          permohonan_id: string | null
+          saran: string | null
+          survey_id: string
+          u1: number | null
+          u2: number | null
+          u3: number | null
+          u4: number | null
+          u5: number | null
+          u6: number | null
+          u7: number | null
+          u8: number | null
+          u9: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permohonan_id?: string | null
+          saran?: string | null
+          survey_id: string
+          u1?: number | null
+          u2?: number | null
+          u3?: number | null
+          u4?: number | null
+          u5?: number | null
+          u6?: number | null
+          u7?: number | null
+          u8?: number | null
+          u9?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permohonan_id?: string | null
+          saran?: string | null
+          survey_id?: string
+          u1?: number | null
+          u2?: number | null
+          u3?: number | null
+          u4?: number | null
+          u5?: number | null
+          u6?: number | null
+          u7?: number | null
+          u8?: number | null
+          u9?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ikm_responses_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "permohonan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ikm_responses_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "v_permohonan_overdue"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ikm_responses_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "ikm_surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ikm_surveys: {
+        Row: {
+          aktif: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          judul: string
+          opd_id: string | null
+          periode: string
+        }
+        Insert: {
+          aktif?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          judul: string
+          opd_id?: string | null
+          periode: string
+        }
+        Update: {
+          aktif?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          judul?: string
+          opd_id?: string | null
+          periode?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ikm_surveys_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_queue: {
         Row: {
           attempts: number
@@ -1567,6 +1791,87 @@ export type Database = {
           },
         ]
       }
+      nomor_surat_issued: {
+        Row: {
+          id: string
+          issued_at: string
+          issued_by: string | null
+          nomor: string
+          opd_id: string
+          permohonan_id: string | null
+          tahun: number
+        }
+        Insert: {
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          nomor: string
+          opd_id: string
+          permohonan_id?: string | null
+          tahun: number
+        }
+        Update: {
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          nomor?: string
+          opd_id?: string
+          permohonan_id?: string | null
+          tahun?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nomor_surat_issued_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nomor_surat_issued_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "permohonan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nomor_surat_issued_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "v_permohonan_overdue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nomor_surat_sequence: {
+        Row: {
+          last_number: number
+          opd_id: string
+          tahun: number
+          updated_at: string
+        }
+        Insert: {
+          last_number?: number
+          opd_id: string
+          tahun: number
+          updated_at?: string
+        }
+        Update: {
+          last_number?: number
+          opd_id?: string
+          tahun?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nomor_surat_sequence_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string | null
@@ -1609,6 +1914,8 @@ export type Database = {
           id: string
           kategori: string[]
           nama: string
+          nomor_surat_format: string | null
+          nomor_surat_kode: string | null
           singkatan: string
         }
         Insert: {
@@ -1616,6 +1923,8 @@ export type Database = {
           id?: string
           kategori?: string[]
           nama: string
+          nomor_surat_format?: string | null
+          nomor_surat_kode?: string | null
           singkatan: string
         }
         Update: {
@@ -1623,6 +1932,8 @@ export type Database = {
           id?: string
           kategori?: string[]
           nama?: string
+          nomor_surat_format?: string | null
+          nomor_surat_kode?: string | null
           singkatan?: string
         }
         Relationships: []
@@ -1747,16 +2058,21 @@ export type Database = {
           atas_nama_hp: string | null
           atas_nama_nama: string | null
           atas_nama_nik: string | null
+          current_disposition_id: string | null
           deskripsi: string | null
+          dokumen_final_path: string | null
           id: string
           judul: string
           kategori: string
           kode: string
+          nomor_surat: string | null
           opd_id: string
           pemohon_id: string
           petugas_id: string | null
           prioritas: string
           ringkasan: string | null
+          sla_paused_at: string | null
+          sla_total_pause_seconds: number
           status: Database["public"]["Enums"]["status_permohonan"]
           tanggal_masuk: string
           tenggat: string | null
@@ -1770,16 +2086,21 @@ export type Database = {
           atas_nama_hp?: string | null
           atas_nama_nama?: string | null
           atas_nama_nik?: string | null
+          current_disposition_id?: string | null
           deskripsi?: string | null
+          dokumen_final_path?: string | null
           id?: string
           judul: string
           kategori: string
           kode: string
+          nomor_surat?: string | null
           opd_id: string
           pemohon_id: string
           petugas_id?: string | null
           prioritas?: string
           ringkasan?: string | null
+          sla_paused_at?: string | null
+          sla_total_pause_seconds?: number
           status?: Database["public"]["Enums"]["status_permohonan"]
           tanggal_masuk?: string
           tenggat?: string | null
@@ -1793,16 +2114,21 @@ export type Database = {
           atas_nama_hp?: string | null
           atas_nama_nama?: string | null
           atas_nama_nik?: string | null
+          current_disposition_id?: string | null
           deskripsi?: string | null
+          dokumen_final_path?: string | null
           id?: string
           judul?: string
           kategori?: string
           kode?: string
+          nomor_surat?: string | null
           opd_id?: string
           pemohon_id?: string
           petugas_id?: string | null
           prioritas?: string
           ringkasan?: string | null
+          sla_paused_at?: string | null
+          sla_total_pause_seconds?: number
           status?: Database["public"]["Enums"]["status_permohonan"]
           tanggal_masuk?: string
           tenggat?: string | null
@@ -1917,6 +2243,13 @@ export type Database = {
             referencedRelation: "permohonan"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "permohonan_rating_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "v_permohonan_overdue"
+            referencedColumns: ["id"]
+          },
         ]
       }
       permohonan_riwayat: {
@@ -1950,6 +2283,13 @@ export type Database = {
             columns: ["permohonan_id"]
             isOneToOne: false
             referencedRelation: "permohonan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permohonan_riwayat_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "v_permohonan_overdue"
             referencedColumns: ["id"]
           },
         ]
@@ -2288,6 +2628,108 @@ export type Database = {
           },
         ]
       }
+      submission_dispositions: {
+        Row: {
+          acted_at: string | null
+          created_at: string
+          from_user: string | null
+          id: string
+          level: string
+          note: string | null
+          permohonan_id: string
+          status: string
+          to_user: string
+        }
+        Insert: {
+          acted_at?: string | null
+          created_at?: string
+          from_user?: string | null
+          id?: string
+          level: string
+          note?: string | null
+          permohonan_id: string
+          status?: string
+          to_user: string
+        }
+        Update: {
+          acted_at?: string | null
+          created_at?: string
+          from_user?: string | null
+          id?: string
+          level?: string
+          note?: string | null
+          permohonan_id?: string
+          status?: string
+          to_user?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submission_dispositions_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "permohonan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submission_dispositions_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "v_permohonan_overdue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submission_sla_events: {
+        Row: {
+          actor: string | null
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          event_type: string
+          id: string
+          permohonan_id: string
+          reason: string | null
+          started_at: string
+        }
+        Insert: {
+          actor?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          event_type: string
+          id?: string
+          permohonan_id: string
+          reason?: string | null
+          started_at?: string
+        }
+        Update: {
+          actor?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          event_type?: string
+          id?: string
+          permohonan_id?: string
+          reason?: string | null
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submission_sla_events_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "permohonan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submission_sla_events_permohonan_id_fkey"
+            columns: ["permohonan_id"]
+            isOneToOne: false
+            referencedRelation: "v_permohonan_overdue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       uat_results: {
         Row: {
           catatan: string | null
@@ -2575,6 +3017,41 @@ export type Database = {
           },
         ]
       }
+      v_permohonan_overdue: {
+        Row: {
+          id: string | null
+          kode: string | null
+          opd_id: string | null
+          overdue_days: number | null
+          status: Database["public"]["Enums"]["status_permohonan"] | null
+          tenggat: string | null
+        }
+        Insert: {
+          id?: string | null
+          kode?: string | null
+          opd_id?: string | null
+          overdue_days?: never
+          status?: Database["public"]["Enums"]["status_permohonan"] | null
+          tenggat?: string | null
+        }
+        Update: {
+          id?: string | null
+          kode?: string | null
+          opd_id?: string | null
+          overdue_days?: never
+          status?: Database["public"]["Enums"]["status_permohonan"] | null
+          tenggat?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permohonan_opd_id_fkey"
+            columns: ["opd_id"]
+            isOneToOne: false
+            referencedRelation: "opd"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       aset_compliance: { Args: { _opd_id: string }; Returns: Json }
@@ -2606,6 +3083,15 @@ export type Database = {
         Returns: Json
       }
       count_permohonan_bulan_ini: { Args: never; Returns: number }
+      fn_generate_nomor_surat: {
+        Args: { _opd_id: string; _permohonan_id: string }
+        Returns: string
+      }
+      fn_ikm_dashboard: { Args: { _survey_id: string }; Returns: Json }
+      fn_permohonan_effective_sla_seconds: {
+        Args: { _id: string }
+        Returns: number
+      }
       get_effective_permissions: {
         Args: { _user_id: string }
         Returns: {
