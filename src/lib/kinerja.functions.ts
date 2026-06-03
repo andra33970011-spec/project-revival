@@ -19,7 +19,7 @@ export type SkorRow = {
 
 export const opdKinerjaTrend = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => z.object({
-    opd_id: z.string().uuid().nullable().optional(),
+    opd_id: z.string().uuid().optional(),
     months: z.number().int().min(1).max(36).default(12),
   }).parse(i))
   .handler(async ({ data }) => {
