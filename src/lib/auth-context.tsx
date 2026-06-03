@@ -289,11 +289,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAdminDesa: roles.includes("admin_desa"),
     isAdminOpd: roles.includes("admin_opd"),
     isAdminPemda: roles.includes("admin_pemda"),
+    isPimpinan: roles.includes("pimpinan"),
     isElevated: roles.includes("super_admin") || roles.includes("admin_pemda"),
+    isElevatedView: roles.includes("super_admin") || roles.includes("admin_pemda") || roles.includes("pimpinan"),
     isAsn: roles.includes("asn"),
     isStaff:
       roles.includes("super_admin") ||
       roles.includes("admin_pemda") ||
+      roles.includes("pimpinan") ||
       roles.includes("admin_opd") ||
       roles.includes("admin_desa") ||
       roles.includes("asn"),
@@ -301,11 +304,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       !!profile?.verified_at ||
       roles.includes("super_admin") ||
       roles.includes("admin_pemda") ||
+      roles.includes("pimpinan") ||
       roles.includes("admin_opd") ||
       roles.includes("admin_desa"),
     permissions,
     asnType,
     systemPosition,
+    pimpinanType,
     can: (p: string) => roles.includes("super_admin") || permissions.has(p),
     signOut: async () => {
       await supabase.auth.signOut();
