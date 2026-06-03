@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-// AppRole mencakup role baru `admin_pemda` (Fase 1 RBAC). Role lama tetap.
-export type AppRole = "warga" | "admin_opd" | "super_admin" | "admin_desa" | "asn" | "admin_pemda";
+// AppRole mencakup role baru `admin_pemda` & `pimpinan`. Role lama tetap.
+export type AppRole = "warga" | "admin_opd" | "super_admin" | "admin_desa" | "asn" | "admin_pemda" | "pimpinan";
 
 export type AsnTypeValue = "pns" | "pppk_penuh_waktu" | "pppk_paruh_waktu" | "honorer";
 export type SystemPositionValue =
