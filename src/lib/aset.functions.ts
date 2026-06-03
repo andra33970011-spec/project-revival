@@ -35,6 +35,11 @@ const asetSchema = z.object({
   status: z.enum(["aktif", "rusak", "dihapuskan"]).default("aktif"),
   foto_url: z.string().url().max(1000).optional().nullable(),
   catatan: z.string().max(1000).optional().nullable(),
+  umur_ekonomis_bulan: z.number().int().min(0).max(1200).optional().nullable(),
+  metode_susut: z.enum(["garis_lurus", "saldo_menurun"]).optional().nullable(),
+  garansi_sampai: z.string().date().optional().nullable(),
+  kalibrasi_berikut: z.string().date().optional().nullable(),
+  dokumen_kehilangan_url: z.string().url().max(1000).optional().nullable(),
 });
 
 export const upsertAset = createServerFn({ method: "POST" })
@@ -81,7 +86,8 @@ export const upsertAset = createServerFn({ method: "POST" })
     const key = idemKey("aset:create", context.userId, { nama: data.nama, opd_id: data.opd_id });
     return withIdempotency(key, 30_000, async () => {
       const kode = genKode();
-      const { data: row, error } = await supabaseAdmin.from("aset").insert({ ...payload, kode }).select("id,kode").single();
+      // qr_token diisi otomatis oleh trigger aset_set_qr_token; cast agar lulus type check
+      const { data: row, error } = await supabaseAdmin.from("aset").insert({ ...payload, kode } as never).select("id,kode").single();
       if (error) {
         log.error("aset.create.fail", { userId: context.userId, correlationId, error: error.message });
         throw new Error(error.message);
@@ -121,7 +127,7 @@ export const listAset = createServerFn({ method: "POST" })
     const ctx = await userCtx(context.userId);
     let q = supabaseAdmin
       .from("aset")
-      .select("id,kode,nama,kategori,merk,nomor_seri,opd_id,pemegang_user_id,lokasi_terkini,lat,lng,status,lifecycle_status,last_verified_at,foto_url,updated_at, opd:opd!opd_id(nama,singkatan), pemegang:profiles!pemegang_user_id(nama_lengkap,nip)")
+      .select("id,kode,qr_token,nama,kategori,merk,nomor_seri,opd_id,pemegang_user_id,lokasi_terkini,lat,lng,status,lifecycle_status,last_verified_at,garansi_sampai,kalibrasi_berikut,umur_ekonomis_bulan,metode_susut,nilai_perolehan,tanggal_perolehan,foto_url,updated_at, opd:opd!opd_id(nama,singkatan), pemegang:profiles!pemegang_user_id(nama_lengkap,nip)")
       .order("updated_at", { ascending: false })
       .limit(500);
     if (data.mine) q = q.eq("pemegang_user_id", context.userId);

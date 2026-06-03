@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PermohonanIndexRouteImport } from './routes/permohonan.index'
 import { Route as PengisianIndexRouteImport } from './routes/pengisian.index'
 import { Route as LayananIndexRouteImport } from './routes/layanan.index'
+import { Route as DataTerbukaIndexRouteImport } from './routes/data-terbuka.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as TugasAssignmentIdRouteImport } from './routes/tugas.$assignmentId'
 import { Route as PermohonanBaruRouteImport } from './routes/permohonan.baru'
@@ -28,6 +29,7 @@ import { Route as PermohonanIdRouteImport } from './routes/permohonan.$id'
 import { Route as PengisianIdRouteImport } from './routes/pengisian.$id'
 import { Route as LayananSlugRouteImport } from './routes/layanan.$slug'
 import { Route as InstansiSingkatanRouteImport } from './routes/instansi.$singkatan'
+import { Route as DataTerbukaSlugRouteImport } from './routes/data-terbuka.$slug'
 import { Route as AsnVerifikasiRouteImport } from './routes/asn.verifikasi'
 import { Route as AsnTugasRouteImport } from './routes/asn.tugas'
 import { Route as AsnIzinRouteImport } from './routes/asn.izin'
@@ -61,6 +63,7 @@ import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminAsnKepatuhanRouteImport } from './routes/admin.asn-kepatuhan'
 import { Route as AdminAsnRouteImport } from './routes/admin.asn'
 import { Route as AdminAsetKampanyeRouteImport } from './routes/admin.aset-kampanye'
+import { Route as AdminAsetExtraRouteImport } from './routes/admin.aset-extra'
 import { Route as AdminAsetRouteImport } from './routes/admin.aset'
 import { Route as AsnScanTokenRouteImport } from './routes/asn.scan.$token'
 import { Route as ApiInternalMetricsRouteImport } from './routes/api/internal/metrics'
@@ -83,10 +86,12 @@ import { Route as ApiPublicHooksStorageCleanupRouteImport } from './routes/api/p
 import { Route as ApiPublicHooksSlaReminderRouteImport } from './routes/api/public/hooks/sla-reminder'
 import { Route as ApiPublicHooksRetryQueueRouteImport } from './routes/api/public/hooks/retry-queue'
 import { Route as ApiPublicHooksRetentionCleanupRouteImport } from './routes/api/public/hooks/retention-cleanup'
+import { Route as ApiPublicHooksFormDeadlineReminderRouteImport } from './routes/api/public/hooks/form-deadline-reminder'
 import { Route as ApiPublicHooksCronWatchdogRouteImport } from './routes/api/public/hooks/cron-watchdog'
 import { Route as ApiPublicHooksCleanupUploadsRouteImport } from './routes/api/public/hooks/cleanup-uploads'
 import { Route as ApiPublicHooksBackupSnapshotRouteImport } from './routes/api/public/hooks/backup-snapshot'
 import { Route as ApiPublicHooksAssignmentReminderRouteImport } from './routes/api/public/hooks/assignment-reminder'
+import { Route as ApiPublicHooksAsetWarrantyReminderRouteImport } from './routes/api/public/hooks/aset-warranty-reminder'
 
 const TentangRoute = TentangRouteImport.update({
   id: '/tentang',
@@ -148,6 +153,11 @@ const LayananIndexRoute = LayananIndexRouteImport.update({
   path: '/layanan/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DataTerbukaIndexRoute = DataTerbukaIndexRouteImport.update({
+  id: '/data-terbuka/',
+  path: '/data-terbuka/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -181,6 +191,11 @@ const LayananSlugRoute = LayananSlugRouteImport.update({
 const InstansiSingkatanRoute = InstansiSingkatanRouteImport.update({
   id: '/instansi/$singkatan',
   path: '/instansi/$singkatan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataTerbukaSlugRoute = DataTerbukaSlugRouteImport.update({
+  id: '/data-terbuka/$slug',
+  path: '/data-terbuka/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AsnVerifikasiRoute = AsnVerifikasiRouteImport.update({
@@ -348,6 +363,11 @@ const AdminAsetKampanyeRoute = AdminAsetKampanyeRouteImport.update({
   path: '/admin/aset-kampanye',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAsetExtraRoute = AdminAsetExtraRouteImport.update({
+  id: '/admin/aset-extra',
+  path: '/admin/aset-extra',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAsetRoute = AdminAsetRouteImport.update({
   id: '/admin/aset',
   path: '/admin/aset',
@@ -467,6 +487,12 @@ const ApiPublicHooksRetentionCleanupRoute =
     path: '/api/public/hooks/retention-cleanup',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksFormDeadlineReminderRoute =
+  ApiPublicHooksFormDeadlineReminderRouteImport.update({
+    id: '/api/public/hooks/form-deadline-reminder',
+    path: '/api/public/hooks/form-deadline-reminder',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksCronWatchdogRoute =
   ApiPublicHooksCronWatchdogRouteImport.update({
     id: '/api/public/hooks/cron-watchdog',
@@ -491,6 +517,12 @@ const ApiPublicHooksAssignmentReminderRoute =
     path: '/api/public/hooks/assignment-reminder',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksAsetWarrantyReminderRoute =
+  ApiPublicHooksAsetWarrantyReminderRouteImport.update({
+    id: '/api/public/hooks/aset-warranty-reminder',
+    path: '/api/public/hooks/aset-warranty-reminder',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -503,6 +535,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRoute
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
@@ -536,6 +569,7 @@ export interface FileRoutesByFullPath {
   '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
+  '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
@@ -543,6 +577,7 @@ export interface FileRoutesByFullPath {
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/data-terbuka/': typeof DataTerbukaIndexRoute
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
@@ -561,10 +596,12 @@ export interface FileRoutesByFullPath {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
+  '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
@@ -583,6 +620,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRoute
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
@@ -616,6 +654,7 @@ export interface FileRoutesByTo {
   '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
+  '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
@@ -623,6 +662,7 @@ export interface FileRoutesByTo {
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
   '/admin': typeof AdminIndexRoute
+  '/data-terbuka': typeof DataTerbukaIndexRoute
   '/layanan': typeof LayananIndexRoute
   '/pengisian': typeof PengisianIndexRoute
   '/permohonan': typeof PermohonanIndexRoute
@@ -641,10 +681,12 @@ export interface FileRoutesByTo {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
+  '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
@@ -664,6 +706,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
   '/admin/aset': typeof AdminAsetRoute
+  '/admin/aset-extra': typeof AdminAsetExtraRoute
   '/admin/aset-kampanye': typeof AdminAsetKampanyeRoute
   '/admin/asn': typeof AdminAsnRoute
   '/admin/asn-kepatuhan': typeof AdminAsnKepatuhanRoute
@@ -697,6 +740,7 @@ export interface FileRoutesById {
   '/asn/izin': typeof AsnIzinRoute
   '/asn/tugas': typeof AsnTugasRoute
   '/asn/verifikasi': typeof AsnVerifikasiRoute
+  '/data-terbuka/$slug': typeof DataTerbukaSlugRoute
   '/instansi/$singkatan': typeof InstansiSingkatanRoute
   '/layanan/$slug': typeof LayananSlugRoute
   '/pengisian/$id': typeof PengisianIdRoute
@@ -704,6 +748,7 @@ export interface FileRoutesById {
   '/permohonan/baru': typeof PermohonanBaruRoute
   '/tugas/$assignmentId': typeof TugasAssignmentIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/data-terbuka/': typeof DataTerbukaIndexRoute
   '/layanan/': typeof LayananIndexRoute
   '/pengisian/': typeof PengisianIndexRoute
   '/permohonan/': typeof PermohonanIndexRoute
@@ -722,10 +767,12 @@ export interface FileRoutesById {
   '/admin/system/uat': typeof AdminSystemUatRoute
   '/api/internal/metrics': typeof ApiInternalMetricsRoute
   '/asn/scan/$token': typeof AsnScanTokenRoute
+  '/api/public/hooks/aset-warranty-reminder': typeof ApiPublicHooksAsetWarrantyReminderRoute
   '/api/public/hooks/assignment-reminder': typeof ApiPublicHooksAssignmentReminderRoute
   '/api/public/hooks/backup-snapshot': typeof ApiPublicHooksBackupSnapshotRoute
   '/api/public/hooks/cleanup-uploads': typeof ApiPublicHooksCleanupUploadsRoute
   '/api/public/hooks/cron-watchdog': typeof ApiPublicHooksCronWatchdogRoute
+  '/api/public/hooks/form-deadline-reminder': typeof ApiPublicHooksFormDeadlineReminderRoute
   '/api/public/hooks/retention-cleanup': typeof ApiPublicHooksRetentionCleanupRoute
   '/api/public/hooks/retry-queue': typeof ApiPublicHooksRetryQueueRoute
   '/api/public/hooks/sla-reminder': typeof ApiPublicHooksSlaReminderRoute
@@ -746,6 +793,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
+    | '/admin/aset-extra'
     | '/admin/aset-kampanye'
     | '/admin/asn'
     | '/admin/asn-kepatuhan'
@@ -779,6 +827,7 @@ export interface FileRouteTypes {
     | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
+    | '/data-terbuka/$slug'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
@@ -786,6 +835,7 @@ export interface FileRouteTypes {
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
     | '/admin/'
+    | '/data-terbuka/'
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
@@ -804,10 +854,12 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
     | '/api/public/hooks/cron-watchdog'
+    | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
     | '/api/public/hooks/sla-reminder'
@@ -826,6 +878,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
+    | '/admin/aset-extra'
     | '/admin/aset-kampanye'
     | '/admin/asn'
     | '/admin/asn-kepatuhan'
@@ -859,6 +912,7 @@ export interface FileRouteTypes {
     | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
+    | '/data-terbuka/$slug'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
@@ -866,6 +920,7 @@ export interface FileRouteTypes {
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
     | '/admin'
+    | '/data-terbuka'
     | '/layanan'
     | '/pengisian'
     | '/permohonan'
@@ -884,10 +939,12 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
     | '/api/public/hooks/cron-watchdog'
+    | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
     | '/api/public/hooks/sla-reminder'
@@ -906,6 +963,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/tentang'
     | '/admin/aset'
+    | '/admin/aset-extra'
     | '/admin/aset-kampanye'
     | '/admin/asn'
     | '/admin/asn-kepatuhan'
@@ -939,6 +997,7 @@ export interface FileRouteTypes {
     | '/asn/izin'
     | '/asn/tugas'
     | '/asn/verifikasi'
+    | '/data-terbuka/$slug'
     | '/instansi/$singkatan'
     | '/layanan/$slug'
     | '/pengisian/$id'
@@ -946,6 +1005,7 @@ export interface FileRouteTypes {
     | '/permohonan/baru'
     | '/tugas/$assignmentId'
     | '/admin/'
+    | '/data-terbuka/'
     | '/layanan/'
     | '/pengisian/'
     | '/permohonan/'
@@ -964,10 +1024,12 @@ export interface FileRouteTypes {
     | '/admin/system/uat'
     | '/api/internal/metrics'
     | '/asn/scan/$token'
+    | '/api/public/hooks/aset-warranty-reminder'
     | '/api/public/hooks/assignment-reminder'
     | '/api/public/hooks/backup-snapshot'
     | '/api/public/hooks/cleanup-uploads'
     | '/api/public/hooks/cron-watchdog'
+    | '/api/public/hooks/form-deadline-reminder'
     | '/api/public/hooks/retention-cleanup'
     | '/api/public/hooks/retry-queue'
     | '/api/public/hooks/sla-reminder'
@@ -987,6 +1049,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   TentangRoute: typeof TentangRoute
   AdminAsetRoute: typeof AdminAsetRoute
+  AdminAsetExtraRoute: typeof AdminAsetExtraRoute
   AdminAsetKampanyeRoute: typeof AdminAsetKampanyeRoute
   AdminAsnRoute: typeof AdminAsnRoute
   AdminAsnKepatuhanRoute: typeof AdminAsnKepatuhanRoute
@@ -1020,6 +1083,7 @@ export interface RootRouteChildren {
   AsnIzinRoute: typeof AsnIzinRoute
   AsnTugasRoute: typeof AsnTugasRoute
   AsnVerifikasiRoute: typeof AsnVerifikasiRoute
+  DataTerbukaSlugRoute: typeof DataTerbukaSlugRoute
   InstansiSingkatanRoute: typeof InstansiSingkatanRoute
   LayananSlugRoute: typeof LayananSlugRoute
   PengisianIdRoute: typeof PengisianIdRoute
@@ -1027,6 +1091,7 @@ export interface RootRouteChildren {
   PermohonanBaruRoute: typeof PermohonanBaruRoute
   TugasAssignmentIdRoute: typeof TugasAssignmentIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  DataTerbukaIndexRoute: typeof DataTerbukaIndexRoute
   LayananIndexRoute: typeof LayananIndexRoute
   PengisianIndexRoute: typeof PengisianIndexRoute
   PermohonanIndexRoute: typeof PermohonanIndexRoute
@@ -1042,10 +1107,12 @@ export interface RootRouteChildren {
   AdminSystemUatRoute: typeof AdminSystemUatRoute
   ApiInternalMetricsRoute: typeof ApiInternalMetricsRoute
   AsnScanTokenRoute: typeof AsnScanTokenRoute
+  ApiPublicHooksAsetWarrantyReminderRoute: typeof ApiPublicHooksAsetWarrantyReminderRoute
   ApiPublicHooksAssignmentReminderRoute: typeof ApiPublicHooksAssignmentReminderRoute
   ApiPublicHooksBackupSnapshotRoute: typeof ApiPublicHooksBackupSnapshotRoute
   ApiPublicHooksCleanupUploadsRoute: typeof ApiPublicHooksCleanupUploadsRoute
   ApiPublicHooksCronWatchdogRoute: typeof ApiPublicHooksCronWatchdogRoute
+  ApiPublicHooksFormDeadlineReminderRoute: typeof ApiPublicHooksFormDeadlineReminderRoute
   ApiPublicHooksRetentionCleanupRoute: typeof ApiPublicHooksRetentionCleanupRoute
   ApiPublicHooksRetryQueueRoute: typeof ApiPublicHooksRetryQueueRoute
   ApiPublicHooksSlaReminderRoute: typeof ApiPublicHooksSlaReminderRoute
@@ -1140,6 +1207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayananIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/data-terbuka/': {
+      id: '/data-terbuka/'
+      path: '/data-terbuka'
+      fullPath: '/data-terbuka/'
+      preLoaderRoute: typeof DataTerbukaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -1187,6 +1261,13 @@ declare module '@tanstack/react-router' {
       path: '/instansi/$singkatan'
       fullPath: '/instansi/$singkatan'
       preLoaderRoute: typeof InstansiSingkatanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-terbuka/$slug': {
+      id: '/data-terbuka/$slug'
+      path: '/data-terbuka/$slug'
+      fullPath: '/data-terbuka/$slug'
+      preLoaderRoute: typeof DataTerbukaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/asn/verifikasi': {
@@ -1420,6 +1501,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAsetKampanyeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/aset-extra': {
+      id: '/admin/aset-extra'
+      path: '/admin/aset-extra'
+      fullPath: '/admin/aset-extra'
+      preLoaderRoute: typeof AdminAsetExtraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/aset': {
       id: '/admin/aset'
       path: '/admin/aset'
@@ -1574,6 +1662,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksRetentionCleanupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/form-deadline-reminder': {
+      id: '/api/public/hooks/form-deadline-reminder'
+      path: '/api/public/hooks/form-deadline-reminder'
+      fullPath: '/api/public/hooks/form-deadline-reminder'
+      preLoaderRoute: typeof ApiPublicHooksFormDeadlineReminderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/cron-watchdog': {
       id: '/api/public/hooks/cron-watchdog'
       path: '/api/public/hooks/cron-watchdog'
@@ -1600,6 +1695,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/assignment-reminder'
       fullPath: '/api/public/hooks/assignment-reminder'
       preLoaderRoute: typeof ApiPublicHooksAssignmentReminderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/aset-warranty-reminder': {
+      id: '/api/public/hooks/aset-warranty-reminder'
+      path: '/api/public/hooks/aset-warranty-reminder'
+      fullPath: '/api/public/hooks/aset-warranty-reminder'
+      preLoaderRoute: typeof ApiPublicHooksAsetWarrantyReminderRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -1642,6 +1744,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   TentangRoute: TentangRoute,
   AdminAsetRoute: AdminAsetRoute,
+  AdminAsetExtraRoute: AdminAsetExtraRoute,
   AdminAsetKampanyeRoute: AdminAsetKampanyeRoute,
   AdminAsnRoute: AdminAsnRoute,
   AdminAsnKepatuhanRoute: AdminAsnKepatuhanRoute,
@@ -1675,6 +1778,7 @@ const rootRouteChildren: RootRouteChildren = {
   AsnIzinRoute: AsnIzinRoute,
   AsnTugasRoute: AsnTugasRoute,
   AsnVerifikasiRoute: AsnVerifikasiRoute,
+  DataTerbukaSlugRoute: DataTerbukaSlugRoute,
   InstansiSingkatanRoute: InstansiSingkatanRoute,
   LayananSlugRoute: LayananSlugRoute,
   PengisianIdRoute: PengisianIdRoute,
@@ -1682,6 +1786,7 @@ const rootRouteChildren: RootRouteChildren = {
   PermohonanBaruRoute: PermohonanBaruRoute,
   TugasAssignmentIdRoute: TugasAssignmentIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  DataTerbukaIndexRoute: DataTerbukaIndexRoute,
   LayananIndexRoute: LayananIndexRoute,
   PengisianIndexRoute: PengisianIndexRoute,
   PermohonanIndexRoute: PermohonanIndexRoute,
@@ -1697,10 +1802,14 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSystemUatRoute: AdminSystemUatRoute,
   ApiInternalMetricsRoute: ApiInternalMetricsRoute,
   AsnScanTokenRoute: AsnScanTokenRoute,
+  ApiPublicHooksAsetWarrantyReminderRoute:
+    ApiPublicHooksAsetWarrantyReminderRoute,
   ApiPublicHooksAssignmentReminderRoute: ApiPublicHooksAssignmentReminderRoute,
   ApiPublicHooksBackupSnapshotRoute: ApiPublicHooksBackupSnapshotRoute,
   ApiPublicHooksCleanupUploadsRoute: ApiPublicHooksCleanupUploadsRoute,
   ApiPublicHooksCronWatchdogRoute: ApiPublicHooksCronWatchdogRoute,
+  ApiPublicHooksFormDeadlineReminderRoute:
+    ApiPublicHooksFormDeadlineReminderRoute,
   ApiPublicHooksRetentionCleanupRoute: ApiPublicHooksRetentionCleanupRoute,
   ApiPublicHooksRetryQueueRoute: ApiPublicHooksRetryQueueRoute,
   ApiPublicHooksSlaReminderRoute: ApiPublicHooksSlaReminderRoute,

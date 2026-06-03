@@ -6,7 +6,8 @@ import {
   upsertTemplate, listTemplatesAdmin, toggleTemplateAktif,
   listSubmissions, exportSubmissionsXlsx,
 } from "@/lib/dataset.functions";
-import { Plus, X, FileSpreadsheet, Eye, Power, Save } from "lucide-react";
+import { migrateDatasetToForm } from "@/lib/forms-extras.functions";
+import { Plus, X, FileSpreadsheet, Eye, Power, Save, ArrowRightCircle } from "lucide-react";
 
 export const Route = createFileRoute("/admin/dataset")({
   head: () => ({ meta: [{ title: "Admin — Dataset" }, { name: "robots", content: "noindex" }] }),
@@ -39,6 +40,15 @@ function Page() {
       const r = await exportSubmissionsXlsx({ data: { template_id: id } }) as unknown as { url: string; filename: string };
       const a = document.createElement("a"); a.href = r.url; a.download = r.filename; a.target = "_blank"; a.click();
     } catch (ex) { alert(ex instanceof Error ? ex.message : "Gagal ekspor"); }
+  }
+
+  async function onMigrate(id: string, judul: string) {
+    if (!confirm(`Pindahkan template "${judul}" ke Form Builder?\n\nTemplate akan dikloning menjadi form baru (kolom, target, & status). Template lama akan dinonaktifkan.`)) return;
+    try {
+      const r = await migrateDatasetToForm({ data: { template_id: id } }) as unknown as { form_id: string };
+      alert("Berhasil dipindahkan. Form ID: " + r.form_id);
+      await load();
+    } catch (ex) { alert(ex instanceof Error ? ex.message : "Gagal migrasi"); }
   }
 
   return (
@@ -88,6 +98,7 @@ function Page() {
                     <IconBtn onClick={() => setViewSubs(t.id)} title="Lihat Submission"><Eye className="h-3.5 w-3.5" /></IconBtn>
                     <IconBtn onClick={() => onExport(t.id)} title="Ekspor Excel"><FileSpreadsheet className="h-3.5 w-3.5" /></IconBtn>
                     <IconBtn onClick={() => onToggle(t.id, t.aktif)} title="Toggle Aktif"><Power className="h-3.5 w-3.5" /></IconBtn>
+                    <IconBtn onClick={() => onMigrate(t.id, t.judul)} title="Pindahkan ke Form Builder"><ArrowRightCircle className="h-3.5 w-3.5 text-primary" /></IconBtn>
                   </div>
                 </td>
               </tr>
