@@ -142,9 +142,9 @@ export function AdminShell({
   }, [mobileOpen]);
 
   const opd = opdList.find((o) => o.id === opdAktifId);
-  // Pemilihan nav cerdas: super_admin > admin_pemda > admin_desa (eksklusif) > admin_opd/default
+  // Pemilihan nav cerdas: super_admin pakai superNavGroups saja (tanpa baseNav agar tidak duplikat).
   const rawNav: NavItem[] = isSuperAdmin
-    ? baseNav
+    ? []
     : isAdminPemda
     ? pemdaNav
     : isAdminDesa && !isAdminOpd
@@ -152,6 +152,7 @@ export function AdminShell({
     : baseNav;
   // Filter berdasarkan permission granular (super_admin selalu lolos via can()).
   const primaryNav = rawNav.filter((it) => (it.permission ? can(it.permission) : true));
+
   const currentRole: RbacRole | null = isSuperAdmin
     ? "super_admin"
     : isAdminPemda
